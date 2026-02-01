@@ -1,0 +1,153 @@
+You are generating a medical quiz for a UK medical student. Create questions that test understanding, application, and clinical reasoning.
+
+## Quiz Parameters
+
+Topic: {topic_name}
+Number of Questions: {num_questions}
+Difficulty: {difficulty}
+Student Confidence: {confidence}
+
+## Question Generation Guidelines
+
+### Difficulty Levels
+
+**Easy (Recall and Recognition)**
+- Definition questions
+- Basic fact recall
+- Simple classifications
+- Straightforward identification
+- Example: "Which of the following is a beta-blocker?"
+
+**Medium (Application and Analysis)**
+- Clinical scenario application
+- Mechanism questions
+- Comparison and contrast
+- Interpretation of data
+- Example: "A patient presents with chest pain. Given their history, which investigation would you order first?"
+
+**Hard (Synthesis and Evaluation)**
+- Complex clinical cases
+- Multi-step reasoning
+- Differential diagnosis
+- Treatment planning with complications
+- Example: "A 67-year-old with multiple comorbidities presents with... What is your management plan and why?"
+
+### Question Quality Standards
+
+1. **Clinical Relevance**: Questions should relate to real clinical scenarios
+2. **UK Context**: Use NHS protocols, NICE guidelines, BNF references
+3. **Clear Stems**: Question should be unambiguous and complete
+4. **Plausible Distractors**: Wrong answers should be tempting but distinctly incorrect
+5. **Single Best Answer**: One option should be clearly correct
+6. **Educational Value**: Explanation should teach, not just confirm
+
+### Question Structure
+
+Each question must include:
+- **Question Stem**: Clear, complete clinical scenario or question
+- **Options**: 4-5 answer choices labeled A, B, C, D, (E)
+- **Correct Answer**: The letter of the correct option
+- **Explanation**: Why the answer is correct and why others are wrong
+- **Learning Points**: 2-3 key takeaways
+- **References**: UK guidelines (NICE/BNF/GMC) when applicable
+
+### UK Medical Focus Areas
+
+Include questions on:
+- **Clinical Medicine**: Diagnosis, investigations, management
+- **Pharmacology**: BNF-based prescribing, interactions, contraindications
+- **Anatomy & Physiology**: Applied clinical anatomy
+- **Pathology**: Disease mechanisms and manifestations
+- **Clinical Skills**: Communication, ethics, professionalism (GMC Outcomes)
+- **Public Health**: NHS structure, screening, prevention
+
+### Question Types to Include
+
+1. **Single Best Answer (SBA)**: Most common format
+2. **Clinical Vignettes**: Patient scenarios requiring diagnosis/management
+3. **Data Interpretation**: Lab results, imaging, charts
+4. **Mechanism Questions**: Physiological/pharmacological processes
+5. **Ethics/Law**: GMC guidance, consent, capacity
+
+### Adaptive Difficulty
+
+- If confidence < 0.3: Focus on foundational concepts (60% easy, 30% medium, 10% hard)
+- If confidence 0.3-0.7: Balanced mix (20% easy, 60% medium, 20% hard)
+- If confidence > 0.7: Challenge them (10% easy, 30% medium, 60% hard)
+
+### Common Pitfalls to Avoid
+
+- ❌ Ambiguous questions with multiple defensible answers
+- ❌ "All of the above" or "None of the above" options
+- ❌ Trick questions that test memorization of obscure facts
+- ❌ Questions with obvious correct answers
+- ❌ US-specific content (use UK terminology and guidelines)
+- ❌ Explanations that just restate the answer without teaching
+
+### Example High-Quality Question
+
+**Question:**
+A 45-year-old woman presents to A&E with sudden onset severe headache described as "the worst headache of her life." She has neck stiffness and photophobia. Her observations show BP 165/95 mmHg, HR 88 bpm, temperature 37.2°C. She is alert and orientated. What is the most appropriate initial investigation?
+
+A. CT head without contrast
+B. Lumbar puncture
+C. MRI brain with contrast
+D. Cerebral angiography
+E. No investigation needed - prescribe analgesia
+
+**Correct Answer:** A
+
+**Explanation:**
+This presentation is highly suggestive of subarachnoid haemorrhage (SAH). The key features are:
+- Sudden onset "thunderclap" headache
+- Neck stiffness (meningism)
+- Photophobia
+
+According to NICE guidelines, CT head without contrast is the first-line investigation for suspected SAH and should be performed within 1 hour. It has >95% sensitivity if performed within 6 hours of symptom onset.
+
+Why other options are incorrect:
+- B (LP): Only performed if CT is negative but suspicion remains high (12 hours post-headache for xanthochromia)
+- C (MRI): Not first-line; takes too long in acute setting
+- D (Angiography): Only after diagnosis confirmed to identify source
+- E: Dangerous - missing SAH has high morbidity/mortality
+
+**Learning Points:**
+1. "Worst headache of life" + meningism = SAH until proven otherwise
+2. CT head is first-line investigation (do within 1 hour per NICE)
+3. If CT negative >6 hours post-onset, LP is needed to check for xanthochromia
+
+**References:**
+- NICE CG56: Head injury assessment and early management
+- NICE CKS: Subarachnoid haemorrhage
+
+## Output Format
+
+Return a JSON array of questions in this exact format:
+
+```json
+[
+  {
+    "question_number": 1,
+    "question_stem": "Full question text here...",
+    "options": {
+      "A": "Option A text",
+      "B": "Option B text",
+      "C": "Option C text",
+      "D": "Option D text"
+    },
+    "correct_answer": "A",
+    "explanation": "Detailed explanation...",
+    "learning_points": [
+      "Key learning point 1",
+      "Key learning point 2"
+    ],
+    "references": ["NICE guideline or BNF reference"],
+    "difficulty": "medium",
+    "topic_tags": ["relevant", "topic", "tags"]
+  }
+]
+```
+
+## Now Generate the Quiz
+
+Based on the parameters above, generate {num_questions} high-quality questions at {difficulty} difficulty level for the topic "{topic_name}". Ensure questions are clinically relevant, UK-focused, and educational.

@@ -1,0 +1,51 @@
+# FastAPI & Server
+fastapi==0.109.2
+uvicorn[standard]==0.27.1
+pydantic==2.6.1
+pydantic-settings==2.1.0
+python-multipart==0.0.22
+
+# LLM Engine
+llama-cpp-python==0.2.72
+
+# Vector Store & Embeddings
+chromadb==0.4.22
+sentence-transformers==2.3.1
+
+# Graph & Data
+networkx==3.2.1
+numpy==1.26.4
+pandas==2.2.0
+
+# Database
+sqlalchemy==2.0.25
+aiosqlite==0.19.0
+
+# PDF Processing
+pypdf2==3.0.1
+pdfplumber==0.10.3
+
+# HTML Parsing (for Anki)
+beautifulsoup4==4.12.3
+
+# Encryption & Security
+cryptography==42.0.4
+keyring==24.3.0
+
+# Model Download
+huggingface-hub==0.20.3
+tqdm==4.66.1
+
+# Calendar Export
+icalendar==5.0.11
+
+# File Watching
+watchdog==4.0.0
+
+# Utilities
+python-dotenv==1.0.1
+httpx==0.26.0
+
+# Dev & Testing
+pytest==8.0.0
+pytest-asyncio==0.23.4
