@@ -103,18 +103,14 @@ class AgentOrchestrator:
         
         Returns:
             LLM response
+        
+        TODO: Implement actual OpenAI API integration using self.api_key
         """
-        # This would use the actual OpenAI API
-        # For now, returning a mock response structure
-        return {
-            "choices": [{
-                "message": {
-                    "role": "assistant",
-                    "content": "Mock response"
-                },
-                "finish_reason": "stop"
-            }]
-        }
+        raise NotImplementedError(
+            "OpenAI API integration not yet implemented. "
+            "This method needs to call the OpenAI Chat Completions API "
+            "with the current messages, tools, and model configuration."
+        )
     
     def _execute_tool_call(self, tool_call: Dict[str, Any]) -> Any:
         """

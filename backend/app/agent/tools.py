@@ -8,6 +8,9 @@ import json
 
 
 # Tool implementations
+# NOTE: These are placeholder implementations that return empty data structures.
+# They need to be connected to actual database services and business logic.
+
 def get_weak_topics(threshold: float = 0.3) -> List[Dict]:
     """
     Get topics where student confidence is below threshold.
@@ -17,8 +20,10 @@ def get_weak_topics(threshold: float = 0.3) -> List[Dict]:
         
     Returns:
         List of weak topics with details
+    
+    TODO: Connect to student progress database and knowledge graph
     """
-    # Implementation would connect to database
+    # Placeholder: Connect to database and query topics where confidence < threshold
     return []
 
 
@@ -31,6 +36,8 @@ def get_decaying_topics(days: int = 7) -> List[Dict]:
         
     Returns:
         List of topics needing review
+    
+    TODO: Query study history and calculate topics needing review based on spaced repetition
     """
     return []
 

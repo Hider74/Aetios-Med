@@ -225,7 +225,7 @@ Test individual components:
 ```python
 # Test tools
 from app.agent import TOOL_DEFINITIONS
-assert len(TOOL_DEFINITIONS) == 18
+assert len(TOOL_DEFINITIONS) == 18  # All 18 tools as specified
 
 # Test prompts
 from app.agent import get_system_prompt
