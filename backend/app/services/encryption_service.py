@@ -221,7 +221,7 @@ class EncryptionService:
     def test_encryption(self) -> bool:
         """Test encryption/decryption functionality."""
         try:
-            test_text = "Hello, Aetios-Med! 🔒"
+            test_text = "Hello, Aetios-Med! Test encryption."
             
             # Test with keyring key
             encrypted = self.encrypt_text(test_text)

@@ -152,7 +152,7 @@ class AnkiParser:
                 )
                 revlog_row = cursor.fetchone()
                 if revlog_row:
-                    # Anki timestamps are in milliseconds
+                    # Convert from milliseconds to seconds (Unix timestamp)
                     last_review = revlog_row["id"] // 1000
             except Exception:
                 pass

@@ -141,6 +141,7 @@ Return ONLY a JSON array with this structure:
             
         except json.JSONDecodeError as e:
             # Fallback: return empty or generate simple questions
+            print(f"JSON parsing failed: {e}. Response preview: {response[:200]}")
             return self._generate_fallback_questions(topic, num_questions, difficulty)
     
     def _generate_fallback_questions(

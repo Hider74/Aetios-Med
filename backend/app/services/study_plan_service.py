@@ -135,7 +135,7 @@ class StudyPlanService:
         for day_num in range(total_days):
             day_date = start_date + timedelta(days=day_num)
             
-            # Skip weekends if exam is far away
+            # Skip weekends if exam is far away (Saturday=5, Sunday=6)
             if exam_id and day_date.weekday() in [5, 6]:  # Saturday, Sunday
                 days_until_exam = (end_date - day_date).days
                 if days_until_exam > 14:
