@@ -107,14 +107,18 @@ Return ONLY a JSON array with this structure:
 ]"""
         
         # Generate questions
-        response = await self.llm_service.complete(
-            messages=[
-                {"role": "system", "content": "You are a medical education expert."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.7,
-            max_tokens=2048
-        )
+        try:
+            response = await self.llm_service.complete(
+                messages=[
+                    {"role": "system", "content": "You are a medical education expert."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7,
+                max_tokens=2048
+            )
+        except Exception as e:
+            print(f"LLM generation failed: {e}")
+            return self._generate_fallback_questions(topic, num_questions, difficulty)
         
         # Parse response
         try:

@@ -327,7 +327,7 @@ class IngestService:
                         }],
                         ids=[doc_id]
                     )
-                except:
+                except Exception:
                     pass  # Document might not exist yet
             else:
                 stats['unchanged'] += 1

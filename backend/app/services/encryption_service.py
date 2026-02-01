@@ -259,5 +259,5 @@ class EncryptionService:
             base64.b64decode(text)
             # If it decodes and is long enough, probably encrypted
             return len(text) > 32 and '=' in text[-3:]
-        except:
+        except Exception:
             return False

@@ -154,7 +154,7 @@ class AnkiParser:
                 if revlog_row:
                     # Anki timestamps are in milliseconds
                     last_review = revlog_row["id"] // 1000
-            except:
+            except Exception:
                 pass
             
             card = AnkiCard(

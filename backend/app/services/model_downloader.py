@@ -64,7 +64,7 @@ class ModelDownloader:
                         break
                 else:
                     total_size = None
-            except:
+            except Exception:
                 total_size = None
             
             # Download with progress bar
@@ -299,7 +299,7 @@ class ModelDownloader:
                 # Just check if repo exists
                 return True
                 
-        except:
+        except Exception:
             return False
 
 
