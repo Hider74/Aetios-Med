@@ -34,19 +34,18 @@ async def lifespan(app: FastAPI):
     # Initialize database
     await init_database(settings.database_path)
     
-    # Initialize graph service (loads curriculum + user progress)
+    # Initialize graph service (loads curriculum)
     graph_service = GraphService(
-        curriculum_path=settings.curriculum_path,
-        database_path=settings.database_path
+        curriculum_path=settings.curriculum_path
     )
-    await graph_service.initialize()
+    graph_service.load_curriculum()
     
     # Initialize vector store
     vector_service = VectorService(
-        persist_directory=settings.chroma_path,
+        chroma_path=settings.chroma_path,
         embedding_model=settings.embedding_model
     )
-    await vector_service.initialize()
+    vector_service.initialize()
     
     # Initialize LLM (may not be downloaded yet)
     llm_service = LLMService(

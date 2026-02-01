@@ -84,7 +84,7 @@ class RetentionService:
         db: AsyncSession,
         threshold: float = 0.8,
         limit: int = 10
-    ) -> List[Dict[str, any]]:
+    ) -> List[Dict[str, Any]]:
         """
         Get topics with decaying retention that need review.
         
@@ -178,7 +178,7 @@ class RetentionService:
         topic_id: str,
         db: AsyncSession,
         desired_retention: float = 0.9
-    ) -> List[Dict[str, any]]:
+    ) -> List[Dict[str, Any]]:
         """
         Predict future review dates for a topic.
         
@@ -236,7 +236,7 @@ class RetentionService:
         self,
         card_id: int,
         db: AsyncSession
-    ) -> Optional[Dict[str, any]]:
+    ) -> Optional[Dict[str, Any]]:
         """
         Calculate retention for an Anki card.
         
@@ -299,7 +299,7 @@ class RetentionService:
         db: AsyncSession,
         retention_threshold: float = 0.7,
         limit: int = 20
-    ) -> List[Dict[str, any]]:
+    ) -> List[Dict[str, Any]]:
         """Get Anki cards with low retention that need review."""
         result = await db.execute(
             select(AnkiCard)

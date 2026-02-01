@@ -21,7 +21,7 @@ async def health_check(request: Request):
         timestamp=datetime.utcnow(),
         services={
             "llm": llm_service.is_loaded if llm_service else False,
-            "graph": graph_service.is_initialized if graph_service else False,
+            "graph": graph_service.is_loaded if graph_service else False,
             "vector": vector_service.is_initialized if vector_service else False,
         }
     )

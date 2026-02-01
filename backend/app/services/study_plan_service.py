@@ -107,8 +107,10 @@ class StudyPlanService:
             # Prerequisites (learn foundation first)
             if not topic.prerequisites:
                 score += 20
-            elif all(progress_map.get(prereq, {}).get('confidence', 0) > 0.7 
-                    for prereq in topic.prerequisites):
+            elif all(
+                (prog := progress_map.get(prereq)) and prog.confidence > 0.7
+                for prereq in topic.prerequisites
+            ):
                 score += 10
             
             topic_priorities.append({
