@@ -1,0 +1,1443 @@
+{
+  "curriculum": {
+    "name": "UK Medical Curriculum",
+    "version": "1.0",
+    "description": "Comprehensive medical curriculum aligned with GMC outcomes for UK medical students",
+    "topics": [
+      {
+        "id": "cardiovascular",
+        "label": "Cardiovascular System",
+        "type": "specialty",
+        "parent": null,
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand the structure and function of the cardiovascular system",
+          "Diagnose and manage common cardiovascular conditions",
+          "Interpret cardiovascular investigations appropriately",
+          "Recognize cardiovascular emergencies and initiate management"
+        ],
+        "resources": [
+          "https://teachmeanatomy.info/the-basics/systems/cardiovascular-system/",
+          "https://www.zerotofinals.com/medicine/cardiovascular/"
+        ],
+        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage", "Clinical Examination"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "cardiac_anatomy",
+        "label": "Cardiac Anatomy",
+        "type": "topic",
+        "parent": "cardiovascular",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Describe the anatomical structure of the heart including chambers, valves, and major vessels",
+          "Explain the coronary arterial blood supply and venous drainage",
+          "Understand the conducting system of the heart",
+          "Relate cardiac anatomy to surface landmarks for clinical examination"
+        ],
+        "resources": [
+          "https://teachmeanatomy.info/thorax/organs/heart/",
+          "https://www.zerotofinals.com/medicine/cardiovascular/cardiac-anatomy/"
+        ],
+        "gmc_outcomes": ["Applied Biomedical Sciences", "Clinical Examination"],
+        "exam_weight": 1.5
+      },
+      {
+        "id": "cardiac_physiology",
+        "label": "Cardiac Physiology",
+        "type": "topic",
+        "parent": "cardiovascular",
+        "prerequisites": ["cardiac_anatomy"],
+        "learning_objectives": [
+          "Explain the cardiac cycle and pressure-volume relationships",
+          "Understand cardiac output and its determinants",
+          "Describe the mechanisms of cardiac electrical conduction",
+          "Explain the Frank-Starling mechanism and cardiac contractility",
+          "Understand cardiac autoregulation and neural control"
+        ],
+        "resources": [
+          "https://teachmeanatomy.info/the-basics/systems/cardiovascular-system/cardiac-cycle/",
+          "https://www.zerotofinals.com/medicine/cardiovascular/cardiac-physiology/"
+        ],
+        "gmc_outcomes": ["Applied Biomedical Sciences"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "ecg_interpretation",
+        "label": "ECG Interpretation",
+        "type": "topic",
+        "parent": "cardiovascular",
+        "prerequisites": ["cardiac_anatomy", "cardiac_physiology"],
+        "learning_objectives": [
+          "Systematically interpret a 12-lead ECG",
+          "Recognize common ECG abnormalities including arrhythmias and ischaemia",
+          "Identify life-threatening ECG findings requiring urgent intervention",
+          "Correlate ECG findings with clinical presentations"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/cardiovascular/ecg-interpretation/",
+          "https://teachmeanatomy.info/the-basics/investigations/electrocardiogram/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Clinical Skills"],
+        "exam_weight": 3.0
+      },
+      {
+        "id": "heart_failure",
+        "label": "Heart Failure",
+        "type": "topic",
+        "parent": "cardiovascular",
+        "prerequisites": ["cardiac_physiology"],
+        "learning_objectives": [
+          "Define and classify heart failure (acute vs chronic, systolic vs diastolic)",
+          "Identify common causes and risk factors for heart failure",
+          "Recognize clinical features and investigate appropriately",
+          "Initiate and optimize medical management according to guidelines",
+          "Understand prognosis and when to refer for specialist input"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/cardiovascular/heart-failure/",
+          "https://teachmeanatomy.info/cardiovascular/pathology/heart-failure/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication", "Prescribing"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "arrhythmias",
+        "label": "Arrhythmias",
+        "type": "topic",
+        "parent": "cardiovascular",
+        "prerequisites": ["cardiac_physiology", "ecg_interpretation"],
+        "learning_objectives": [
+          "Classify arrhythmias into bradycardias and tachycardias",
+          "Recognize atrial fibrillation and understand anticoagulation management",
+          "Identify and manage life-threatening arrhythmias (VT, VF)",
+          "Understand indications for cardioversion and pacing",
+          "Calculate CHA2DS2-VASc and HAS-BLED scores"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/cardiovascular/arrhythmias/",
+          "https://www.zerotofinals.com/medicine/cardiovascular/atrial-fibrillation/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Emergency Management", "Prescribing"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "ischaemic_heart_disease",
+        "label": "Ischaemic Heart Disease",
+        "type": "topic",
+        "parent": "cardiovascular",
+        "prerequisites": ["cardiac_anatomy", "ecg_interpretation"],
+        "learning_objectives": [
+          "Understand the pathophysiology of atherosclerosis and coronary artery disease",
+          "Differentiate between stable angina, unstable angina, NSTEMI and STEMI",
+          "Calculate cardiovascular risk and implement primary prevention strategies",
+          "Manage acute coronary syndromes according to current guidelines",
+          "Recognize complications of MI and initiate appropriate management"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/cardiovascular/acute-coronary-syndrome/",
+          "https://teachmeanatomy.info/cardiovascular/pathology/ischaemic-heart-disease/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Emergency Management", "Prescribing"],
+        "exam_weight": 3.0
+      },
+      {
+        "id": "valvular_disease",
+        "label": "Valvular Heart Disease",
+        "type": "topic",
+        "parent": "cardiovascular",
+        "prerequisites": ["cardiac_anatomy", "cardiac_physiology"],
+        "learning_objectives": [
+          "Describe the pathophysiology of common valvular lesions",
+          "Recognize clinical features of aortic stenosis, mitral regurgitation, and other valve diseases",
+          "Interpret murmurs on cardiovascular examination",
+          "Understand indications for valve repair or replacement",
+          "Recognize complications of prosthetic valves"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/cardiovascular/valvular-heart-disease/",
+          "https://teachmeanatomy.info/cardiovascular/pathology/valvular-disease/"
+        ],
+        "gmc_outcomes": ["Clinical Examination", "Diagnose and Manage"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "hypertension",
+        "label": "Hypertension",
+        "type": "topic",
+        "parent": "cardiovascular",
+        "prerequisites": ["cardiac_physiology"],
+        "learning_objectives": [
+          "Define hypertension and classify according to severity",
+          "Investigate to exclude secondary causes of hypertension",
+          "Understand end-organ damage and cardiovascular risk",
+          "Manage hypertension according to NICE guidelines",
+          "Recognize and manage hypertensive emergencies"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/cardiovascular/hypertension/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "respiratory",
+        "label": "Respiratory System",
+        "type": "specialty",
+        "parent": null,
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand the structure and function of the respiratory system",
+          "Diagnose and manage common respiratory conditions",
+          "Interpret respiratory investigations including chest X-rays and spirometry",
+          "Recognize respiratory emergencies and initiate appropriate management"
+        ],
+        "resources": [
+          "https://teachmeanatomy.info/thorax/organs/lungs/",
+          "https://www.zerotofinals.com/medicine/respiratory/"
+        ],
+        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage", "Clinical Examination"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "respiratory_anatomy",
+        "label": "Respiratory Anatomy",
+        "type": "topic",
+        "parent": "respiratory",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Describe the anatomical structure of the upper and lower respiratory tract",
+          "Understand the structure and function of the pleura",
+          "Explain the blood supply and innervation of the lungs",
+          "Relate respiratory anatomy to surface landmarks for examination"
+        ],
+        "resources": [
+          "https://teachmeanatomy.info/thorax/organs/lungs/",
+          "https://teachmeanatomy.info/thorax/organs/trachea/"
+        ],
+        "gmc_outcomes": ["Applied Biomedical Sciences", "Clinical Examination"],
+        "exam_weight": 1.5
+      },
+      {
+        "id": "respiratory_physiology",
+        "label": "Respiratory Physiology",
+        "type": "topic",
+        "parent": "respiratory",
+        "prerequisites": ["respiratory_anatomy"],
+        "learning_objectives": [
+          "Explain the mechanics of breathing and gas exchange",
+          "Understand ventilation-perfusion matching",
+          "Describe oxygen and carbon dioxide transport",
+          "Interpret spirometry and other lung function tests",
+          "Understand control of respiration"
+        ],
+        "resources": [
+          "https://teachmeanatomy.info/the-basics/systems/respiratory-system/",
+          "https://www.zerotofinals.com/medicine/respiratory/respiratory-physiology/"
+        ],
+        "gmc_outcomes": ["Applied Biomedical Sciences"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "asthma",
+        "label": "Asthma",
+        "type": "topic",
+        "parent": "respiratory",
+        "prerequisites": ["respiratory_physiology"],
+        "learning_objectives": [
+          "Understand the pathophysiology of asthma",
+          "Diagnose asthma using clinical features and investigations",
+          "Manage chronic asthma according to BTS/SIGN guidelines",
+          "Recognize and manage acute asthma exacerbations",
+          "Educate patients on inhaler technique and self-management"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/respiratory/asthma/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "copd",
+        "label": "Chronic Obstructive Pulmonary Disease",
+        "type": "topic",
+        "parent": "respiratory",
+        "prerequisites": ["respiratory_physiology"],
+        "learning_objectives": [
+          "Understand the pathophysiology of COPD and emphysema",
+          "Diagnose COPD using spirometry and clinical assessment",
+          "Manage stable COPD including smoking cessation",
+          "Recognize and manage acute exacerbations of COPD",
+          "Understand indications for long-term oxygen therapy"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/respiratory/copd/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "pneumonia",
+        "label": "Pneumonia",
+        "type": "topic",
+        "parent": "respiratory",
+        "prerequisites": ["respiratory_anatomy"],
+        "learning_objectives": [
+          "Classify pneumonia by setting and likely organisms",
+          "Recognize clinical features and investigate appropriately",
+          "Calculate CURB-65 score to guide management",
+          "Select appropriate antibiotic therapy",
+          "Identify complications of pneumonia"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/respiratory/pneumonia/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Emergency Management"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "lung_cancer",
+        "label": "Lung Cancer",
+        "type": "topic",
+        "parent": "respiratory",
+        "prerequisites": ["respiratory_anatomy"],
+        "learning_objectives": [
+          "Classify lung cancers and understand staging systems",
+          "Recognize clinical presentations including paraneoplastic syndromes",
+          "Investigate suspected lung cancer appropriately",
+          "Understand management options including surgery, chemotherapy, and radiotherapy",
+          "Communicate sensitively about diagnosis and prognosis"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/respiratory/lung-cancer/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication", "Breaking Bad News"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "pulmonary_embolism",
+        "label": "Pulmonary Embolism",
+        "type": "topic",
+        "parent": "respiratory",
+        "prerequisites": ["respiratory_physiology"],
+        "learning_objectives": [
+          "Understand risk factors for venous thromboembolism",
+          "Recognize clinical features of PE and calculate Wells score",
+          "Investigate appropriately using D-dimer and imaging",
+          "Manage acute PE including anticoagulation",
+          "Understand prophylaxis strategies"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/respiratory/pulmonary-embolism/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Emergency Management", "Prescribing"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "tuberculosis",
+        "label": "Tuberculosis",
+        "type": "topic",
+        "parent": "respiratory",
+        "prerequisites": ["respiratory_anatomy"],
+        "learning_objectives": [
+          "Understand the pathophysiology and epidemiology of TB",
+          "Recognize primary, latent, and reactivated TB",
+          "Investigate suspected TB including appropriate sampling",
+          "Manage TB with directly observed therapy",
+          "Understand public health implications and contact tracing"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/respiratory/tuberculosis/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Public Health"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "gastrointestinal",
+        "label": "Gastrointestinal System",
+        "type": "specialty",
+        "parent": null,
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand the structure and function of the gastrointestinal system",
+          "Diagnose and manage common GI conditions",
+          "Interpret GI investigations appropriately",
+          "Recognize GI emergencies and initiate management"
+        ],
+        "resources": [
+          "https://teachmeanatomy.info/abdomen/",
+          "https://www.zerotofinals.com/medicine/gastroenterology/"
+        ],
+        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage", "Clinical Examination"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "upper_gi_bleeding",
+        "label": "Upper GI Bleeding",
+        "type": "topic",
+        "parent": "gastrointestinal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Identify causes of upper GI bleeding including peptic ulcers and varices",
+          "Recognize clinical features and assess severity using Glasgow-Blatchford score",
+          "Resuscitate and stabilize patients with active bleeding",
+          "Understand indications for endoscopy",
+          "Manage variceal bleeding appropriately"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/gastroenterology/upper-gi-bleeding/"
+        ],
+        "gmc_outcomes": ["Emergency Management", "Diagnose and Manage", "Prescribing"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "inflammatory_bowel_disease",
+        "label": "Inflammatory Bowel Disease",
+        "type": "topic",
+        "parent": "gastrointestinal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Differentiate between Crohn's disease and ulcerative colitis",
+          "Recognize clinical features and extraintestinal manifestations",
+          "Investigate using appropriate blood tests, imaging, and endoscopy",
+          "Manage according to disease severity and location",
+          "Identify complications requiring surgical intervention"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/gastroenterology/inflammatory-bowel-disease/",
+          "https://www.zerotofinals.com/medicine/gastroenterology/crohns-disease/",
+          "https://www.zerotofinals.com/medicine/gastroenterology/ulcerative-colitis/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Clinical Communication"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "liver_disease",
+        "label": "Chronic Liver Disease",
+        "type": "topic",
+        "parent": "gastrointestinal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Identify common causes of chronic liver disease",
+          "Recognize signs of chronic liver disease and portal hypertension",
+          "Understand Child-Pugh and MELD scoring systems",
+          "Manage complications including ascites, encephalopathy, and varices",
+          "Understand indications for liver transplantation"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/gastroenterology/chronic-liver-disease/",
+          "https://teachmeanatomy.info/abdomen/organs/liver/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Clinical Examination", "Prescribing"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "acute_abdomen",
+        "label": "Acute Abdomen",
+        "type": "topic",
+        "parent": "gastrointestinal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Systematically assess patients with acute abdominal pain",
+          "Identify surgical emergencies requiring urgent referral",
+          "Recognize appendicitis, cholecystitis, bowel obstruction, and perforation",
+          "Investigate appropriately with imaging and laboratory tests",
+          "Provide initial management and resuscitation"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/surgery/acute-abdomen/"
+        ],
+        "gmc_outcomes": ["Emergency Management", "Clinical Examination", "Diagnose and Manage"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "colorectal_cancer",
+        "label": "Colorectal Cancer",
+        "type": "topic",
+        "parent": "gastrointestinal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand risk factors and screening programs for colorectal cancer",
+          "Recognize clinical presentations including red flag symptoms",
+          "Investigate using appropriate imaging and endoscopy",
+          "Understand staging and treatment options",
+          "Communicate sensitively about diagnosis and prognosis"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/gastroenterology/colorectal-cancer/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication", "Health Promotion"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "coeliac_disease",
+        "label": "Coeliac Disease",
+        "type": "topic",
+        "parent": "gastrointestinal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand the pathophysiology of coeliac disease",
+          "Recognize classical and atypical presentations",
+          "Investigate using serology and duodenal biopsy",
+          "Provide dietary advice and long-term management",
+          "Identify associated conditions and complications"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/gastroenterology/coeliac-disease/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Health Promotion", "Clinical Communication"],
+        "exam_weight": 1.5
+      },
+      {
+        "id": "pancreatitis",
+        "label": "Pancreatitis",
+        "type": "topic",
+        "parent": "gastrointestinal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Identify common causes of acute and chronic pancreatitis",
+          "Recognize clinical features and diagnostic criteria",
+          "Assess severity using Glasgow score",
+          "Manage acute pancreatitis including fluid resuscitation",
+          "Recognize complications including pseudocysts and necrosis"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/gastroenterology/acute-pancreatitis/"
+        ],
+        "gmc_outcomes": ["Emergency Management", "Diagnose and Manage"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "neurology",
+        "label": "Neurology",
+        "type": "specialty",
+        "parent": null,
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand neurological anatomy and physiology",
+          "Perform systematic neurological examination",
+          "Diagnose and manage common neurological conditions",
+          "Recognize neurological emergencies"
+        ],
+        "resources": [
+          "https://teachmeanatomy.info/neuroanatomy/",
+          "https://www.zerotofinals.com/medicine/neurology/"
+        ],
+        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage", "Clinical Examination"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "stroke",
+        "label": "Stroke",
+        "type": "topic",
+        "parent": "neurology",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Differentiate between ischaemic stroke, haemorrhagic stroke, and TIA",
+          "Recognize stroke syndromes and localize lesions",
+          "Assess using ROSIER and NIHSS scores",
+          "Manage acute stroke including thrombolysis criteria",
+          "Implement secondary prevention strategies"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/neurology/stroke/"
+        ],
+        "gmc_outcomes": ["Emergency Management", "Diagnose and Manage", "Clinical Examination"],
+        "exam_weight": 3.0
+      },
+      {
+        "id": "epilepsy",
+        "label": "Epilepsy",
+        "type": "topic",
+        "parent": "neurology",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Classify seizures and epilepsy syndromes",
+          "Diagnose epilepsy using clinical history and investigations",
+          "Manage epilepsy with antiepileptic medications",
+          "Recognize and manage status epilepticus",
+          "Counsel patients on driving and pregnancy"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/neurology/epilepsy/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Clinical Communication"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "headache",
+        "label": "Headache",
+        "type": "topic",
+        "parent": "neurology",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Classify primary and secondary headaches",
+          "Recognize red flags requiring urgent investigation",
+          "Diagnose tension headache, migraine, and cluster headache",
+          "Manage headaches appropriately including prophylaxis",
+          "Identify when imaging is indicated"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/neurology/headache/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication", "Prescribing"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "parkinsons_disease",
+        "label": "Parkinson's Disease",
+        "type": "topic",
+        "parent": "neurology",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand the pathophysiology of Parkinson's disease",
+          "Recognize cardinal features and differential diagnoses",
+          "Manage with dopaminergic medications",
+          "Identify motor and non-motor complications",
+          "Understand multidisciplinary management"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/neurology/parkinsons-disease/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Clinical Examination"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "multiple_sclerosis",
+        "label": "Multiple Sclerosis",
+        "type": "topic",
+        "parent": "neurology",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand the pathophysiology and classification of MS",
+          "Recognize common presentations including optic neuritis",
+          "Diagnose using McDonald criteria with MRI and CSF analysis",
+          "Manage relapses and disease-modifying treatments",
+          "Provide holistic and multidisciplinary care"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/neurology/multiple-sclerosis/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication", "Prescribing"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "meningitis",
+        "label": "Meningitis and Encephalitis",
+        "type": "topic",
+        "parent": "neurology",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Differentiate between bacterial, viral, and other causes of meningitis",
+          "Recognize clinical features and perform lumbar puncture safely",
+          "Interpret CSF results",
+          "Manage bacterial meningitis with urgent antibiotics",
+          "Understand vaccination and prophylaxis"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/neurology/meningitis/"
+        ],
+        "gmc_outcomes": ["Emergency Management", "Diagnose and Manage", "Prescribing"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "motor_neurone_disease",
+        "label": "Motor Neurone Disease",
+        "type": "topic",
+        "parent": "neurology",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Recognize upper and lower motor neurone signs",
+          "Diagnose MND and differentiate from mimics",
+          "Understand prognosis and disease progression",
+          "Provide palliative and multidisciplinary care",
+          "Discuss end-of-life decisions sensitively"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/neurology/motor-neurone-disease/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication", "End of Life Care"],
+        "exam_weight": 1.5
+      },
+      {
+        "id": "renal",
+        "label": "Renal Medicine",
+        "type": "specialty",
+        "parent": null,
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand renal anatomy and physiology",
+          "Diagnose and manage common renal conditions",
+          "Interpret renal function tests and urinalysis",
+          "Recognize acute kidney injury and chronic kidney disease"
+        ],
+        "resources": [
+          "https://teachmeanatomy.info/abdomen/kidneys/",
+          "https://www.zerotofinals.com/medicine/renal/"
+        ],
+        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage", "Clinical Examination"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "acute_kidney_injury",
+        "label": "Acute Kidney Injury",
+        "type": "topic",
+        "parent": "renal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Define AKI using KDIGO criteria",
+          "Classify AKI into pre-renal, renal, and post-renal causes",
+          "Investigate and identify the underlying cause",
+          "Manage AKI including fluid balance and medication review",
+          "Recognize indications for renal replacement therapy"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/renal/acute-kidney-injury/"
+        ],
+        "gmc_outcomes": ["Emergency Management", "Diagnose and Manage", "Prescribing"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "chronic_kidney_disease",
+        "label": "Chronic Kidney Disease",
+        "type": "topic",
+        "parent": "renal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Classify CKD using eGFR and albuminuria",
+          "Identify causes and risk factors for CKD",
+          "Manage to slow progression and prevent complications",
+          "Recognize complications including anaemia and bone disease",
+          "Understand indications for dialysis and transplantation"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/renal/chronic-kidney-disease/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "glomerulonephritis",
+        "label": "Glomerulonephritis",
+        "type": "topic",
+        "parent": "renal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Classify glomerulonephritis by presentation and histology",
+          "Recognize nephritic and nephrotic syndromes",
+          "Investigate with urinalysis, serology, and renal biopsy",
+          "Manage with immunosuppression where appropriate",
+          "Identify rapidly progressive glomerulonephritis"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/renal/glomerulonephritis/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing"],
+        "exam_weight": 1.5
+      },
+      {
+        "id": "urinary_tract_infection",
+        "label": "Urinary Tract Infection",
+        "type": "topic",
+        "parent": "renal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Differentiate between lower and upper UTIs",
+          "Recognize risk factors and typical organisms",
+          "Investigate with urinalysis and culture",
+          "Prescribe appropriate antibiotics",
+          "Identify complications including urosepsis"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/renal/urinary-tract-infection/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "electrolyte_disorders",
+        "label": "Electrolyte Disorders",
+        "type": "topic",
+        "parent": "renal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand normal electrolyte homeostasis",
+          "Recognize and investigate hyponatraemia and hypernatraemia",
+          "Manage hyperkalaemia as a medical emergency",
+          "Identify and treat hypocalcaemia and hypercalcaemia",
+          "Understand acid-base disorders"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/renal/electrolyte-imbalance/"
+        ],
+        "gmc_outcomes": ["Emergency Management", "Diagnose and Manage", "Prescribing"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "endocrine",
+        "label": "Endocrine System",
+        "type": "specialty",
+        "parent": null,
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand endocrine anatomy and hormone regulation",
+          "Diagnose and manage common endocrine conditions",
+          "Interpret hormone assays appropriately",
+          "Recognize endocrine emergencies"
+        ],
+        "resources": [
+          "https://teachmeanatomy.info/the-basics/systems/endocrine-system/",
+          "https://www.zerotofinals.com/medicine/endocrinology/"
+        ],
+        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "diabetes_mellitus",
+        "label": "Diabetes Mellitus",
+        "type": "topic",
+        "parent": "endocrine",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Differentiate between type 1 and type 2 diabetes",
+          "Diagnose diabetes using appropriate criteria",
+          "Manage type 2 diabetes according to NICE guidelines",
+          "Recognize acute complications including DKA and HHS",
+          "Screen for and manage chronic complications"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/endocrinology/diabetes-mellitus/",
+          "https://www.zerotofinals.com/medicine/endocrinology/diabetic-ketoacidosis/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
+        "exam_weight": 3.0
+      },
+      {
+        "id": "thyroid_disease",
+        "label": "Thyroid Disease",
+        "type": "topic",
+        "parent": "endocrine",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand thyroid hormone regulation",
+          "Recognize hyperthyroidism and hypothyroidism",
+          "Investigate with thyroid function tests and imaging",
+          "Manage thyroid disorders medically and surgically",
+          "Recognize thyroid cancer and thyrotoxic crisis"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/endocrinology/thyroid-disease/",
+          "https://www.zerotofinals.com/medicine/endocrinology/hyperthyroidism/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "cushings_addisons",
+        "label": "Adrenal Disorders",
+        "type": "topic",
+        "parent": "endocrine",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand the hypothalamic-pituitary-adrenal axis",
+          "Recognize Cushing's syndrome and investigate causes",
+          "Diagnose and manage Addison's disease",
+          "Recognize and treat adrenal crisis as an emergency",
+          "Understand steroid replacement therapy"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/endocrinology/cushings-syndrome/",
+          "https://www.zerotofinals.com/medicine/endocrinology/addisons-disease/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Emergency Management", "Prescribing"],
+        "exam_weight": 1.5
+      },
+      {
+        "id": "hypopituitarism",
+        "label": "Pituitary Disorders",
+        "type": "topic",
+        "parent": "endocrine",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand pituitary hormone regulation",
+          "Recognize hypopituitarism and hormone deficiencies",
+          "Diagnose and manage acromegaly and prolactinoma",
+          "Investigate pituitary masses with imaging",
+          "Understand hormone replacement therapy"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/endocrinology/pituitary-disorders/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing"],
+        "exam_weight": 1.5
+      },
+      {
+        "id": "calcium_disorders",
+        "label": "Calcium and Bone Metabolism",
+        "type": "topic",
+        "parent": "endocrine",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand calcium homeostasis and vitamin D metabolism",
+          "Diagnose and manage hypercalcaemia including malignancy",
+          "Recognize hypocalcaemia and its causes",
+          "Understand parathyroid disorders",
+          "Manage osteoporosis and fracture prevention"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/endocrinology/calcium-disorders/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
+        "exam_weight": 1.5
+      },
+      {
+        "id": "musculoskeletal",
+        "label": "Musculoskeletal System",
+        "type": "specialty",
+        "parent": null,
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand musculoskeletal anatomy",
+          "Perform systematic joint examination",
+          "Diagnose and manage common rheumatological conditions",
+          "Interpret joint X-rays and inflammatory markers"
+        ],
+        "resources": [
+          "https://teachmeanatomy.info/the-basics/systems/musculoskeletal-system/",
+          "https://www.zerotofinals.com/medicine/rheumatology/"
+        ],
+        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage", "Clinical Examination"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "rheumatoid_arthritis",
+        "label": "Rheumatoid Arthritis",
+        "type": "topic",
+        "parent": "musculoskeletal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand the pathophysiology of RA",
+          "Recognize clinical features and extra-articular manifestations",
+          "Investigate with antibodies and imaging",
+          "Manage with DMARDs and biologics",
+          "Monitor for complications and drug side effects"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/rheumatology/rheumatoid-arthritis/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Clinical Examination"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "osteoarthritis",
+        "label": "Osteoarthritis",
+        "type": "topic",
+        "parent": "musculoskeletal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand the pathophysiology of osteoarthritis",
+          "Recognize clinical features and X-ray changes",
+          "Differentiate from inflammatory arthritis",
+          "Manage conservatively and with analgesia",
+          "Understand indications for joint replacement"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/rheumatology/osteoarthritis/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Clinical Examination"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "gout",
+        "label": "Gout and Crystal Arthropathy",
+        "type": "topic",
+        "parent": "musculoskeletal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand uric acid metabolism and crystal formation",
+          "Recognize acute gout and pseudogout",
+          "Investigate with joint aspiration and microscopy",
+          "Manage acute attacks and provide prophylaxis",
+          "Counsel on lifestyle modifications"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/rheumatology/gout/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
+        "exam_weight": 1.5
+      },
+      {
+        "id": "sle",
+        "label": "Systemic Lupus Erythematosus",
+        "type": "topic",
+        "parent": "musculoskeletal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand the pathophysiology of SLE",
+          "Recognize multisystem features and apply diagnostic criteria",
+          "Investigate with autoantibodies and complement levels",
+          "Manage with immunosuppression",
+          "Recognize complications including lupus nephritis"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/rheumatology/systemic-lupus-erythematosus/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing"],
+        "exam_weight": 1.5
+      },
+      {
+        "id": "back_pain",
+        "label": "Back Pain and Spinal Disorders",
+        "type": "topic",
+        "parent": "musculoskeletal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Assess patients with back pain systematically",
+          "Identify red flags requiring urgent investigation",
+          "Recognize cauda equina syndrome",
+          "Differentiate mechanical from inflammatory back pain",
+          "Manage conservatively and refer appropriately"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/rheumatology/back-pain/"
+        ],
+        "gmc_outcomes": ["Clinical Examination", "Emergency Management", "Diagnose and Manage"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "vasculitis",
+        "label": "Vasculitis",
+        "type": "topic",
+        "parent": "musculoskeletal",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Classify vasculitis by vessel size",
+          "Recognize presentations of common vasculitides",
+          "Investigate with ANCA and tissue biopsy",
+          "Manage with immunosuppression urgently",
+          "Recognize giant cell arteritis as an emergency"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/rheumatology/vasculitis/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Emergency Management", "Prescribing"],
+        "exam_weight": 1.5
+      },
+      {
+        "id": "haematology",
+        "label": "Haematology",
+        "type": "specialty",
+        "parent": null,
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand blood cell production and function",
+          "Diagnose and manage haematological conditions",
+          "Interpret full blood counts and blood films",
+          "Recognize haematological emergencies"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/haematology/"
+        ],
+        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "anaemia",
+        "label": "Anaemia",
+        "type": "topic",
+        "parent": "haematology",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Classify anaemia by MCV and underlying cause",
+          "Investigate with appropriate blood tests",
+          "Manage iron deficiency, B12, and folate deficiency",
+          "Recognize haemolytic anaemia",
+          "Understand when to transfuse"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/haematology/anaemia/",
+          "https://www.zerotofinals.com/medicine/haematology/iron-deficiency-anaemia/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "leukaemia",
+        "label": "Leukaemia",
+        "type": "topic",
+        "parent": "haematology",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Classify leukaemia as acute or chronic, myeloid or lymphoid",
+          "Recognize clinical presentations",
+          "Investigate with blood film and bone marrow",
+          "Understand treatment principles including chemotherapy",
+          "Recognize complications including tumour lysis syndrome"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/haematology/leukaemia/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication"],
+        "exam_weight": 1.5
+      },
+      {
+        "id": "lymphoma",
+        "label": "Lymphoma",
+        "type": "topic",
+        "parent": "haematology",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Differentiate between Hodgkin and non-Hodgkin lymphoma",
+          "Recognize B symptoms and lymphadenopathy",
+          "Investigate with imaging and lymph node biopsy",
+          "Understand staging systems",
+          "Explain treatment with chemotherapy and radiotherapy"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/haematology/lymphoma/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication"],
+        "exam_weight": 1.5
+      },
+      {
+        "id": "coagulopathy",
+        "label": "Coagulation Disorders",
+        "type": "topic",
+        "parent": "haematology",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand the coagulation cascade",
+          "Recognize inherited bleeding disorders including haemophilia",
+          "Investigate with coagulation screen",
+          "Manage anticoagulation and reversal",
+          "Recognize DIC and thrombotic thrombocytopenic purpura"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/haematology/coagulation-disorders/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Emergency Management", "Prescribing"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "infectious_diseases",
+        "label": "Infectious Diseases",
+        "type": "specialty",
+        "parent": null,
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand microbiology and immunology principles",
+          "Diagnose and manage common infections",
+          "Prescribe antibiotics appropriately",
+          "Recognize sepsis and initiate management"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/infectious-diseases/"
+        ],
+        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage", "Prescribing"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "sepsis",
+        "label": "Sepsis and Septic Shock",
+        "type": "topic",
+        "parent": "infectious_diseases",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Recognize sepsis using clinical criteria",
+          "Understand the pathophysiology of septic shock",
+          "Implement the sepsis six bundle",
+          "Prescribe broad-spectrum antibiotics urgently",
+          "Provide critical care support"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/infectious-diseases/sepsis/"
+        ],
+        "gmc_outcomes": ["Emergency Management", "Diagnose and Manage", "Prescribing"],
+        "exam_weight": 3.0
+      },
+      {
+        "id": "hiv",
+        "label": "HIV and AIDS",
+        "type": "topic",
+        "parent": "infectious_diseases",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand HIV transmission and pathophysiology",
+          "Recognize acute seroconversion and AIDS-defining illnesses",
+          "Investigate with HIV testing and CD4 counts",
+          "Manage with antiretroviral therapy",
+          "Understand prevention including PrEP and PEP"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/infectious-diseases/hiv/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Public Health"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "malaria",
+        "label": "Malaria and Travel Medicine",
+        "type": "topic",
+        "parent": "infectious_diseases",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand malaria transmission and life cycle",
+          "Recognize clinical features and complications",
+          "Investigate with blood films and rapid tests",
+          "Manage according to species and severity",
+          "Provide travel advice and prophylaxis"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/infectious-diseases/malaria/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
+        "exam_weight": 1.5
+      },
+      {
+        "id": "skin_infections",
+        "label": "Skin and Soft Tissue Infections",
+        "type": "topic",
+        "parent": "infectious_diseases",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Recognize cellulitis and differentiate from DVT",
+          "Diagnose necrotizing fasciitis as a surgical emergency",
+          "Manage with appropriate antibiotics",
+          "Recognize MRSA and understand infection control",
+          "Identify diabetic foot infections"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/infectious-diseases/cellulitis/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Emergency Management", "Prescribing"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "viral_hepatitis",
+        "label": "Viral Hepatitis",
+        "type": "topic",
+        "parent": "infectious_diseases",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Differentiate between hepatitis A, B, C, D, and E",
+          "Understand transmission routes and risk factors",
+          "Investigate with serology and viral loads",
+          "Manage chronic hepatitis B and C",
+          "Understand vaccination and prevention"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/medicine/infectious-diseases/viral-hepatitis/"
+        ],
+        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Public Health"],
+        "exam_weight": 1.5
+      },
+      {
+        "id": "pharmacology",
+        "label": "Clinical Pharmacology",
+        "type": "specialty",
+        "parent": null,
+        "prerequisites": [],
+        "learning_objectives": [
+          "Understand pharmacokinetics and pharmacodynamics",
+          "Prescribe safely and effectively",
+          "Recognize and manage adverse drug reactions",
+          "Understand drug interactions"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/pharmacology/"
+        ],
+        "gmc_outcomes": ["Prescribing", "Patient Safety"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "prescribing_principles",
+        "label": "Principles of Prescribing",
+        "type": "topic",
+        "parent": "pharmacology",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Write legal and legible prescriptions",
+          "Calculate drug doses appropriately",
+          "Understand pharmacokinetics in renal and hepatic impairment",
+          "Recognize high-risk medications requiring monitoring",
+          "Understand controlled drug regulations"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/pharmacology/prescribing/"
+        ],
+        "gmc_outcomes": ["Prescribing", "Patient Safety"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "adverse_drug_reactions",
+        "label": "Adverse Drug Reactions",
+        "type": "topic",
+        "parent": "pharmacology",
+        "prerequisites": ["prescribing_principles"],
+        "learning_objectives": [
+          "Classify adverse drug reactions",
+          "Recognize common and serious ADRs",
+          "Report ADRs via yellow card scheme",
+          "Manage drug allergies and anaphylaxis",
+          "Understand drug interactions"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/pharmacology/adverse-drug-reactions/"
+        ],
+        "gmc_outcomes": ["Prescribing", "Patient Safety", "Emergency Management"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "analgesia",
+        "label": "Analgesia and Pain Management",
+        "type": "topic",
+        "parent": "pharmacology",
+        "prerequisites": ["prescribing_principles"],
+        "learning_objectives": [
+          "Understand the WHO analgesic ladder",
+          "Prescribe opioids safely including dose conversions",
+          "Manage acute and chronic pain",
+          "Recognize opioid toxicity and reversal",
+          "Understand neuropathic pain management"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/pharmacology/analgesia/"
+        ],
+        "gmc_outcomes": ["Prescribing", "Patient Safety"],
+        "exam_weight": 2.0
+      },
+      {
+        "id": "antimicrobials",
+        "label": "Antimicrobial Prescribing",
+        "type": "topic",
+        "parent": "pharmacology",
+        "prerequisites": ["prescribing_principles"],
+        "learning_objectives": [
+          "Understand antimicrobial mechanisms and resistance",
+          "Practice antimicrobial stewardship",
+          "Select appropriate empirical therapy",
+          "Recognize Clostridium difficile infection",
+          "Understand allergy and cross-reactivity"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/pharmacology/antibiotics/"
+        ],
+        "gmc_outcomes": ["Prescribing", "Patient Safety", "Public Health"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "emergency_drugs",
+        "label": "Emergency Drugs",
+        "type": "topic",
+        "parent": "pharmacology",
+        "prerequisites": ["prescribing_principles"],
+        "learning_objectives": [
+          "Know the drugs used in cardiac arrest",
+          "Understand adrenaline dosing in anaphylaxis",
+          "Prescribe naloxone for opioid overdose",
+          "Manage benzodiazepine overdose with flumazenil",
+          "Understand emergency reversal agents"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/pharmacology/emergency-drugs/"
+        ],
+        "gmc_outcomes": ["Emergency Management", "Prescribing", "Patient Safety"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "clinical_skills",
+        "label": "Clinical Skills",
+        "type": "specialty",
+        "parent": null,
+        "prerequisites": [],
+        "learning_objectives": [
+          "Perform systematic clinical examinations",
+          "Take comprehensive patient histories",
+          "Communicate effectively with patients and colleagues",
+          "Demonstrate practical procedures safely"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/clinical-skills/"
+        ],
+        "gmc_outcomes": ["Clinical Examination", "Clinical Communication", "Clinical Skills"],
+        "exam_weight": 3.0
+      },
+      {
+        "id": "history_taking",
+        "label": "History Taking",
+        "type": "topic",
+        "parent": "clinical_skills",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Take a systematic history using open and closed questions",
+          "Explore presenting complaints thoroughly",
+          "Conduct systems reviews",
+          "Take social, family, and drug histories",
+          "Summarize and present findings clearly"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/clinical-skills/history-taking/"
+        ],
+        "gmc_outcomes": ["Clinical Communication", "Patient-Centered Care"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "clinical_examination",
+        "label": "Clinical Examination Skills",
+        "type": "topic",
+        "parent": "clinical_skills",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Perform cardiovascular, respiratory, and abdominal examinations",
+          "Conduct neurological and musculoskeletal examinations",
+          "Examine cranial nerves systematically",
+          "Identify and interpret clinical signs",
+          "Present examination findings professionally"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/clinical-skills/examination/"
+        ],
+        "gmc_outcomes": ["Clinical Examination", "Clinical Communication"],
+        "exam_weight": 3.0
+      },
+      {
+        "id": "practical_procedures",
+        "label": "Practical Procedures",
+        "type": "topic",
+        "parent": "clinical_skills",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Perform venepuncture and cannulation safely",
+          "Take arterial blood gases and interpret results",
+          "Insert urinary catheters with aseptic technique",
+          "Demonstrate NG tube insertion",
+          "Understand consent and complications"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/clinical-skills/procedures/"
+        ],
+        "gmc_outcomes": ["Clinical Skills", "Patient Safety", "Infection Control"],
+        "exam_weight": 2.5
+      },
+      {
+        "id": "communication_skills",
+        "label": "Communication Skills",
+        "type": "topic",
+        "parent": "clinical_skills",
+        "prerequisites": [],
+        "learning_objectives": [
+          "Build rapport and establish trust with patients",
+          "Break bad news sensitively using structured frameworks",
+          "Obtain informed consent",
+          "Communicate with multidisciplinary teams",
+          "Handle difficult conversations professionally"
+        ],
+        "resources": [
+          "https://www.zerotofinals.com/clinical-skills/communication/"
+        ],
+        "gmc_outcomes": ["Clinical Communication", "Breaking Bad News", "Patient-Centered Care"],
+        "exam_weight": 2.5
+      }
+    ]
+  }
+}

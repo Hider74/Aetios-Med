@@ -1,0 +1,255 @@
+You are creating a personalized study plan for a UK medical student. Generate a comprehensive, realistic plan based on their data and goals.
+
+## Study Plan Parameters
+
+Planning Horizon: {weeks} weeks
+Exam: {exam_name} ({exam_date})
+Weak Topics: {weak_topics}
+Decaying Topics: {decaying_topics}
+Topics Covered in Exam: {exam_topics}
+Current Confidence Levels: {confidence_summary}
+Available Study Hours per Week: {weekly_hours}
+
+## Study Plan Principles
+
+### 1. Spaced Repetition Integration
+- Schedule review sessions based on forgetting curve
+- Initial learning → Review after 1 day → 3 days → 1 week → 2 weeks
+- Prioritize topics approaching their optimal review window
+- Use decaying topics list to prevent knowledge loss
+
+### 2. Prerequisite-First Approach
+- Never schedule advanced topics before their prerequisites
+- Use knowledge graph to respect dependency chains
+- Build solid foundations before moving to complex material
+
+### 3. Balanced Coverage
+- Mix of different subjects each day to maintain variety
+- Avoid marathon sessions on single topics
+- Include breaks and consolidation time
+- Balance passive learning (reading) with active practice (questions/cases)
+
+### 4. Exam-Driven Prioritization
+- High-weight exam topics get more study time
+- Address weak areas in exam topics first
+- Ensure all exam topics covered at least 1 week before exam
+- Leave final week for review and practice papers
+
+### 5. Active Learning Methods
+- 40% active recall (flashcards, practice questions)
+- 30% case-based learning and clinical scenarios
+- 20% reading/watching lectures
+- 10% note-taking and summary creation
+
+### 6. Realistic Time Allocation
+- Account for clinical placements and lectures
+- Buffer time for unexpected commitments
+- Avoid overloading (max 4-5 hours focused study per day)
+- Include rest days to prevent burnout
+
+## Daily Study Block Structure
+
+Each study session should follow this pattern:
+
+**Morning Block (2-3 hours):**
+- Start with Anki reviews (spaced repetition)
+- Focus on challenging/weak topics when mentally fresh
+- Active problem-solving and clinical cases
+
+**Afternoon Block (2-3 hours):**
+- Content review and new material
+- Video lectures or textbook reading
+- Note-taking and concept mapping
+
+**Evening Block (1-2 hours):**
+- Practice questions and quizzes
+- Review mistakes and weak areas
+- Light revision of day's material
+
+## Study Techniques to Recommend
+
+### For Weak Topics (Confidence < 0.3)
+1. **Foundation Building**: Start with basic resources (Crash Course, Oxford Handbook)
+2. **Active Recall**: Create Anki cards from key facts
+3. **Teach Back**: Explain concepts aloud or to study buddy
+4. **Frequent Testing**: Daily quizzes to identify gaps
+5. **Spaced Review**: Review daily for first week, then space out
+
+### For Medium Topics (Confidence 0.3-0.7)
+1. **Application Practice**: Clinical cases and scenarios
+2. **Past Papers**: Practice exam-style questions
+3. **Integration**: Connect with related topics
+4. **Peer Discussion**: Group study sessions
+5. **Regular Review**: Weekly check-ins
+
+### For Strong Topics (Confidence > 0.7)
+1. **Maintenance**: Spaced repetition only
+2. **High-Level Practice**: Complex cases and differentials
+3. **Teaching**: Tutor peers to reinforce knowledge
+4. **Quick Reviews**: Brief weekly refreshers
+
+## UK-Specific Resources to Include
+
+### Core Resources
+- **Oxford Handbook of Clinical Medicine**: Quick reference
+- **Crash Course**: Foundation building
+- **Geeky Medics**: Clinical skills and OSCEs
+- **Pastest/Passmedicine**: Question banks
+- **NICE Guidelines**: Evidence-based management
+- **BNF**: Pharmacology reference
+
+### Topic-Specific
+- **Anatomy**: Complete Anatomy app, Acland's videos
+- **Pharmacology**: BNF app, Rang & Dale
+- **Pathology**: Robbins, PathologyOutlines
+- **Clinical Medicine**: Kumar & Clark, Davidson's
+- **Surgery**: Bailey & Love's, Surgical Recall
+
+## Study Plan Format
+
+### Weekly Overview
+```
+Week X (Date Range): [Focus Theme]
+Priority Topics: [Top 3-5 topics this week]
+Review Topics: [Spaced repetition items]
+Total Study Hours: [Expected hours]
+Milestones: [What should be achieved by end of week]
+```
+
+### Daily Breakdown
+```
+Day X (Date): [Daily Theme]
+
+Morning Session (Time):
+- Topic 1: [Activity] (Duration)
+- Topic 2: [Activity] (Duration)
+- Resources: [Specific chapters/videos]
+
+Afternoon Session (Time):
+- Topic 3: [Activity] (Duration)
+- Resources: [Specific resources]
+
+Evening Session (Time):
+- Anki reviews
+- Practice questions (Topic X)
+- Review day's material
+
+Daily Goals:
+- [ ] Complete [specific objective]
+- [ ] Review [specific topic]
+- [ ] Practice [specific skill]
+```
+
+## Integration Points
+
+### Anki Reviews
+- Schedule 20-30 minutes daily for reviews
+- Front-load new cards earlier in the plan
+- Mature cards require less time as plan progresses
+
+### Practice Questions
+- Start with easier questions early in plan
+- Progress to exam-style SBAs/EMQs
+- Include timed practice papers in final 2 weeks
+- Review all incorrect answers and understand why
+
+### Clinical Correlation
+- Relate topics to recent clinical placements
+- Use real cases encountered
+- Practice presenting cases
+- OSCE preparation if applicable
+
+## Flexibility and Adaptation
+
+### Built-in Flexibility
+- Mark some sessions as "flexible" for catch-up
+- Include buffer days before exam
+- Allow topic swapping if prerequisites prove challenging
+
+### Progress Tracking
+- Daily confidence self-assessment
+- Weekly quiz to gauge progress
+- Adjust plan if falling behind
+- Celebrate milestones
+
+### Warning Signs to Address
+- Topics taking longer than allocated time
+- Consistent poor quiz performance
+- Burnout or decreased motivation
+- External commitments increasing
+
+## Output Format
+
+Generate a complete study plan in this structure:
+
+```json
+{
+  "plan_id": "unique_id",
+  "created_date": "ISO_date",
+  "exam_info": {
+    "name": "exam_name",
+    "date": "exam_date",
+    "days_until_exam": number
+  },
+  "summary": {
+    "total_weeks": number,
+    "total_topics": number,
+    "weak_topics_count": number,
+    "priority_topics": ["topic1", "topic2"],
+    "expected_study_hours": number
+  },
+  "weekly_plan": [
+    {
+      "week_number": 1,
+      "dates": "start_date - end_date",
+      "theme": "Week theme",
+      "priority_topics": ["topic1", "topic2"],
+      "review_topics": ["topic3", "topic4"],
+      "expected_hours": number,
+      "milestones": ["milestone1", "milestone2"],
+      "daily_schedule": [
+        {
+          "day": "Monday",
+          "date": "date",
+          "sessions": [
+            {
+              "time": "Morning",
+              "duration_minutes": number,
+              "topics": ["topic"],
+              "activities": ["activity1", "activity2"],
+              "resources": ["resource1", "resource2"],
+              "learning_method": "active_recall|reading|practice"
+            }
+          ],
+          "daily_goals": ["goal1", "goal2"],
+          "anki_new_cards": number,
+          "practice_questions": number
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "textbooks": ["book1", "book2"],
+    "videos": ["video1", "video2"],
+    "question_banks": ["qb1", "qb2"],
+    "guidelines": ["NICE guideline", "BNF section"]
+  },
+  "tips": [
+    "Study tip 1",
+    "Study tip 2"
+  ]
+}
+```
+
+## Now Generate the Study Plan
+
+Based on the parameters above, create a comprehensive, realistic, and personalized study plan that:
+1. Addresses all weak topics with adequate time
+2. Incorporates spaced repetition for decaying topics
+3. Covers all exam topics with buffer time
+4. Respects prerequisites and topic dependencies
+5. Includes varied, active learning methods
+6. Is achievable within time constraints
+7. Includes UK-specific resources and guidelines
+
+Be specific, be realistic, and make it actionable.
