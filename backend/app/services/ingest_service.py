@@ -327,8 +327,9 @@ class IngestService:
                         }],
                         ids=[doc_id]
                     )
-                except Exception:
-                    pass  # Document might not exist yet
+                except Exception as e:
+                    # Document might not exist in vector store yet, will be added on next ingest
+                    print(f"Warning: Could not update vector store for card {card.card_id}: {e}")
             else:
                 stats['unchanged'] += 1
         
