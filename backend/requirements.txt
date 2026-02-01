@@ -3,10 +3,10 @@ fastapi==0.109.2
 uvicorn[standard]==0.27.1
 pydantic==2.6.1
 pydantic-settings==2.1.0
-python-multipart==0.0.9
+python-multipart==0.0.22
 
 # LLM Engine
-llama-cpp-python==0.2.55
+llama-cpp-python==0.2.72
 
 # Vector Store & Embeddings
 chromadb==0.4.22
@@ -29,7 +29,7 @@ pdfplumber==0.10.3
 beautifulsoup4==4.12.3
 
 # Encryption & Security
-cryptography==42.0.2
+cryptography==42.0.4
 keyring==24.3.0
 
 # Model Download
