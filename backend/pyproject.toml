@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aetios-med-backend"
+version = "0.1.0"
+description = "Backend for Aetios-Med Medical Study Assistant"
+authors = [{name = "Hider74"}]
+license = {text = "MIT"}
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi==0.109.2",
+    "uvicorn[standard]==0.27.1",
+    "pydantic==2.6.1",
+    "pydantic-settings==2.1.0",
+    "python-multipart==0.0.9",
+    "llama-cpp-python==0.2.55",
+    "chromadb==0.4.22",
+    "sentence-transformers==2.3.1",
+    "networkx==3.2.1",
+    "numpy==1.26.4",
+    "pandas==2.2.0",
+    "sqlalchemy==2.0.25",
+    "aiosqlite==0.19.0",
+    "pypdf2==3.0.1",
+    "pdfplumber==0.10.3",
+    "beautifulsoup4==4.12.3",
+    "cryptography==42.0.2",
+    "keyring==24.3.0",
+    "huggingface-hub==0.20.3",
+    "tqdm==4.66.1",
+    "icalendar==5.0.11",
+    "watchdog==4.0.0",
+    "python-dotenv==1.0.1",
+    "httpx==0.26.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.0.0",
+    "pytest-asyncio==0.23.4",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+asyncio_mode = "auto"

@@ -1,0 +1,63 @@
+{
+  "name": "aetios-med",
+  "version": "0.1.0",
+  "description": "Offline-first Medical Study Assistant with Living Knowledge Graph",
+  "author": "Hider74",
+  "license": "MIT",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "cd frontend && vite",
+    "dev:backend": "cd backend && uvicorn app.main:app --reload --port 8741",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && vite build",
+    "build:backend": "cd backend && pyinstaller --onefile run.py",
+    "electron:dev": "electron .",
+    "electron:build": "electron-builder",
+    "start": "electron .",
+    "lint": "eslint frontend/src --ext .ts,.tsx",
+    "test": "vitest",
+    "test:backend": "cd backend && pytest"
+  },
+  "dependencies": {
+    "electron": "^29.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "electron-builder": "^24.9.1",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.0"
+  },
+  "build": {
+    "appId": "com.aetios.med",
+    "productName": "Aetios-Med",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      "frontend/dist/**/*",
+      "backend/dist/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.education",
+      "target": ["dmg", "zip"],
+      "extraResources": [
+        {
+          "from": "backend/dist/run",
+          "to": "backend/run"
+        }
+      ]
+    },
+    "win": {
+      "target": ["nsis", "portable"],
+      "extraResources": [
+        {
+          "from": "backend/dist/run.exe",
+          "to": "backend/run.exe"
+        }
+      ]
+    }
+  }
+}

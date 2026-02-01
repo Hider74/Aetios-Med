@@ -1,0 +1,1 @@
+"""Aetios-Med Backend Application"""
