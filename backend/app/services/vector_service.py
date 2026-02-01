@@ -280,3 +280,12 @@ class VectorService:
             'count': self.collection.count(),
             'metadata': self.collection.metadata
         }
+    
+    async def close(self) -> None:
+        """Close connections and cleanup resources."""
+        # ChromaDB doesn't require explicit cleanup
+        # Just mark as uninitialized
+        self.is_initialized = False
+        self.client = None
+        self.collection = None
+        self.embedder = None
