@@ -1,0 +1,20 @@
+name: Build
+on:
+  push:
+    tags: ['v*']
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: npm install && cd frontend && npm install
+      - run: cd backend && pip install -r requirements.txt
