@@ -5,7 +5,6 @@ Handles the main agent loop with tool calling and response generation.
 from typing import List, Dict, Any, Optional, AsyncIterator
 import json
 import logging
-import re
 from datetime import datetime
 
 from .tools import TOOL_DEFINITIONS, execute_tool
@@ -106,7 +105,7 @@ class AgentOrchestrator:
             LLM response in OpenAI-compatible format
         """
         if not self.llm_service.is_loaded:
-            raise RuntimeError("LLM model not loaded. Call llm_service.load_model() first.")
+            raise RuntimeError("LLM model not loaded. Call await llm_service.load_model() first.")
         
         # Format tools as part of system prompt
         tools_prompt = self._format_tools_for_prompt()
@@ -205,25 +204,49 @@ class AgentOrchestrator:
                 tool_name = call_str[:paren_idx].strip()
                 
                 # Extract JSON arguments (between parentheses)
-                # Find matching closing paren by counting braces
-                depth = 0
-                start_idx = paren_idx + 1
+                # Use JSON-aware parsing to handle nested structures and strings with special chars
+                args_start = paren_idx + 1
+                
+                # Simple approach: find the JSON object/dict by looking for balanced braces
+                # This works because our format requires JSON args wrapped in parens
+                brace_count = 0
+                in_string = False
+                escape_next = False
                 end_idx = -1
                 
-                for i in range(paren_idx + 1, len(call_str)):
-                    if call_str[i] == '(':
-                        depth += 1
-                    elif call_str[i] == ')':
-                        if depth == 0:
+                for i in range(args_start, len(call_str)):
+                    char = call_str[i]
+                    
+                    # Handle escape sequences in strings
+                    if escape_next:
+                        escape_next = False
+                        continue
+                    
+                    if char == '\\':
+                        escape_next = True
+                        continue
+                    
+                    # Track string boundaries
+                    if char == '"':
+                        in_string = not in_string
+                        continue
+                    
+                    # Only count braces/parens outside of strings
+                    if not in_string:
+                        if char == '{':
+                            brace_count += 1
+                        elif char == '}':
+                            brace_count -= 1
+                        elif char == ')' and brace_count == 0:
+                            # Found the closing paren for the function call
                             end_idx = i
                             break
-                        depth -= 1
                 
                 if end_idx == -1:
                     logger.warning(f"Invalid tool call format (unmatched parentheses): {line}")
                     continue
                 
-                args_str = call_str[start_idx:end_idx].strip()
+                args_str = call_str[args_start:end_idx].strip()
                 
                 # Parse JSON arguments
                 if args_str:
