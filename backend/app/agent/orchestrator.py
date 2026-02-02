@@ -5,6 +5,7 @@ Handles the main agent loop with tool calling and response generation.
 from typing import List, Dict, Any, Optional, AsyncIterator
 import json
 import logging
+import re
 from datetime import datetime
 
 from .tools import TOOL_DEFINITIONS, execute_tool
@@ -21,8 +22,8 @@ class AgentOrchestrator:
     
     def __init__(
         self,
-        api_key: Optional[str] = None,
-        model: str = "gpt-4-turbo-preview",
+        llm_service,
+        model: str = "llama-3",
         max_iterations: int = 10,
         temperature: float = 0.7
     ):
@@ -30,15 +31,15 @@ class AgentOrchestrator:
         Initialize the agent orchestrator.
         
         Args:
-            api_key: OpenAI API key (uses env var if None)
-            model: Model to use for generation
+            llm_service: LLMService instance for local inference
+            model: Model identifier
             max_iterations: Maximum tool calling iterations
             temperature: Generation temperature
         """
+        self.llm_service = llm_service
         self.model = model
         self.max_iterations = max_iterations
         self.temperature = temperature
-        self.api_key = api_key
         
         # Initialize conversation history
         self.messages: List[Dict[str, Any]] = []
@@ -102,15 +103,115 @@ class AgentOrchestrator:
         Call the LLM with current messages and tools.
         
         Returns:
-            LLM response
-        
-        TODO: Implement actual OpenAI API integration using self.api_key
+            LLM response in OpenAI-compatible format
         """
-        raise NotImplementedError(
-            "OpenAI API integration not yet implemented. "
-            "This method needs to call the OpenAI Chat Completions API "
-            "with the current messages, tools, and model configuration."
-        )
+        if not self.llm_service.is_loaded:
+            raise RuntimeError("LLM model not loaded. Call llm_service.load_model() first.")
+        
+        # Format tools as part of system prompt
+        tools_prompt = self._format_tools_for_prompt()
+        
+        # Create messages with tool instructions
+        messages_with_tools = self.messages.copy()
+        
+        # Add tool instructions to the last system message or create new one
+        if messages_with_tools and messages_with_tools[0]["role"] == "system":
+            messages_with_tools[0]["content"] += f"\n\n{tools_prompt}"
+        else:
+            messages_with_tools.insert(0, {
+                "role": "system",
+                "content": tools_prompt
+            })
+        
+        # Call the local LLM
+        try:
+            response_text = await self.llm_service.complete(
+                messages=messages_with_tools,
+                temperature=self.temperature,
+                max_tokens=2048,
+                stop=["<|eot_id|>", "TOOL_CALL:"]
+            )
+            
+            # Parse response for tool calls
+            tool_calls = self._parse_tool_calls(response_text)
+            
+            # Format response in OpenAI-compatible format
+            if tool_calls:
+                return {
+                    "choices": [{
+                        "message": {
+                            "role": "assistant",
+                            "content": None,
+                            "tool_calls": tool_calls
+                        },
+                        "finish_reason": "tool_calls"
+                    }]
+                }
+            else:
+                return {
+                    "choices": [{
+                        "message": {
+                            "role": "assistant",
+                            "content": response_text
+                        },
+                        "finish_reason": "stop"
+                    }]
+                }
+        except Exception as e:
+            logger.error(f"Error calling LLM: {e}")
+            raise
+    
+    def _format_tools_for_prompt(self) -> str:
+        """Format tool definitions for the system prompt."""
+        tools_text = "You have access to the following tools:\n\n"
+        
+        for tool in TOOL_DEFINITIONS:
+            func = tool["function"]
+            name = func["name"]
+            desc = func["description"]
+            params = func.get("parameters", {}).get("properties", {})
+            
+            tools_text += f"- {name}: {desc}\n"
+            if params:
+                tools_text += f"  Parameters: {', '.join(params.keys())}\n"
+        
+        tools_text += "\nTo use a tool, respond with:\nTOOL_CALL: tool_name({\"arg\": \"value\"})\n\n"
+        tools_text += "You can make multiple tool calls by putting each on a new line.\n"
+        tools_text += "After tool results are provided, continue with your response.\n"
+        
+        return tools_text
+    
+    def _parse_tool_calls(self, response_text: str) -> Optional[List[Dict[str, Any]]]:
+        """Parse tool calls from model response."""
+        # Look for TOOL_CALL: pattern
+        tool_call_pattern = r'TOOL_CALL:\s*(\w+)\((.*?)\)'
+        matches = re.finditer(tool_call_pattern, response_text, re.MULTILINE | re.DOTALL)
+        
+        tool_calls = []
+        for i, match in enumerate(matches):
+            tool_name = match.group(1)
+            args_str = match.group(2).strip()
+            
+            # Parse arguments
+            try:
+                if args_str:
+                    arguments = json.loads(args_str)
+                else:
+                    arguments = {}
+            except json.JSONDecodeError:
+                logger.warning(f"Failed to parse tool arguments: {args_str}")
+                arguments = {}
+            
+            tool_calls.append({
+                "id": f"call_{i}",
+                "type": "function",
+                "function": {
+                    "name": tool_name,
+                    "arguments": json.dumps(arguments)
+                }
+            })
+        
+        return tool_calls if tool_calls else None
     
     def _execute_tool_call(self, tool_call: Dict[str, Any]) -> Any:
         """
@@ -253,19 +354,19 @@ class ToolExecutionError(Exception):
 
 
 def create_agent(
-    api_key: Optional[str] = None,
-    model: str = "gpt-4-turbo-preview",
+    llm_service,
+    model: str = "llama-3",
     **kwargs
 ) -> AgentOrchestrator:
     """
     Factory function to create an agent orchestrator.
     
     Args:
-        api_key: OpenAI API key
-        model: Model to use
+        llm_service: LLMService instance for local inference
+        model: Model identifier
         **kwargs: Additional arguments for AgentOrchestrator
         
     Returns:
         Configured AgentOrchestrator instance
     """
-    return AgentOrchestrator(api_key=api_key, model=model, **kwargs)
+    return AgentOrchestrator(llm_service=llm_service, model=model, **kwargs)
