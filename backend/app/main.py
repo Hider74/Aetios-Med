@@ -14,6 +14,11 @@ from app.routers import chat, graph, ingest, quiz, study, system
 from app.services.llm_service import LLMService
 from app.services.graph_service import GraphService
 from app.services.vector_service import VectorService
+from app.services.ingest_service import IngestService
+from app.services.quiz_service import QuizService
+from app.services.retention_service import RetentionService
+from app.services.study_plan_service import StudyPlanService
+from app.services.encryption_service import EncryptionService
 from app.models.database import init_database
 
 
@@ -21,6 +26,11 @@ from app.models.database import init_database
 llm_service: LLMService = None
 graph_service: GraphService = None
 vector_service: VectorService = None
+ingest_service: IngestService = None
+quiz_service: QuizService = None
+retention_service: RetentionService = None
+study_plan_service: StudyPlanService = None
+encryption_service: EncryptionService = None
 
 
 @asynccontextmanager
@@ -30,6 +40,7 @@ async def lifespan(app: FastAPI):
     Initializes services on startup, cleans up on shutdown.
     """
     global llm_service, graph_service, vector_service
+    global ingest_service, quiz_service, retention_service, study_plan_service, encryption_service
     
     # Initialize database
     await init_database(settings.database_path)
@@ -58,10 +69,40 @@ async def lifespan(app: FastAPI):
     if settings.model_path.exists():
         await llm_service.load_model()
     
+    # Initialize retention service
+    retention_service = RetentionService()
+    
+    # Initialize study plan service
+    study_plan_service = StudyPlanService(
+        graph_service=graph_service,
+        retention_service=retention_service
+    )
+    
+    # Initialize quiz service
+    quiz_service = QuizService(
+        llm_service=llm_service,
+        graph_service=graph_service,
+        vector_service=vector_service
+    )
+    
+    # Initialize ingest service
+    ingest_service = IngestService(
+        vector_service=vector_service,
+        graph_service=graph_service
+    )
+    
+    # Initialize encryption service
+    encryption_service = EncryptionService()
+    
     # Make services available to routers
     app.state.llm = llm_service
     app.state.graph = graph_service
     app.state.vector = vector_service
+    app.state.ingest = ingest_service
+    app.state.quiz = quiz_service
+    app.state.retention = retention_service
+    app.state.study = study_plan_service
+    app.state.encryption = encryption_service
     
     yield
     

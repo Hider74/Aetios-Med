@@ -21,8 +21,8 @@ class AgentOrchestrator:
     
     def __init__(
         self,
-        api_key: Optional[str] = None,
-        model: str = "gpt-4-turbo-preview",
+        llm_service,
+        model: str = "llama-3",
         max_iterations: int = 10,
         temperature: float = 0.7
     ):
@@ -30,15 +30,15 @@ class AgentOrchestrator:
         Initialize the agent orchestrator.
         
         Args:
-            api_key: OpenAI API key (uses env var if None)
-            model: Model to use for generation
+            llm_service: LLMService instance for local inference
+            model: Model identifier
             max_iterations: Maximum tool calling iterations
             temperature: Generation temperature
         """
+        self.llm_service = llm_service
         self.model = model
         self.max_iterations = max_iterations
         self.temperature = temperature
-        self.api_key = api_key
         
         # Initialize conversation history
         self.messages: List[Dict[str, Any]] = []
@@ -102,22 +102,190 @@ class AgentOrchestrator:
         Call the LLM with current messages and tools.
         
         Returns:
-            LLM response
-        
-        TODO: Implement actual OpenAI API integration using self.api_key
+            LLM response in OpenAI-compatible format
         """
-        raise NotImplementedError(
-            "OpenAI API integration not yet implemented. "
-            "This method needs to call the OpenAI Chat Completions API "
-            "with the current messages, tools, and model configuration."
-        )
+        if not self.llm_service.is_loaded:
+            raise RuntimeError("LLM model not loaded. Call await llm_service.load_model() first.")
+        
+        # Format tools as part of system prompt
+        tools_prompt = self._format_tools_for_prompt()
+        
+        # Create messages with tool instructions
+        messages_with_tools = self.messages.copy()
+        
+        # Add tool instructions to the last system message or create new one
+        if messages_with_tools and messages_with_tools[0]["role"] == "system":
+            messages_with_tools[0]["content"] += f"\n\n{tools_prompt}"
+        else:
+            messages_with_tools.insert(0, {
+                "role": "system",
+                "content": tools_prompt
+            })
+        
+        # Call the local LLM
+        try:
+            response_text = await self.llm_service.complete(
+                messages=messages_with_tools,
+                temperature=self.temperature,
+                max_tokens=2048,
+                stop=["<|eot_id|>"]
+            )
+            
+            # Parse response for tool calls
+            tool_calls = self._parse_tool_calls(response_text)
+            
+            # Format response in OpenAI-compatible format
+            if tool_calls:
+                return {
+                    "choices": [{
+                        "message": {
+                            "role": "assistant",
+                            "content": None,
+                            "tool_calls": tool_calls
+                        },
+                        "finish_reason": "tool_calls"
+                    }]
+                }
+            else:
+                return {
+                    "choices": [{
+                        "message": {
+                            "role": "assistant",
+                            "content": response_text
+                        },
+                        "finish_reason": "stop"
+                    }]
+                }
+        except Exception as e:
+            logger.error(f"Error calling LLM: {e}")
+            raise
     
-    def _execute_tool_call(self, tool_call: Dict[str, Any]) -> Any:
+    def _format_tools_for_prompt(self) -> str:
+        """Format tool definitions for the system prompt."""
+        tools_text = "You have access to the following tools:\n\n"
+        
+        for tool in TOOL_DEFINITIONS:
+            func = tool["function"]
+            name = func["name"]
+            desc = func["description"]
+            params = func.get("parameters", {}).get("properties", {})
+            
+            tools_text += f"- {name}: {desc}\n"
+            if params:
+                tools_text += f"  Parameters: {', '.join(params.keys())}\n"
+        
+        tools_text += "\nTo use a tool, respond with:\nTOOL_CALL: tool_name({\"arg\": \"value\"})\n\n"
+        tools_text += "You can make multiple tool calls by putting each on a new line.\n"
+        tools_text += "After tool results are provided, continue with your response.\n"
+        
+        return tools_text
+    
+    def _parse_tool_calls(self, response_text: str) -> Optional[List[Dict[str, Any]]]:
+        """
+        Parse tool calls from model response.
+        
+        Expects tool calls in the format: TOOL_CALL: tool_name({"arg": "value"})
+        Arguments must be valid JSON (double quotes required, as per JSON spec).
+        Handles escape sequences (\n, \t, \", \\, etc.) correctly.
+        
+        Note: Malformed tool calls are logged as warnings and skipped. The agent
+        will continue processing valid tool calls and may try again in the next
+        iteration if the LLM detects the tool call was not executed.
+        """
+        tool_calls = []
+        
+        # Process line by line looking for TOOL_CALL: pattern
+        for line in response_text.split('\n'):
+            line = line.strip()
+            if not line.startswith('TOOL_CALL:'):
+                continue
+            
+            # Extract tool name and arguments
+            try:
+                # Remove TOOL_CALL: prefix
+                call_str = line[len('TOOL_CALL:'):].strip()
+                
+                # Find tool name (before opening paren)
+                paren_idx = call_str.find('(')
+                if paren_idx == -1:
+                    logger.warning(f"Invalid tool call format (no parentheses): {line}")
+                    continue
+                
+                tool_name = call_str[:paren_idx].strip()
+                
+                # Extract JSON arguments (between parentheses)
+                # Use JSON-aware parsing to handle nested structures and strings with special chars
+                args_start = paren_idx + 1
+                
+                # Simple approach: find the JSON object/dict by looking for balanced braces
+                # This works because our format requires JSON args wrapped in parens
+                brace_count = 0
+                in_string = False
+                escape_next = False
+                end_idx = -1
+                
+                for i in range(args_start, len(call_str)):
+                    char = call_str[i]
+                    
+                    # Handle escape sequences in strings
+                    if escape_next:
+                        escape_next = False
+                        continue
+                    
+                    if char == '\\':
+                        escape_next = True
+                        continue
+                    
+                    # Track string boundaries
+                    if char == '"':
+                        in_string = not in_string
+                        continue
+                    
+                    # Only count braces/parens outside of strings
+                    if not in_string:
+                        if char == '{':
+                            brace_count += 1
+                        elif char == '}':
+                            brace_count -= 1
+                        elif char == ')' and brace_count == 0:
+                            # Found the closing paren for the function call
+                            end_idx = i
+                            break
+                
+                if end_idx == -1:
+                    logger.warning(f"Invalid tool call format (unmatched parentheses): {line}")
+                    continue
+                
+                args_str = call_str[args_start:end_idx].strip()
+                
+                # Parse JSON arguments
+                if args_str:
+                    arguments = json.loads(args_str)
+                else:
+                    arguments = {}
+                
+                tool_calls.append({
+                    "id": f"call_{len(tool_calls)}",
+                    "type": "function",
+                    "function": {
+                        "name": tool_name,
+                        "arguments": json.dumps(arguments)
+                    }
+                })
+            except json.JSONDecodeError as e:
+                logger.warning(f"Failed to parse tool arguments in '{line}': {e}")
+            except Exception as e:
+                logger.warning(f"Failed to parse tool call '{line}': {e}")
+        
+        return tool_calls if tool_calls else None
+    
+    async def _execute_tool_call(self, tool_call: Dict[str, Any], db=None) -> Any:
         """
         Execute a single tool call.
         
         Args:
             tool_call: Tool call specification
+            db: Database session to pass to tools
             
         Returns:
             Tool execution result
@@ -128,19 +296,23 @@ class AgentOrchestrator:
         
         try:
             arguments = json.loads(arguments_str)
-            result = execute_tool(tool_name, arguments)
+            # Add db session to arguments if not present
+            if db is not None and 'db' not in arguments:
+                arguments['db'] = db
+            result = await execute_tool(tool_name, arguments)
             logger.info(f"Executed tool {tool_name} with result: {result}")
             return result
         except Exception as e:
             logger.error(f"Error executing tool {tool_name}: {e}")
             return {"error": str(e)}
     
-    async def process_message(self, user_message: str) -> str:
+    async def process_message(self, user_message: str, db=None) -> str:
         """
         Process a user message through the agent loop.
         
         Args:
             user_message: User's input message
+            db: Database session for tool execution
             
         Returns:
             Final assistant response
@@ -172,7 +344,7 @@ class AgentOrchestrator:
                     tool_call_id = tool_call.get("id")
                     function_name = tool_call.get("function", {}).get("name")
                     
-                    result = self._execute_tool_call(tool_call)
+                    result = await self._execute_tool_call(tool_call, db=db)
                     self.add_tool_result(tool_call_id, function_name, result)
                 
                 # Continue loop to get next response
@@ -187,12 +359,13 @@ class AgentOrchestrator:
         logger.warning(f"Max iterations ({self.max_iterations}) reached")
         return "I apologize, but I need to break this down into smaller steps. Could you please rephrase your question?"
     
-    async def stream_message(self, user_message: str) -> AsyncIterator[str]:
+    async def stream_message(self, user_message: str, db=None) -> AsyncIterator[str]:
         """
         Process a user message with streaming response.
         
         Args:
             user_message: User's input message
+            db: Database session for tool execution
             
         Yields:
             Response chunks as they're generated
@@ -205,7 +378,7 @@ class AgentOrchestrator:
             
             # In a real implementation, this would stream from OpenAI
             # For now, yielding the full response
-            response = await self.process_message(user_message)
+            response = await self.process_message(user_message, db=db)
             yield response
             break
     
@@ -253,19 +426,19 @@ class ToolExecutionError(Exception):
 
 
 def create_agent(
-    api_key: Optional[str] = None,
-    model: str = "gpt-4-turbo-preview",
+    llm_service,
+    model: str = "llama-3",
     **kwargs
 ) -> AgentOrchestrator:
     """
     Factory function to create an agent orchestrator.
     
     Args:
-        api_key: OpenAI API key
-        model: Model to use
+        llm_service: LLMService instance for local inference
+        model: Model identifier
         **kwargs: Additional arguments for AgentOrchestrator
         
     Returns:
         Configured AgentOrchestrator instance
     """
-    return AgentOrchestrator(api_key=api_key, model=model, **kwargs)
+    return AgentOrchestrator(llm_service=llm_service, model=model, **kwargs)

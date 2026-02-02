@@ -5,10 +5,19 @@ export interface TopicNode {
   lastReviewed: Date | null;
   timesReviewed: number;
   mastered: boolean;
-  resources: string[];
+  resources: string[] | {
+    teachmeanatomy?: string;
+    teachmesurgery?: string;
+    quesmed?: string;
+    nice?: string;
+    bnf?: string;
+    zerotofinals?: string;
+  };
   notes: string;
   subtopics?: string[];
   parentTopics?: string[];
+  anki_cards_count?: number;
+  notes_count?: number;
 }
 
 export interface GraphEdge {

@@ -8,7 +8,14 @@ import {
   Trash2,
   ExternalLink,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Activity,
+  FileQuestion,
+  FileText,
+  Pill,
+  Video,
+  CreditCard,
+  StickyNote
 } from 'lucide-react';
 import { useGraph } from '../../hooks/useGraph';
 import { formatDistanceToNow } from 'date-fns';
@@ -164,27 +171,114 @@ export const NodeDetail: React.FC<NodeDetailProps> = ({ onClose, onStartStudy })
         )}
 
         {/* Resources */}
-        {selectedNode.resources.length > 0 && (
+        {selectedNode.resources && typeof selectedNode.resources === 'object' && !Array.isArray(selectedNode.resources) && (
           <div>
-            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 mb-2">
+            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 mb-3">
               <BookOpen size={16} />
               Resources
             </h4>
-            <ul className="space-y-2">
-              {selectedNode.resources.map((resource, idx) => (
-                <li key={idx}>
-                  <a
-                    href={resource}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-blue-500 hover:text-blue-600 flex items-center gap-2"
-                  >
-                    <ExternalLink size={14} />
-                    {resource}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <div className="flex flex-wrap gap-2">
+              {selectedNode.resources.teachmeanatomy && (
+                <a
+                  href={selectedNode.resources.teachmeanatomy}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-lg transition-colors"
+                >
+                  <BookOpen size={14} />
+                  TeachMe Anatomy
+                </a>
+              )}
+              {selectedNode.resources.teachmesurgery && (
+                <a
+                  href={selectedNode.resources.teachmesurgery}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded-lg transition-colors"
+                >
+                  <Activity size={14} />
+                  TeachMe Surgery
+                </a>
+              )}
+              {selectedNode.resources.quesmed && (
+                <a
+                  href={selectedNode.resources.quesmed}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 bg-purple-500 hover:bg-purple-600 text-white text-sm rounded-lg transition-colors"
+                >
+                  <FileQuestion size={14} />
+                  Quesmed
+                </a>
+              )}
+              {selectedNode.resources.nice && (
+                <a
+                  href={selectedNode.resources.nice}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 bg-orange-500 hover:bg-orange-600 text-white text-sm rounded-lg transition-colors"
+                >
+                  <FileText size={14} />
+                  NICE Guidelines
+                </a>
+              )}
+              {selectedNode.resources.bnf && (
+                <a
+                  href={selectedNode.resources.bnf}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 bg-red-500 hover:bg-red-600 text-white text-sm rounded-lg transition-colors"
+                >
+                  <Pill size={14} />
+                  BNF
+                </a>
+              )}
+              {selectedNode.resources.zerotofinals && (
+                <a
+                  href={selectedNode.resources.zerotofinals}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 bg-gray-500 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors"
+                >
+                  <Video size={14} />
+                  Zero To Finals
+                </a>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Linked Content */}
+        {((selectedNode.anki_cards_count && selectedNode.anki_cards_count > 0) || 
+          (selectedNode.notes_count && selectedNode.notes_count > 0)) && (
+          <div>
+            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+              Linked Content
+            </h4>
+            <div className="space-y-2">
+              {selectedNode.anki_cards_count && selectedNode.anki_cards_count > 0 && (
+                <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <CreditCard size={16} className="text-blue-500" />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Anki Cards</span>
+                  </div>
+                  <span className="text-sm font-bold text-blue-600 dark:text-blue-400">
+                    {selectedNode.anki_cards_count}
+                  </span>
+                </div>
+              )}
+              {selectedNode.notes_count && selectedNode.notes_count > 0 && (
+                <div className="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <StickyNote size={16} className="text-yellow-500" />
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Notes</span>
+                  </div>
+                  <span className="text-sm font-bold text-yellow-600 dark:text-yellow-400">
+                    {selectedNode.notes_count}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         )}
 

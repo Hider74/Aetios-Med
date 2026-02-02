@@ -7,6 +7,10 @@ interface DecayingTopicsProps {
   topics: TopicNode[];
 }
 
+// Note: This component displays topics needing review based on FSRS-predicted retention
+// data from the backend RetentionService. The confidence values are calculated using
+// the FSRS (Free Spaced Repetition Scheduler) algorithm which predicts memory retention.
+
 export const DecayingTopics: React.FC<DecayingTopicsProps> = ({ topics }) => {
   const getUrgencyColor = (confidence: number) => {
     if (confidence < 0.3) return 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400';

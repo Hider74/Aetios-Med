@@ -3,12 +3,14 @@ Ingest Service
 Process and ingest files into the knowledge base.
 """
 from pathlib import Path
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 from datetime import datetime
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..parsers.anki_parser import AnkiParser
+from ..parsers.pdf_parser import PDFParser
+from ..parsers.notes_parser import NotesParser
 from ..models.database import AnkiCard as DBAnkiCard, Note
 from .vector_service import VectorService
 from .graph_service import GraphService
@@ -25,6 +27,8 @@ class IngestService:
         self.vector_service = vector_service
         self.graph_service = graph_service
         self.anki_parser = AnkiParser()
+        self.pdf_parser = PDFParser()
+        self.notes_parser = NotesParser()
     
     async def ingest_anki_file(
         self,
@@ -202,6 +206,249 @@ class IngestService:
         await db.commit()
         
         return note.id
+    
+    async def ingest_pdf_file(
+        self,
+        pdf_path: Path,
+        filename: str,
+        db: AsyncSession
+    ) -> Dict[str, Any]:
+        """
+        Ingest a PDF file into the knowledge base.
+        
+        Args:
+            pdf_path: Path to the PDF file
+            filename: Original filename
+            db: Database session
+        
+        Returns:
+            Statistics about the ingestion
+        """
+        # Parse PDF into chunks
+        chunks = self.pdf_parser.parse(pdf_path)
+        metadata = self.pdf_parser.extract_metadata(pdf_path)
+        
+        if not chunks:
+            return {
+                'pages': 0,
+                'chunks': 0,
+                'notes_created': 0,
+                'topics_mapped': 0,
+                'errors': []
+            }
+        
+        # Ensure graph is loaded for topic mapping
+        if not self.graph_service.is_loaded:
+            self.graph_service.load_curriculum()
+        
+        # Prepare topic candidates for matching
+        topic_candidates = [
+            {
+                'id': topic.id,
+                'description': f"{topic.label}. {' '.join(topic.learning_objectives[:3])}"
+            }
+            for topic in self.graph_service.topics.values()
+        ]
+        
+        stats = {
+            'pages': metadata.get('pages', len(set(c.page_number for c in chunks))),
+            'chunks': len(chunks),
+            'notes_created': 0,
+            'topics_mapped': 0,
+            'errors': []
+        }
+        
+        # Group chunks by page and create notes
+        pages = {}
+        for chunk in chunks:
+            if chunk.page_number not in pages:
+                pages[chunk.page_number] = []
+            pages[chunk.page_number].append(chunk)
+        
+        # Process each page as a note
+        for page_num, page_chunks in pages.items():
+            try:
+                # Combine chunks for the page
+                page_content = '\n\n'.join(c.text for c in page_chunks)
+                
+                # Map to topic using embeddings
+                topic_id = self.vector_service.find_best_topic_match(
+                    page_content[:1000],  # Use first 1000 chars for matching
+                    topic_candidates
+                )
+                
+                if topic_id:
+                    stats['topics_mapped'] += 1
+                
+                # Create note in database
+                note = Note(
+                    title=f"{filename} - Page {page_num}",
+                    content=page_content,
+                    source='pdf',
+                    topic_id=topic_id,
+                    file_path=str(pdf_path)
+                )
+                db.add(note)
+                await db.flush()
+                
+                # Add chunks to vector store
+                for chunk in page_chunks:
+                    doc_id = f"pdf_{note.id}_{chunk.chunk_id}"
+                    self.vector_service.add_documents(
+                        documents=[chunk.text],
+                        metadatas=[{
+                            'source': 'pdf',
+                            'filename': filename,
+                            'page': page_num,
+                            'topic_id': topic_id or '',
+                            'note_id': note.id
+                        }],
+                        ids=[doc_id]
+                    )
+                
+                stats['notes_created'] += 1
+                
+            except Exception as e:
+                stats['errors'].append(f"Page {page_num}: {str(e)}")
+                print(f"Error processing page {page_num}: {e}")
+        
+        await db.commit()
+        
+        return stats
+    
+    async def ingest_note_file(
+        self,
+        file_path: Path,
+        content: str,
+        db: AsyncSession
+    ) -> Dict[str, Any]:
+        """
+        Ingest a text or markdown note file into the knowledge base.
+        
+        Args:
+            file_path: Path to the note file
+            content: File content
+            db: Database session
+        
+        Returns:
+            Statistics about the ingestion
+        """
+        # Ensure graph is loaded for topic mapping
+        if not self.graph_service.is_loaded:
+            self.graph_service.load_curriculum()
+        
+        # Prepare topic candidates for matching
+        topic_candidates = [
+            {
+                'id': topic.id,
+                'description': f"{topic.label}. {' '.join(topic.learning_objectives[:3])}"
+            }
+            for topic in self.graph_service.topics.values()
+        ]
+        
+        stats = {
+            'sections': 0,
+            'notes_created': 0,
+            'topics_mapped': 0,
+            'errors': []
+        }
+        
+        try:
+            # Parse based on file type
+            if file_path.suffix == '.md':
+                sections = self.notes_parser.parse_markdown(file_path)
+                stats['sections'] = len(sections)
+                
+                # Create a note for each section
+                for section in sections:
+                    try:
+                        # Map to topic using embeddings
+                        topic_id = self.vector_service.find_best_topic_match(
+                            f"{section.title}. {section.content[:500]}",
+                            topic_candidates
+                        )
+                        
+                        if topic_id:
+                            stats['topics_mapped'] += 1
+                        
+                        # Create note in database
+                        note = Note(
+                            title=section.title,
+                            content=section.content,
+                            source='markdown',
+                            topic_id=topic_id,
+                            file_path=str(file_path)
+                        )
+                        db.add(note)
+                        await db.flush()
+                        
+                        # Add to vector store
+                        doc_id = f"note_{note.id}"
+                        self.vector_service.add_documents(
+                            documents=[f"{section.title}\n\n{section.content}"],
+                            metadatas=[{
+                                'source': 'markdown',
+                                'title': section.title,
+                                'topic_id': topic_id or '',
+                                'note_id': note.id,
+                                'file_path': str(file_path)
+                            }],
+                            ids=[doc_id]
+                        )
+                        
+                        stats['notes_created'] += 1
+                        
+                    except Exception as e:
+                        stats['errors'].append(f"Section '{section.title}': {str(e)}")
+                        print(f"Error processing section '{section.title}': {e}")
+            
+            else:  # .txt
+                section = self.notes_parser.parse_text(file_path)
+                stats['sections'] = 1
+                
+                # Map to topic using embeddings
+                topic_id = self.vector_service.find_best_topic_match(
+                    f"{section.title}. {section.content[:500]}",
+                    topic_candidates
+                )
+                
+                if topic_id:
+                    stats['topics_mapped'] += 1
+                
+                # Create note in database
+                note = Note(
+                    title=section.title,
+                    content=section.content,
+                    source='text',
+                    topic_id=topic_id,
+                    file_path=str(file_path)
+                )
+                db.add(note)
+                await db.flush()
+                
+                # Add to vector store
+                doc_id = f"note_{note.id}"
+                self.vector_service.add_documents(
+                    documents=[f"{section.title}\n\n{section.content}"],
+                    metadatas=[{
+                        'source': 'text',
+                        'title': section.title,
+                        'topic_id': topic_id or '',
+                        'note_id': note.id,
+                        'file_path': str(file_path)
+                    }],
+                    ids=[doc_id]
+                )
+                
+                stats['notes_created'] += 1
+                
+        except Exception as e:
+            stats['errors'].append(f"File processing: {str(e)}")
+            print(f"Error processing file {file_path}: {e}")
+        
+        await db.commit()
+        
+        return stats
     
     async def batch_ingest_notes(
         self,
