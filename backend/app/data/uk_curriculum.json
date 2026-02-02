@@ -1693,7 +1693,7 @@
           "zerotofinals": "https://www.zerotofinals.com/pharmacology/antibiotics/",
           "quesmed": "https://quesmed.com/question-bank/medicine",
           "nice": "https://www.nice.org.uk/guidance/ng185",
-          "bnf": "https://bnf.nice.org.uk/drugs/antibacterials.html"
+          "bnf": "https://bnf.nice.org.uk/drugs/antibacterials"
         },
         "gmc_outcomes": [
           "Prescribing",
