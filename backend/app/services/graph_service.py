@@ -10,7 +10,7 @@ from datetime import datetime
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..models.database import TopicProgress, StudySession, QuizResult
+from ..models.database import TopicProgress, StudySession, QuizResult, Note, AnkiCard
 from ..models.graph_models import (
     CurriculumTopic, GraphEdge, KnowledgeGraph, 
     GraphStatistics, TopicDetails
@@ -219,12 +219,24 @@ class GraphService:
             'accuracy': sum(1 for r in quiz_results if r.is_correct) / len(quiz_results) if quiz_results else 0.0
         }
         
+        # Query related notes count
+        result = await db.execute(
+            select(Note).where(Note.topic_id == topic_id)
+        )
+        related_notes_count = len(result.scalars().all())
+        
+        # Query related Anki cards count
+        result = await db.execute(
+            select(AnkiCard).where(AnkiCard.topic_id == topic_id)
+        )
+        related_cards_count = len(result.scalars().all())
+        
         return TopicDetails(
             topic=topic,
             prerequisites=prereq_topics,
             dependents=dependents,
-            related_notes=0,  # TODO: query notes
-            related_cards=0,  # TODO: query anki_cards
+            related_notes=related_notes_count,
+            related_cards=related_cards_count,
             study_history=study_history,
             quiz_stats=quiz_stats
         )

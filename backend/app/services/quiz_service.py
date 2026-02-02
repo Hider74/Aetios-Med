@@ -150,28 +150,12 @@ Return ONLY a JSON array with this structure:
         num_questions: int,
         difficulty: str
     ) -> List[Dict[str, Any]]:
-        """Generate simple fallback questions when LLM fails."""
-        questions = []
-        
-        for i in range(num_questions):
-            if i < len(topic.learning_objectives):
-                obj = topic.learning_objectives[i]
-                questions.append({
-                    'question': f"Which of the following best describes: {obj}?",
-                    'options': {
-                        'A': 'Option A',
-                        'B': 'Option B',
-                        'C': 'Option C',
-                        'D': 'Option D'
-                    },
-                    'correct_answer': 'A',
-                    'explanation': 'This is a placeholder question.',
-                    'topic_id': topic.id,
-                    'difficulty': difficulty,
-                    'timestamp': datetime.utcnow().isoformat()
-                })
-        
-        return questions
+        """
+        Return empty list when LLM fails to generate quiz questions.
+        Do not generate placeholder questions with meaningless options.
+        """
+        print(f"Quiz generation failed for topic {topic.id}. Returning empty list.")
+        return []
     
     async def submit_quiz_answer(
         self,

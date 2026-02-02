@@ -35,7 +35,8 @@ export const AnkiCardsDue: React.FC = () => {
   };
 
   const handleReviewNow = () => {
-    // TODO: Navigate to Anki review interface
+    // Show notification explaining Anki review workflow
+    alert('Anki Review: Please review your cards in the Anki desktop application. Card progress will be synced when you re-import your Anki deck.');
     console.log('Starting Anki review session...');
   };
 
