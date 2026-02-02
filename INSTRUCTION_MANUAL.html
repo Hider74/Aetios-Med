@@ -1,0 +1,2450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aetios-Med User Manual - Complete Guide for UK Medical Students</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+        
+        nav {
+            background: #2d3748;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        nav a:hover {
+            background: #4a5568;
+        }
+        
+        main {
+            padding: 2rem;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+            scroll-margin-top: 80px;
+        }
+        
+        h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        h3 {
+            color: #4a5568;
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem 0;
+        }
+        
+        h4 {
+            color: #2d3748;
+            font-size: 1.2rem;
+            margin: 1rem 0 0.5rem 0;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        .feature-box {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .warning-box {
+            background: #fff5f5;
+            border-left: 4px solid #f56565;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .info-box {
+            background: #ebf8ff;
+            border-left: 4px solid #4299e1;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .success-box {
+            background: #f0fff4;
+            border-left: 4px solid #48bb78;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        code {
+            background: #2d3748;
+            color: #68d391;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+        
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background: #f7fafc;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 0.25rem;
+        }
+        
+        .badge-red {
+            background: #fed7d7;
+            color: #c53030;
+        }
+        
+        .badge-amber {
+            background: #feebc8;
+            color: #c05621;
+        }
+        
+        .badge-green {
+            background: #c6f6d5;
+            color: #2f855a;
+        }
+        
+        .badge-blue {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 2rem;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        .screenshot-placeholder {
+            background: #e2e8f0;
+            border: 2px dashed #a0aec0;
+            padding: 2rem;
+            text-align: center;
+            color: #718096;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+        
+        footer {
+            background: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .toc {
+            background: #f7fafc;
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin: 2rem 0;
+        }
+        
+        .toc ul {
+            list-style: none;
+            margin-left: 0;
+        }
+        
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        
+        @media print {
+            nav {
+                display: none;
+            }
+            
+            section {
+                page-break-inside: avoid;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+            }
+            
+            main {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🩺 Aetios-Med User Manual</h1>
+            <p class="subtitle">Complete Installation & Usage Guide for UK Medical Students</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">Offline-first Medical Study Assistant with Living Knowledge Graph</p>
+        </header>
+        
+        <nav>
+            <ul>
+                <li><a href="#introduction">Introduction</a></li>
+                <li><a href="#requirements">Requirements</a></li>
+                <li><a href="#installation">Installation</a></li>
+                <li><a href="#setup">Setup</a></li>
+                <li><a href="#anki">Anki</a></li>
+                <li><a href="#graph">Knowledge Graph</a></li>
+                <li><a href="#chat">AI Tutor</a></li>
+                <li><a href="#quiz">Quizzes</a></li>
+                <li><a href="#study">Study Plans</a></li>
+                <li><a href="#resources">Resources</a></li>
+                <li><a href="#troubleshooting">Troubleshooting</a></li>
+            </ul>
+        </nav>
+        
+        <main>
+            <section id="introduction">
+                <h2>📖 1. Introduction</h2>
+                
+                <h3>Welcome to Aetios-Med!</h3>
+                <p>Aetios-Med is an <strong>offline-first medical study assistant</strong> designed specifically for UK medical students. It combines the power of artificial intelligence with a living knowledge graph to help you master the medical curriculum efficiently and effectively.</p>
+                
+                <div class="feature-box">
+                    <h4>🎯 Key Features</h4>
+                    <ul>
+                        <li><strong>🧠 Local AI Tutor</strong> - OpenBioLLM-8B running completely offline on your computer</li>
+                        <li><strong>📊 Knowledge Graph</strong> - 75+ UK medical curriculum topics with visual dependencies</li>
+                        <li><strong>🎴 Anki Integration</strong> - Auto-parse .apkg files with intelligent topic mapping</li>
+                        <li><strong>📈 Spaced Repetition</strong> - FSRS-4 algorithm for optimal review scheduling</li>
+                        <li><strong>🎯 Quiz Generation</strong> - AI-powered quizzes targeted at your weak areas</li>
+                        <li><strong>📅 Study Planning</strong> - Personalized study plans with calendar export (.ics)</li>
+                        <li><strong>🔒 Privacy-First</strong> - All data stays on your computer, encrypted with AES-256</li>
+                        <li><strong>🌐 Resource Viewer</strong> - In-app browser for medical resources and VLE access</li>
+                    </ul>
+                </div>
+                
+                <h3>Who Is This For?</h3>
+                <p>Aetios-Med is designed for UK medical students at all levels:</p>
+                <ul>
+                    <li><strong>Pre-clinical years</strong> - Building foundational knowledge</li>
+                    <li><strong>Clinical rotations</strong> - Integrating theory with practice</li>
+                    <li><strong>Exam preparation</strong> - UKMLA, Finals, OSCEs</li>
+                    <li><strong>Foundation Year prep</strong> - Transitioning to clinical practice</li>
+                </ul>
+                
+                <div class="warning-box">
+                    <h4>⚠️ Important Disclaimer</h4>
+                    <p>Aetios-Med is an <strong>educational tool only</strong>. Always verify medical information with qualified healthcare professionals, current guidelines (NICE, BNF), and your medical school curriculum. Never use this tool for making clinical decisions about actual patients.</p>
+                </div>
+                
+                <h3>UK Medical Context</h3>
+                <p>Aetios-Med is specifically tailored for the UK medical education system:</p>
+                <ul>
+                    <li>References <strong>NICE guidelines</strong> and <strong>BNF</strong> (British National Formulary)</li>
+                    <li>Aligned with <strong>GMC Outcomes for Graduates</strong></li>
+                    <li>Uses UK terminology and units</li>
+                    <li>Covers UKMLA, Finals, and OSCE preparation</li>
+                    <li>NHS clinical practice context</li>
+                </ul>
+            </section>
+            
+            <section id="requirements">
+                <h2>💻 2. System Requirements</h2>
+                
+                <h3>Operating Systems</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>OS</th>
+                            <th>Minimum Version</th>
+                            <th>Recommended</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Windows</td>
+                            <td>Windows 10 (64-bit)</td>
+                            <td>Windows 11</td>
+                        </tr>
+                        <tr>
+                            <td>macOS</td>
+                            <td>macOS 10.14 (Mojave)</td>
+                            <td>macOS 12+ (with Apple Silicon for best performance)</td>
+                        </tr>
+                        <tr>
+                            <td>Linux</td>
+                            <td>Ubuntu 20.04 or equivalent</td>
+                            <td>Ubuntu 22.04+</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Hardware Requirements</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Minimum</th>
+                            <th>Recommended</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CPU</strong></td>
+                            <td>Dual-core 2.0 GHz</td>
+                            <td>Quad-core 3.0 GHz or Apple M1/M2</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RAM</strong></td>
+                            <td>8 GB</td>
+                            <td>16 GB or more</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Storage</strong></td>
+                            <td>20 GB free space</td>
+                            <td>50 GB free space (SSD recommended)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GPU</strong></td>
+                            <td>Integrated graphics</td>
+                            <td>Dedicated GPU with 4GB+ VRAM (CUDA support for NVIDIA)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Software Prerequisites</h3>
+                <p>You'll need to install these before running Aetios-Med:</p>
+                
+                <h4>1. Node.js (version 18 or higher)</h4>
+                <ul>
+                    <li><strong>Download:</strong> <a href="https://nodejs.org/">https://nodejs.org/</a></li>
+                    <li>Choose the LTS (Long Term Support) version</li>
+                    <li>Verify installation: Open terminal/command prompt and run <code>node --version</code></li>
+                </ul>
+                
+                <h4>2. Python (version 3.10 or higher)</h4>
+                <ul>
+                    <li><strong>Download:</strong> <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></li>
+                    <li>During installation, check "Add Python to PATH"</li>
+                    <li>Verify installation: <code>python --version</code> or <code>python3 --version</code></li>
+                </ul>
+                
+                <h4>3. Git</h4>
+                <ul>
+                    <li><strong>Download:</strong> <a href="https://git-scm.com/downloads">https://git-scm.com/downloads</a></li>
+                    <li>Use default installation options</li>
+                    <li>Verify installation: <code>git --version</code></li>
+                </ul>
+                
+                <div class="info-box">
+                    <h4>💡 Performance Tips</h4>
+                    <ul>
+                        <li><strong>Apple Silicon (M1/M2)</strong> users will get the best performance with Metal acceleration</li>
+                        <li><strong>NVIDIA GPU</strong> users should install CUDA toolkit for GPU acceleration</li>
+                        <li><strong>SSD storage</strong> significantly improves model loading times</li>
+                        <li>Close other applications when using the AI tutor for best performance</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section id="installation">
+                <h2>🚀 3. Installation Guide</h2>
+                
+                <h3>Installation Methods</h3>
+                <p>There are two ways to install Aetios-Med:</p>
+                <ol>
+                    <li><strong>Pre-built Application</strong> - Download and install (easier, recommended for most users)</li>
+                    <li><strong>Build from Source</strong> - Clone and build yourself (for developers or customization)</li>
+                </ol>
+                
+                <h3>Method 1: Pre-built Application (Coming Soon)</h3>
+                <div class="info-box">
+                    <p>Pre-built installers for Windows (.exe), macOS (.dmg), and Linux (.AppImage) will be available on the GitHub releases page. This manual focuses on building from source, which gives you the most up-to-date version.</p>
+                </div>
+                
+                <h3>Method 2: Build from Source</h3>
+                
+                <h4>Step 1: Clone the Repository</h4>
+                <p>Open your terminal (macOS/Linux) or Command Prompt/PowerShell (Windows) and run:</p>
+                
+                <pre><code># Clone the repository
+git clone https://github.com/Hider74/Aetios-Med.git
+
+# Navigate into the directory
+cd Aetios-Med</code></pre>
+                
+                <h4>Step 2: Install Backend Dependencies</h4>
+                
+                <p><strong>For Windows:</strong></p>
+                <pre><code># Navigate to backend folder
+cd backend
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Return to root
+cd ..</code></pre>
+                
+                <p><strong>For macOS/Linux:</strong></p>
+                <pre><code># Navigate to backend folder
+cd backend
+
+# Install Python dependencies (use pip3 if pip doesn't work)
+pip3 install -r requirements.txt
+
+# Return to root
+cd ..</code></pre>
+                
+                <div class="info-box">
+                    <h4>💡 Virtual Environment (Recommended)</h4>
+                    <p>For cleaner Python dependency management, use a virtual environment:</p>
+                    <pre><code>cd backend
+python -m venv venv
+
+# Activate (Windows)
+venv\Scripts\activate
+
+# Activate (macOS/Linux)
+source venv/bin/activate
+
+pip install -r requirements.txt</code></pre>
+                </div>
+                
+                <h4>Step 3: Install Frontend Dependencies</h4>
+                <pre><code># Navigate to frontend folder
+cd frontend
+
+# Install Node.js dependencies
+npm install
+
+# Return to root
+cd ..</code></pre>
+                
+                <h4>Step 4: Install Root Dependencies</h4>
+                <pre><code># In the root Aetios-Med directory
+npm install</code></pre>
+                
+                <h4>Step 5: Build for Production (Optional)</h4>
+                
+                <p><strong>For macOS:</strong></p>
+                <pre><code>./scripts/build-mac.sh</code></pre>
+                
+                <p><strong>For Windows:</strong></p>
+                <pre><code>powershell -ExecutionPolicy Bypass -File scripts/build-win.ps1</code></pre>
+                
+                <div class="success-box">
+                    <h4>✅ Installation Complete!</h4>
+                    <p>You're ready to start Aetios-Med. The first time you run it, you'll be guided through the setup wizard to download the AI model and configure your folders.</p>
+                </div>
+                
+                <h3>Running Aetios-Med</h3>
+                
+                <h4>Development Mode (3 Terminal Windows)</h4>
+                <p>For development or testing, run these commands in separate terminal windows:</p>
+                
+                <p><strong>Terminal 1 - Backend:</strong></p>
+                <pre><code>cd backend
+uvicorn app.main:app --reload --port 8741</code></pre>
+                
+                <p><strong>Terminal 2 - Frontend:</strong></p>
+                <pre><code>cd frontend
+npm run dev</code></pre>
+                
+                <p><strong>Terminal 3 - Electron:</strong></p>
+                <pre><code>npm run electron:dev</code></pre>
+                
+                <h4>Production Mode</h4>
+                <p>After building, just run the application from your applications folder or by double-clicking the executable.</p>
+                
+                <div class="warning-box">
+                    <h4>⚠️ Common Installation Issues</h4>
+                    <ul>
+                        <li><strong>Permission denied:</strong> On macOS/Linux, make scripts executable: <code>chmod +x scripts/*.sh</code></li>
+                        <li><strong>Python not found:</strong> Try <code>python3</code> instead of <code>python</code></li>
+                        <li><strong>npm install fails:</strong> Clear cache with <code>npm cache clean --force</code> and try again</li>
+                        <li><strong>Port 8741 in use:</strong> Close other applications using this port or change it in <code>backend/app/config.py</code></li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section id="setup">
+                <h2>⚙️ 4. First-Time Setup Wizard</h2>
+                
+                <p>When you first launch Aetios-Med, you'll be guided through a setup wizard to configure the application.</p>
+                
+                <h3>Step 1: Model Download</h3>
+                <p>The AI tutor requires the OpenBioLLM-8B model (quantized to ~4.5GB).</p>
+                
+                <div class="screenshot-placeholder">
+                    📸 Model Download Screen
+                    <p>Progress bar showing model download from HuggingFace</p>
+                </div>
+                
+                <ol>
+                    <li><span class="step-number">1</span> Click <strong>"Download Model"</strong></li>
+                    <li><span class="step-number">2</span> Wait for the download to complete (may take 10-30 minutes depending on your internet speed)</li>
+                    <li><span class="step-number">3</span> The model will be stored in:
+                        <ul>
+                            <li><strong>Windows:</strong> <code>%APPDATA%\Aetios-Med\models\</code></li>
+                            <li><strong>macOS:</strong> <code>~/Library/Application Support/Aetios-Med/models/</code></li>
+                            <li><strong>Linux:</strong> <code>~/.local/share/Aetios-Med/models/</code></li>
+                        </ul>
+                    </li>
+                </ol>
+                
+                <div class="info-box">
+                    <h4>💡 Download Tips</h4>
+                    <ul>
+                        <li>The download can be paused and resumed</li>
+                        <li>Use a stable internet connection (avoid mobile hotspots if possible)</li>
+                        <li>The model file is <code>llama3-openbio-8b.Q4_K_M.gguf</code> (~4.5GB)</li>
+                        <li>Once downloaded, the app works completely offline</li>
+                    </ul>
+                </div>
+                
+                <h3>Step 2: HuggingFace Token (Optional)</h3>
+                <p>A HuggingFace token is <strong>optional</strong> but recommended for faster downloads and access to additional models.</p>
+                
+                <div class="screenshot-placeholder">
+                    📸 HuggingFace Authentication Screen
+                    <p>Token input field with "Skip" option</p>
+                </div>
+                
+                <h4>To get a HuggingFace token:</h4>
+                <ol>
+                    <li>Visit <a href="https://huggingface.co/">https://huggingface.co/</a></li>
+                    <li>Create a free account or log in</li>
+                    <li>Go to Settings → Access Tokens</li>
+                    <li>Create a new token (read access is sufficient)</li>
+                    <li>Copy and paste it into Aetios-Med</li>
+                </ol>
+                
+                <p>Or click <strong>"Skip"</strong> to proceed without a token.</p>
+                
+                <h3>Step 3: Folder Configuration</h3>
+                <p>Configure where Aetios-Med looks for your study materials.</p>
+                
+                <div class="screenshot-placeholder">
+                    📸 Folder Configuration Screen
+                    <p>File browser for selecting Anki folder, Notes folder, etc.</p>
+                </div>
+                
+                <h4>Configure these folders:</h4>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Folder</th>
+                            <th>Purpose</th>
+                            <th>Required?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Anki Folder</strong></td>
+                            <td>Where your .apkg files are stored</td>
+                            <td>Optional</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Notes Folder</strong></td>
+                            <td>Your markdown/text notes (e.g., from Notability exports)</td>
+                            <td>Optional</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Resources Folder</strong></td>
+                            <td>PDFs, lecture slides, etc.</td>
+                            <td>Optional</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p>You can always change these settings later in <strong>Settings → Folders</strong>.</p>
+                
+                <h3>Step 4: Curriculum Loading</h3>
+                <p>Aetios-Med will load the UK medical curriculum knowledge graph (75+ topics).</p>
+                
+                <div class="success-box">
+                    <h4>✅ Setup Complete!</h4>
+                    <p>You'll now see the main dashboard. Take a moment to explore the interface before diving into study!</p>
+                </div>
+            </section>
+            
+            <section id="anki">
+                <h2>🎴 5. Anki Integration</h2>
+                
+                <h3>What is Anki?</h3>
+                <p>Anki is a popular flashcard application that uses spaced repetition. Many medical students use Anki for memorization. Aetios-Med integrates with Anki to:</p>
+                <ul>
+                    <li>Import your existing Anki decks</li>
+                    <li>Map cards to curriculum topics automatically</li>
+                    <li>Track which cards are related to weak topics</li>
+                    <li>Predict when you'll forget information (memory decay)</li>
+                    <li>Generate targeted study recommendations</li>
+                </ul>
+                
+                <h3>Exporting Decks from Anki</h3>
+                
+                <h4>Step 1: Open Anki</h4>
+                <p>Launch Anki on your computer (download from <a href="https://apps.ankiweb.net/">apps.ankiweb.net</a> if you don't have it).</p>
+                
+                <h4>Step 2: Select a Deck</h4>
+                <p>Click on the deck you want to export (e.g., "Medicine Year 2" or "Cardiology").</p>
+                
+                <h4>Step 3: Export</h4>
+                <ol>
+                    <li>Go to <strong>File → Export</strong></li>
+                    <li>Choose <strong>"Anki Deck Package (*.apkg)"</strong> as the export format</li>
+                    <li>Check <strong>"Include scheduling information"</strong> (important for retention tracking)</li>
+                    <li>Check <strong>"Include media"</strong> if your cards have images</li>
+                    <li>Click <strong>Export</strong> and save the .apkg file</li>
+                </ol>
+                
+                <div class="info-box">
+                    <h4>💡 Export Tips</h4>
+                    <ul>
+                        <li>Export individual decks rather than "All Decks" for better organization</li>
+                        <li>The scheduling information is crucial for Aetios-Med to understand which cards you struggle with</li>
+                        <li>.apkg files are just zip files containing a SQLite database</li>
+                    </ul>
+                </div>
+                
+                <h3>Importing into Aetios-Med</h3>
+                
+                <h4>Method 1: Automatic Import (Recommended)</h4>
+                <ol>
+                    <li>Save your .apkg files to the Anki folder you configured during setup</li>
+                    <li>Aetios-Med will automatically detect and import new files</li>
+                    <li>You'll see a notification when import is complete</li>
+                </ol>
+                
+                <h4>Method 2: Manual Import</h4>
+                <ol>
+                    <li>Go to <strong>Dashboard → Import</strong></li>
+                    <li>Click <strong>"Import Anki Deck"</strong></li>
+                    <li>Browse to your .apkg file</li>
+                    <li>Choose whether to enable <strong>automatic topic mapping</strong> (recommended)</li>
+                    <li>Click <strong>Import</strong></li>
+                </ol>
+                
+                <div class="screenshot-placeholder">
+                    📸 Anki Import Screen
+                    <p>File selection dialog with import options</p>
+                </div>
+                
+                <h3>Automatic Topic Mapping</h3>
+                <p>Aetios-Med uses AI to map your Anki cards to curriculum topics automatically:</p>
+                
+                <ol>
+                    <li><span class="step-number">1</span> The system reads the front and back of each card</li>
+                    <li><span class="step-number">2</span> It analyzes the content using the embedding model</li>
+                    <li><span class="step-number">3</span> Cards are matched to the most relevant curriculum topic(s)</li>
+                    <li><span class="step-number">4</span> You can review and adjust mappings manually</li>
+                </ol>
+                
+                <h4>Example Mappings:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Card Front</th>
+                            <th>Mapped Topic</th>
+                            <th>Confidence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>"What are the 4 chambers of the heart?"</td>
+                            <td>Cardiovascular Anatomy</td>
+                            <td><span class="badge badge-green">95%</span></td>
+                        </tr>
+                        <tr>
+                            <td>"First-line treatment for hypertension?"</td>
+                            <td>Cardiovascular Pharmacology</td>
+                            <td><span class="badge badge-green">88%</span></td>
+                        </tr>
+                        <tr>
+                            <td>"Symptoms of diabetic ketoacidosis"</td>
+                            <td>Endocrine Disorders</td>
+                            <td><span class="badge badge-green">92%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Viewing Anki Statistics</h3>
+                <p>Once imported, you can view detailed statistics about your Anki cards:</p>
+                
+                <ul>
+                    <li><strong>Total cards</strong> in each deck</li>
+                    <li><strong>Cards reviewed</strong> vs. new cards</li>
+                    <li><strong>Average ease factor</strong> (how difficult cards are for you)</li>
+                    <li><strong>Total lapses</strong> (times you forgot cards)</li>
+                    <li><strong>Weak cards</strong> (ease factor < 2.0 or multiple lapses)</li>
+                    <li><strong>Memory stability</strong> predictions</li>
+                </ul>
+                
+                <div class="screenshot-placeholder">
+                    📸 Anki Statistics Dashboard
+                    <p>Graphs and charts showing card performance by topic</p>
+                </div>
+                
+                <h3>Understanding Retention Tracking</h3>
+                <p>Aetios-Med tracks your Anki card retention using the card's scheduling information:</p>
+                
+                <ul>
+                    <li><strong>Interval</strong> - Days until next review</li>
+                    <li><strong>Ease factor</strong> - How easy/hard the card is (2.5 is normal)</li>
+                    <li><strong>Reviews</strong> - Number of times you've seen the card</li>
+                    <li><strong>Lapses</strong> - Number of times you've forgotten it</li>
+                    <li><strong>Last review</strong> - When you last studied this card</li>
+                </ul>
+                
+                <p>This data helps the AI tutor identify which topics need more attention.</p>
+                
+                <h3>Managing Multiple Decks</h3>
+                <p>You can import multiple Anki decks:</p>
+                
+                <ol>
+                    <li>Each deck is tracked separately</li>
+                    <li>View per-deck statistics in the Anki panel</li>
+                    <li>Filter the knowledge graph by deck to see only relevant topics</li>
+                    <li>Delete imported decks if you no longer need them</li>
+                </ol>
+                
+                <div class="warning-box">
+                    <h4>⚠️ Important Notes</h4>
+                    <ul>
+                        <li>Importing a deck doesn't modify your original Anki database</li>
+                        <li>Changes in Aetios-Med don't sync back to Anki (it's one-way import)</li>
+                        <li>Re-import a deck to update statistics after studying in Anki</li>
+                        <li>Large decks (1000+ cards) may take a few minutes to process</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section id="graph">
+                <h2>🕸️ 6. Knowledge Graph</h2>
+                
+                <p>The Knowledge Graph is the heart of Aetios-Med. It visualizes 75+ topics from the UK medical curriculum and shows how they relate to each other.</p>
+                
+                <h3>Understanding the Graph</h3>
+                
+                <div class="screenshot-placeholder">
+                    📸 Knowledge Graph Visualization
+                    <p>Interactive node graph with colored nodes showing confidence levels</p>
+                </div>
+                
+                <h4>What You See:</h4>
+                <ul>
+                    <li><strong>Nodes</strong> - Each circle represents a curriculum topic</li>
+                    <li><strong>Edges</strong> - Lines connecting nodes show relationships (prerequisites, dependencies)</li>
+                    <li><strong>Colors</strong> - Indicate your confidence level for each topic</li>
+                    <li><strong>Size</strong> - Larger nodes have more connections</li>
+                </ul>
+                
+                <h3>Color-Coded Confidence Levels</h3>
+                
+                <p>Topics are color-coded based on your mastery:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Color</th>
+                            <th>Confidence</th>
+                            <th>Meaning</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge badge-red">🔴 Red</span></td>
+                            <td>0-30%</td>
+                            <td>Low confidence - needs urgent review</td>
+                            <td>Priority study, review basics, do practice questions</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-amber">🟡 Amber</span></td>
+                            <td>30-60%</td>
+                            <td>Medium confidence - periodic review needed</td>
+                            <td>Regular review, spaced repetition</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-green">🟢 Green</span></td>
+                            <td>60-100%</td>
+                            <td>High confidence - topic mastered</td>
+                            <td>Maintain with occasional review</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Navigating the Graph</h3>
+                
+                <h4>Basic Controls:</h4>
+                <ul>
+                    <li><strong>Click and drag</strong> - Move individual nodes</li>
+                    <li><strong>Mouse wheel</strong> - Zoom in/out</li>
+                    <li><strong>Click a node</strong> - View detailed information</li>
+                    <li><strong>Double-click a node</strong> - Focus on that topic and its connections</li>
+                    <li><strong>Right-click</strong> - Quick actions menu</li>
+                </ul>
+                
+                <h4>Graph Controls Panel:</h4>
+                
+                <div class="screenshot-placeholder">
+                    📸 Graph Controls Toolbar
+                    <p>Zoom, layout, filter, and search controls</p>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Control</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>🔍 Search</strong></td>
+                            <td>Find specific topics by name</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🎨 Filter</strong></td>
+                            <td>Show only red, amber, or green topics</td>
+                        </tr>
+                        <tr>
+                            <td><strong>📐 Layout</strong></td>
+                            <td>Choose graph layout algorithm (Cola, Dagre, Circle, Grid)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🔄 Reset View</strong></td>
+                            <td>Re-center and fit all nodes to screen</td>
+                        </tr>
+                        <tr>
+                            <td><strong>➕➖ Zoom</strong></td>
+                            <td>Zoom in/out of the graph</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Layout Algorithms</h3>
+                <p>Different layouts help you visualize relationships in different ways:</p>
+                
+                <ul>
+                    <li><strong>Cola</strong> (default) - Force-directed layout that groups related topics</li>
+                    <li><strong>Dagre</strong> - Hierarchical layout showing prerequisite flow</li>
+                    <li><strong>Circle</strong> - Circular arrangement for overview</li>
+                    <li><strong>Grid</strong> - Organized grid for easy scanning</li>
+                </ul>
+                
+                <h3>Node Detail Panel</h3>
+                <p>Click any node to see detailed information:</p>
+                
+                <div class="screenshot-placeholder">
+                    📸 Node Detail Side Panel
+                    <p>Showing topic name, confidence, related cards, study history</p>
+                </div>
+                
+                <h4>Information Displayed:</h4>
+                <ul>
+                    <li><strong>Topic Name</strong> - e.g., "Cardiovascular Physiology"</li>
+                    <li><strong>Confidence Score</strong> - Your current mastery level</li>
+                    <li><strong>Last Studied</strong> - When you last reviewed this topic</li>
+                    <li><strong>Study Time</strong> - Total hours spent on this topic</li>
+                    <li><strong>Related Anki Cards</strong> - Number of cards mapped to this topic</li>
+                    <li><strong>Quiz Performance</strong> - Recent quiz scores</li>
+                    <li><strong>Prerequisites</strong> - Topics you should know first</li>
+                    <li><strong>Dependent Topics</strong> - Topics that build on this one</li>
+                </ul>
+                
+                <h4>Quick Actions:</h4>
+                <ul>
+                    <li><strong>Start Quiz</strong> - Generate a quiz for this topic</li>
+                    <li><strong>Ask AI</strong> - Open chat with this topic as context</li>
+                    <li><strong>View Cards</strong> - See related Anki cards</li>
+                    <li><strong>Update Confidence</strong> - Manually adjust your confidence level</li>
+                </ul>
+                
+                <h3>Understanding Topic Relationships</h3>
+                
+                <h4>Prerequisites (Incoming Edges):</h4>
+                <p>Topics you should understand before studying this one. For example:</p>
+                <ul>
+                    <li><strong>Cardiac Pathology</strong> requires <strong>Cardiac Anatomy</strong> and <strong>Cardiac Physiology</strong></li>
+                    <li><strong>Pharmacokinetics</strong> requires <strong>Biochemistry Basics</strong></li>
+                </ul>
+                
+                <h4>Dependencies (Outgoing Edges):</h4>
+                <p>Topics that build on this one. For example:</p>
+                <ul>
+                    <li><strong>Anatomy</strong> is prerequisite for <strong>Physiology</strong>, <strong>Pathology</strong>, and <strong>Clinical Skills</strong></li>
+                </ul>
+                
+                <h3>Tracking Confidence Over Time</h3>
+                <p>Your confidence in each topic changes based on:</p>
+                
+                <ul>
+                    <li><strong>Quiz performance</strong> - Correct answers increase confidence</li>
+                    <li><strong>Study sessions</strong> - Time spent studying increases confidence</li>
+                    <li><strong>Memory decay</strong> - Confidence naturally decreases over time (forgetting curve)</li>
+                    <li><strong>Manual updates</strong> - You can adjust confidence yourself</li>
+                </ul>
+                
+                <h3>Identifying Weak Areas</h3>
+                <p>The graph makes it easy to spot topics needing attention:</p>
+                
+                <ol>
+                    <li><span class="step-number">1</span> <strong>Filter by red topics</strong> - Shows urgent review needs</li>
+                    <li><span class="step-number">2</span> <strong>Check prerequisites</strong> - Red topics with red prerequisites need foundational work first</li>
+                    <li><span class="step-number">3</span> <strong>Sort by decay</strong> - Find topics you studied but are forgetting</li>
+                </ol>
+                
+                <div class="info-box">
+                    <h4>💡 Study Strategy Tips</h4>
+                    <ul>
+                        <li><strong>Bottom-up approach:</strong> Master prerequisites before tackling dependent topics</li>
+                        <li><strong>Clustered learning:</strong> Study related topics together (e.g., all cardiovascular topics)</li>
+                        <li><strong>Maintenance mode:</strong> Even green topics need occasional review to prevent decay</li>
+                        <li><strong>Exam focus:</strong> Prioritize topics directly tested in upcoming exams</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section id="chat">
+                <h2>💬 7. AI Medical Tutor (Chat Interface)</h2>
+                
+                <p>The AI tutor is your personal medical educator, powered by OpenBioLLM-8B running entirely on your computer. It can answer questions, explain concepts, and guide your learning.</p>
+                
+                <h3>Starting a Conversation</h3>
+                
+                <div class="screenshot-placeholder">
+                    📸 Chat Interface
+                    <p>Chat window with conversation history and input box</p>
+                </div>
+                
+                <h4>How to Use:</h4>
+                <ol>
+                    <li><span class="step-number">1</span> Click the <strong>Chat</strong> tab or icon</li>
+                    <li><span class="step-number">2</span> Type your question in the input box</li>
+                    <li><span class="step-number">3</span> Press Enter or click <strong>Send</strong></li>
+                    <li><span class="step-number">4</span> Wait for the AI to respond (typically 5-30 seconds)</li>
+                </ol>
+                
+                <h3>Types of Questions You Can Ask</h3>
+                
+                <h4>Conceptual Questions:</h4>
+                <ul>
+                    <li>"Explain the cardiac cycle in simple terms"</li>
+                    <li>"What's the difference between Type 1 and Type 2 diabetes?"</li>
+                    <li>"How does the renin-angiotensin system work?"</li>
+                </ul>
+                
+                <h4>Clinical Questions:</h4>
+                <ul>
+                    <li>"What are the symptoms of pneumonia?"</li>
+                    <li>"How do you diagnose hyperthyroidism?"</li>
+                    <li>"What's the first-line treatment for community-acquired pneumonia in the UK?"</li>
+                </ul>
+                
+                <h4>Study Guidance:</h4>
+                <ul>
+                    <li>"What should I focus on for my cardiology exam?"</li>
+                    <li>"I'm struggling with pharmacokinetics. Where should I start?"</li>
+                    <li>"Can you create a study plan for respiratory medicine?"</li>
+                </ul>
+                
+                <h4>Exam Preparation:</h4>
+                <ul>
+                    <li>"Give me some practice OSCE scenarios for cardiovascular examination"</li>
+                    <li>"What are common UKMLA questions about antibiotics?"</li>
+                    <li>"Quiz me on the causes of chest pain"</li>
+                </ul>
+                
+                <h3>Understanding AI Responses</h3>
+                
+                <p>The AI tutor provides structured, evidence-based responses:</p>
+                
+                <div class="feature-box">
+                    <h4>Response Structure:</h4>
+                    <ol>
+                        <li><strong>Direct Answer</strong> - Clear, concise response to your question</li>
+                        <li><strong>Explanation</strong> - Detailed explanation with medical reasoning</li>
+                        <li><strong>Clinical Context</strong> - How this applies in UK NHS practice</li>
+                        <li><strong>Related Topics</strong> - Links to related curriculum topics</li>
+                        <li><strong>Further Study</strong> - Suggestions for deeper learning</li>
+                    </ol>
+                </div>
+                
+                <h3>UK Medical Context</h3>
+                
+                <p>The AI is specifically trained on UK medical education and practice:</p>
+                
+                <ul>
+                    <li><strong>NICE Guidelines</strong> - References current UK treatment guidelines</li>
+                    <li><strong>BNF</strong> - Uses British National Formulary for drug information</li>
+                    <li><strong>GMC Outcomes</strong> - Aligned with GMC Outcomes for Graduates</li>
+                    <li><strong>UK Terminology</strong> - Uses UK spelling and medical terms (e.g., "paracetamol" not "acetaminophen")</li>
+                    <li><strong>NHS Context</strong> - Considers NHS resources and pathways</li>
+                </ul>
+                
+                <h3>Interactive Features</h3>
+                
+                <h4>Follow-up Questions:</h4>
+                <p>The AI maintains conversation context, so you can ask follow-up questions:</p>
+                
+                <div class="feature-box">
+                    <p><strong>You:</strong> "Explain hypertension"</p>
+                    <p><strong>AI:</strong> [Provides explanation]</p>
+                    <p><strong>You:</strong> "What's the first-line treatment?"</p>
+                    <p><strong>AI:</strong> [Explains treatment, referencing the previous context]</p>
+                    <p><strong>You:</strong> "Why not start with a beta-blocker?"</p>
+                    <p><strong>AI:</strong> [Explains guideline rationale]</p>
+                </div>
+                
+                <h4>Topic Integration:</h4>
+                <p>When you ask about a topic, the AI can access:</p>
+                <ul>
+                    <li>Your confidence level for that topic</li>
+                    <li>Related Anki cards and how you performed</li>
+                    <li>Your study history for this topic</li>
+                    <li>Prerequisite topics you might need to review</li>
+                </ul>
+                
+                <h4>Automatic Quiz Generation:</h4>
+                <p>After explaining a concept, the AI may offer to quiz you:</p>
+                
+                <div class="screenshot-placeholder">
+                    📸 Inline Quiz Card
+                    <p>Multiple choice question embedded in chat</p>
+                </div>
+                
+                <h3>Best Practices for Using the AI Tutor</h3>
+                
+                <div class="success-box">
+                    <h4>✅ Do:</h4>
+                    <ul>
+                        <li>Ask specific, focused questions</li>
+                        <li>Request explanations in your own words afterward</li>
+                        <li>Ask for clinical examples and case scenarios</li>
+                        <li>Request source references for important information</li>
+                        <li>Use it to test your understanding before exams</li>
+                    </ul>
+                </div>
+                
+                <div class="warning-box">
+                    <h4>⚠️ Don't:</h4>
+                    <ul>
+                        <li>Use it for actual clinical decision-making</li>
+                        <li>Rely solely on the AI - always verify with textbooks and guidelines</li>
+                        <li>Ask about personal health concerns</li>
+                        <li>Expect it to replace attending lectures or clinical placements</li>
+                        <li>Share patient information (even anonymized)</li>
+                    </ul>
+                </div>
+                
+                <h3>Limitations and Accuracy</h3>
+                
+                <p>While the AI is highly capable, it's important to understand its limitations:</p>
+                
+                <ul>
+                    <li><strong>Training data cutoff:</strong> The model was trained on data up to a certain date</li>
+                    <li><strong>Not infallible:</strong> Can occasionally make errors or provide outdated information</li>
+                    <li><strong>General knowledge:</strong> May not know about recent guideline changes</li>
+                    <li><strong>No clinical judgment:</strong> Cannot replace human medical expertise</li>
+                </ul>
+                
+                <div class="info-box">
+                    <h4>💡 Verification Tips</h4>
+                    <ul>
+                        <li>Cross-reference important information with official guidelines</li>
+                        <li>Check drug information against the current BNF</li>
+                        <li>Verify procedures and protocols with your medical school</li>
+                        <li>When in doubt, ask your tutors or consultants</li>
+                    </ul>
+                </div>
+                
+                <h3>Chat History and Sessions</h3>
+                
+                <p>Your conversations are organized into sessions:</p>
+                
+                <ul>
+                    <li><strong>New Session:</strong> Start a fresh conversation</li>
+                    <li><strong>Save Session:</strong> Save important conversations for later review</li>
+                    <li><strong>Export:</strong> Export conversations as PDF or text</li>
+                    <li><strong>Search:</strong> Search across all your past conversations</li>
+                </ul>
+                
+                <h3>Performance and Speed</h3>
+                
+                <p>Response speed depends on your hardware:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Hardware</th>
+                            <th>Typical Response Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Apple M1/M2 (Metal)</td>
+                            <td>5-10 seconds</td>
+                        </tr>
+                        <tr>
+                            <td>NVIDIA GPU (CUDA)</td>
+                            <td>5-15 seconds</td>
+                        </tr>
+                        <tr>
+                            <td>CPU only (8+ cores)</td>
+                            <td>15-30 seconds</td>
+                        </tr>
+                        <tr>
+                            <td>CPU only (4 cores)</td>
+                            <td>30-60 seconds</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="info-box">
+                    <h4>💡 Speed Optimization</h4>
+                    <ul>
+                        <li>Close other applications to free up RAM</li>
+                        <li>First response in a session is slower (model loading)</li>
+                        <li>Subsequent responses are faster (model stays in memory)</li>
+                        <li>Shorter questions get faster responses</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section id="quiz">
+                <h2>🎯 8. Quiz Generation & Spaced Repetition</h2>
+                
+                <p>Aetios-Med generates personalized quizzes using AI, targeting your weak areas and scheduling reviews using the FSRS-4 (Free Spaced Repetition Scheduler) algorithm.</p>
+                
+                <h3>Generating a Quiz</h3>
+                
+                <h4>Method 1: From Knowledge Graph</h4>
+                <ol>
+                    <li><span class="step-number">1</span> Click a topic node in the knowledge graph</li>
+                    <li><span class="step-number">2</span> Click <strong>"Generate Quiz"</strong> in the detail panel</li>
+                    <li><span class="step-number">3</span> Select number of questions (5, 10, or 20)</li>
+                    <li><span class="step-number">4</span> Choose difficulty level</li>
+                </ol>
+                
+                <h4>Method 2: From Dashboard</h4>
+                <ol>
+                    <li><span class="step-number">1</span> Go to Dashboard</li>
+                    <li><span class="step-number">2</span> Look for "Recommended Quizzes" section</li>
+                    <li><span class="step-number">3</span> Click on a suggested quiz (automatically targets weak areas)</li>
+                </ol>
+                
+                <h4>Method 3: Ask the AI</h4>
+                <p>Simply ask the AI tutor: "Quiz me on [topic]" or "Give me practice questions about [topic]"</p>
+                
+                <div class="screenshot-placeholder">
+                    📸 Quiz Generation Options
+                    <p>Dialog showing quiz settings: number of questions, difficulty, topics</p>
+                </div>
+                
+                <h3>Difficulty Levels</h3>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Description</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Easy</strong></td>
+                            <td>Basic recall, definitions, simple facts</td>
+                            <td>"What are the 4 chambers of the heart?"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Medium</strong></td>
+                            <td>Application, understanding mechanisms</td>
+                            <td>"Explain why left ventricular failure causes pulmonary oedema"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hard</strong></td>
+                            <td>Clinical reasoning, differential diagnosis</td>
+                            <td>"A 65yo with chest pain, SOB, and JVP raised. Most likely diagnosis?"</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p>The system automatically adjusts difficulty based on your confidence level in each topic.</p>
+                
+                <h3>Taking a Quiz</h3>
+                
+                <div class="screenshot-placeholder">
+                    📸 Active Quiz Interface
+                    <p>Question with multiple choice options and submit button</p>
+                </div>
+                
+                <h4>Question Types:</h4>
+                <ul>
+                    <li><strong>Multiple Choice</strong> - Select one correct answer</li>
+                    <li><strong>True/False</strong> - Simple binary choice</li>
+                    <li><strong>Best Answer</strong> - Multiple plausible options, choose the best</li>
+                    <li><strong>Clinical Vignette</strong> - Scenario-based questions (harder difficulty)</li>
+                </ul>
+                
+                <h4>During the Quiz:</h4>
+                <ul>
+                    <li>Read the question carefully</li>
+                    <li>Select your answer</li>
+                    <li>Click <strong>Submit</strong></li>
+                    <li>Receive immediate feedback (correct/incorrect)</li>
+                    <li>Read the explanation (always provided)</li>
+                    <li>Click <strong>Next Question</strong></li>
+                </ul>
+                
+                <h3>Quiz Results</h3>
+                
+                <p>After completing a quiz, you'll see:</p>
+                
+                <div class="screenshot-placeholder">
+                    📸 Quiz Results Screen
+                    <p>Score breakdown, correct/incorrect answers, time taken</p>
+                </div>
+                
+                <ul>
+                    <li><strong>Score</strong> - Percentage correct (e.g., 8/10 = 80%)</li>
+                    <li><strong>Time Taken</strong> - Total time to complete</li>
+                    <li><strong>Topic Breakdown</strong> - Performance by subtopic</li>
+                    <li><strong>Confidence Change</strong> - How the quiz affected your topic confidence</li>
+                    <li><strong>Review Mistakes</strong> - Go back to incorrect questions</li>
+                </ul>
+                
+                <h3>Understanding FSRS-4 Spaced Repetition</h3>
+                
+                <p>FSRS-4 is a modern spaced repetition algorithm that's more accurate than traditional SM-2 (used by Anki).</p>
+                
+                <h4>How It Works:</h4>
+                <ol>
+                    <li><span class="step-number">1</span> <strong>Initial Learning:</strong> New topics start with short review intervals</li>
+                    <li><span class="step-number">2</span> <strong>Success Increases Interval:</strong> Correct answers increase time until next review</li>
+                    <li><span class="step-number">3</span> <strong>Failure Resets:</strong> Incorrect answers shorten the review interval</li>
+                    <li><span class="step-number">4</span> <strong>Difficulty Adjustment:</strong> Algorithm learns which topics are harder for you</li>
+                    <li><span class="step-number">5</span> <strong>Optimal Timing:</strong> Reviews scheduled just before you're likely to forget</li>
+                </ol>
+                
+                <h4>Review Schedule Example:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Review #</th>
+                            <th>Interval</th>
+                            <th>If Correct</th>
+                            <th>If Incorrect</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>1 day</td>
+                            <td>Next: 3 days</td>
+                            <td>Next: 10 minutes</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>3 days</td>
+                            <td>Next: 8 days</td>
+                            <td>Next: 1 day</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>8 days</td>
+                            <td>Next: 21 days</td>
+                            <td>Next: 3 days</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>21 days</td>
+                            <td>Next: 45 days</td>
+                            <td>Next: 8 days</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Performance Tracking</h3>
+                
+                <p>Aetios-Med tracks your quiz performance over time:</p>
+                
+                <ul>
+                    <li><strong>Overall Accuracy:</strong> Percentage of questions answered correctly</li>
+                    <li><strong>Per-Topic Performance:</strong> Accuracy breakdown by curriculum topic</li>
+                    <li><strong>Difficulty Performance:</strong> How you perform at each difficulty level</li>
+                    <li><strong>Improvement Trends:</strong> Are you improving over time?</li>
+                    <li><strong>Weak Areas:</strong> Topics where you consistently struggle</li>
+                    <li><strong>Mastery Timeline:</strong> When you achieved high confidence in each topic</li>
+                </ul>
+                
+                <div class="screenshot-placeholder">
+                    📸 Performance Analytics Dashboard
+                    <p>Graphs showing quiz performance trends over time</p>
+                </div>
+                
+                <h3>Targeted Quiz Generation</h3>
+                
+                <p>The AI can create targeted quizzes for specific learning goals:</p>
+                
+                <h4>By Weakness:</h4>
+                <ul>
+                    <li><strong>"Quiz my weakest topics"</strong> - Focuses on red confidence topics</li>
+                    <li><strong>"Review topics I studied last week"</strong> - Reinforcement quiz</li>
+                </ul>
+                
+                <h4>By Exam:</h4>
+                <ul>
+                    <li><strong>"UKMLA practice questions"</strong> - Exam-style format</li>
+                    <li><strong>"OSCE scenarios for cardiovascular exam"</strong> - Clinical skills focus</li>
+                </ul>
+                
+                <h4>By Time:</h4>
+                <ul>
+                    <li><strong>"Quick 5-minute quiz"</strong> - Short review session</li>
+                    <li><strong>"Comprehensive 30-minute assessment"</strong> - Thorough testing</li>
+                </ul>
+                
+                <div class="info-box">
+                    <h4>💡 Quiz Best Practices</h4>
+                    <ul>
+                        <li><strong>Daily practice:</strong> Do at least one quiz per day</li>
+                        <li><strong>Mixed difficulty:</strong> Don't only practice easy questions</li>
+                        <li><strong>Review mistakes:</strong> Always read explanations for wrong answers</li>
+                        <li><strong>Spaced out:</strong> Let FSRS-4 schedule reviews, don't cram</li>
+                        <li><strong>Active recall:</strong> Try to answer before looking at options</li>
+                        <li><strong>Teach others:</strong> Explain correct answers in your own words</li>
+                    </ul>
+                </div>
+                
+                <h3>Integration with Anki Cards</h3>
+                
+                <p>Quizzes can include questions based on your Anki cards:</p>
+                
+                <ul>
+                    <li>Cards you frequently forget are prioritized</li>
+                    <li>Card content is reformulated into quiz questions</li>
+                    <li>Performance feeds back into the knowledge graph</li>
+                </ul>
+            </section>
+            
+            <section id="study">
+                <h2>📅 9. Study Planning & Calendar</h2>
+                
+                <p>Aetios-Med generates personalized AI-powered study plans based on your exams, weak areas, and available time.</p>
+                
+                <h3>Creating a Study Plan</h3>
+                
+                <h4>Step 1: Add an Exam</h4>
+                <ol>
+                    <li><span class="step-number">1</span> Go to <strong>Study Plan → Exams</strong></li>
+                    <li><span class="step-number">2</span> Click <strong>"Add Exam"</strong></li>
+                    <li><span class="step-number">3</span> Enter exam details:
+                        <ul>
+                            <li><strong>Name:</strong> e.g., "Cardiology Final"</li>
+                            <li><strong>Date:</strong> Select exam date</li>
+                            <li><strong>Topics:</strong> Select relevant curriculum topics</li>
+                            <li><strong>Priority:</strong> High/Medium/Low</li>
+                        </ul>
+                    </li>
+                    <li><span class="step-number">4</span> Click <strong>Save</strong></li>
+                </ol>
+                
+                <div class="screenshot-placeholder">
+                    📸 Add Exam Dialog
+                    <p>Form for entering exam details with topic selection</p>
+                </div>
+                
+                <h4>Step 2: Generate Study Plan</h4>
+                <ol>
+                    <li><span class="step-number">1</span> Select the exam</li>
+                    <li><span class="step-number">2</span> Click <strong>"Generate Study Plan"</strong></li>
+                    <li><span class="step-number">3</span> Configure plan settings:
+                        <ul>
+                            <li><strong>Study hours per day:</strong> e.g., 3-4 hours</li>
+                            <li><strong>Days per week:</strong> e.g., 6 days (rest one day)</li>
+                            <li><strong>Focus areas:</strong> Weak topics, all topics, or specific topics</li>
+                            <li><strong>Study methods:</strong> Reading, quizzes, practice problems, etc.</li>
+                        </ul>
+                    </li>
+                    <li><span class="step-number">4</span> Click <strong>Generate</strong></li>
+                </ol>
+                
+                <div class="screenshot-placeholder">
+                    📸 Study Plan Generator
+                    <p>AI generating personalized study schedule</p>
+                </div>
+                
+                <h3>Understanding the Generated Plan</h3>
+                
+                <p>The AI creates a day-by-day study schedule:</p>
+                
+                <h4>Plan Structure:</h4>
+                <ul>
+                    <li><strong>Week-by-week breakdown:</strong> Organized into weekly goals</li>
+                    <li><strong>Daily sessions:</strong> 2-3 study blocks per day</li>
+                    <li><strong>Topic coverage:</strong> Balanced across all required topics</li>
+                    <li><strong>Progressive difficulty:</strong> Starts with fundamentals, builds to complex topics</li>
+                    <li><strong>Regular review:</strong> Spaced repetition built in</li>
+                    <li><strong>Practice sessions:</strong> Quiz days before the exam</li>
+                </ul>
+                
+                <h4>Example Study Day:</h4>
+                <div class="feature-box">
+                    <p><strong>Week 3, Day 4 - Thursday</strong></p>
+                    <ul>
+                        <li><strong>09:00-11:00:</strong> Cardiovascular Pharmacology (reading + notes)</li>
+                        <li><strong>11:15-12:00:</strong> Quiz: Drug mechanisms</li>
+                        <li><strong>14:00-15:30:</strong> Review: Cardiac physiology (from Week 1)</li>
+                        <li><strong>15:45-16:30:</strong> Anki cards: Cardiology deck</li>
+                        <li><strong>Evening:</strong> Watch lecture on heart failure</li>
+                    </ul>
+                </div>
+                
+                <h3>Calendar View</h3>
+                
+                <div class="screenshot-placeholder">
+                    📸 Calendar View
+                    <p>Month/week/day view with color-coded study tasks</p>
+                </div>
+                
+                <h4>Calendar Features:</h4>
+                <ul>
+                    <li><strong>Multiple views:</strong> Month, week, day, or agenda</li>
+                    <li><strong>Color coding:</strong> Different colors for different topic categories</li>
+                    <li><strong>Task duration:</strong> Time blocks show duration</li>
+                    <li><strong>Completion tracking:</strong> Check off tasks as you complete them</li>
+                    <li><strong>Reminders:</strong> Get notifications before study sessions</li>
+                </ul>
+                
+                <h4>Task Types:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Color</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Study Session</strong></td>
+                            <td><span class="badge badge-blue">Blue</span></td>
+                            <td>Reading, note-taking, learning new material</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quiz/Practice</strong></td>
+                            <td><span class="badge badge-green">Green</span></td>
+                            <td>Active recall, practice questions</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Review</strong></td>
+                            <td><span class="badge badge-amber">Amber</span></td>
+                            <td>Spaced repetition review of previous material</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Exam</strong></td>
+                            <td><span class="badge badge-red">Red</span></td>
+                            <td>Actual exam or mock exam</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Exporting to External Calendars</h3>
+                
+                <p>Export your study plan to Google Calendar, Apple Calendar, Outlook, etc.</p>
+                
+                <h4>Export Steps:</h4>
+                <ol>
+                    <li><span class="step-number">1</span> Open your study plan</li>
+                    <li><span class="step-number">2</span> Click <strong>"Export"</strong> → <strong>"Export as ICS"</strong></li>
+                    <li><span class="step-number">3</span> Save the .ics file</li>
+                    <li><span class="step-number">4</span> Import into your calendar app:
+                        <ul>
+                            <li><strong>Google Calendar:</strong> Settings → Import & Export</li>
+                            <li><strong>Apple Calendar:</strong> File → Import</li>
+                            <li><strong>Outlook:</strong> File → Open & Export → Import/Export</li>
+                        </ul>
+                    </li>
+                </ol>
+                
+                <div class="info-box">
+                    <h4>💡 ICS Export Features</h4>
+                    <ul>
+                        <li>All study tasks included as calendar events</li>
+                        <li>Event descriptions contain topic details and resources</li>
+                        <li>Reminders are preserved (if your calendar app supports them)</li>
+                        <li>Colors are maintained (if supported)</li>
+                        <li>Re-export if you modify the plan</li>
+                    </ul>
+                </div>
+                
+                <h3>Tracking Progress</h3>
+                
+                <h4>Mark Tasks Complete:</h4>
+                <ul>
+                    <li>Click the checkbox next to each task as you complete it</li>
+                    <li>Completed tasks show in faded color</li>
+                    <li>Progress percentage updates automatically</li>
+                </ul>
+                
+                <h4>Log Study Sessions:</h4>
+                <p>After each study session, you can log details:</p>
+                <ul>
+                    <li><strong>Actual time spent:</strong> Was it shorter/longer than planned?</li>
+                    <li><strong>Topics covered:</strong> What you actually studied</li>
+                    <li><strong>Confidence change:</strong> How much did you improve?</li>
+                    <li><strong>Notes:</strong> Key takeaways or things to review</li>
+                </ul>
+                
+                <div class="screenshot-placeholder">
+                    📸 Study Session Log Dialog
+                    <p>Form for logging study session details</p>
+                </div>
+                
+                <h3>Adaptive Planning</h3>
+                
+                <p>The AI can adjust your study plan based on your progress:</p>
+                
+                <ul>
+                    <li><strong>Behind schedule?</strong> Consolidates material or extends study time</li>
+                    <li><strong>Ahead of schedule?</strong> Adds depth or additional topics</li>
+                    <li><strong>Struggling with a topic?</strong> Allocates more time and breaks it down</li>
+                    <li><strong>Mastered early?</strong> Moves to next topic, adds maintenance reviews</li>
+                </ul>
+                
+                <h4>To Update Your Plan:</h4>
+                <ol>
+                    <li>Click <strong>"Adjust Plan"</strong></li>
+                    <li>The AI analyzes your recent activity</li>
+                    <li>It suggests modifications</li>
+                    <li>You can accept, modify, or reject changes</li>
+                </ol>
+                
+                <h3>Study Plan Templates</h3>
+                
+                <p>Pre-built templates for common scenarios:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Template</th>
+                            <th>Duration</th>
+                            <th>Best For</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Intensive Revision</strong></td>
+                            <td>2-4 weeks</td>
+                            <td>Final exam cramming (not recommended but available)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Balanced Learning</strong></td>
+                            <td>8-12 weeks</td>
+                            <td>Semester-long topic coverage</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Deep Understanding</strong></td>
+                            <td>12+ weeks</td>
+                            <td>Building foundational knowledge</td>
+                        </tr>
+                        <tr>
+                            <td><strong>OSCE Preparation</strong></td>
+                            <td>4-6 weeks</td>
+                            <td>Clinical skills exam prep</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Maintenance Mode</strong></td>
+                            <td>Ongoing</td>
+                            <td>Keeping knowledge fresh between exams</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="success-box">
+                    <h4>✅ Study Planning Tips</h4>
+                    <ul>
+                        <li><strong>Start early:</strong> Generate plans at least 8 weeks before exams</li>
+                        <li><strong>Be realistic:</strong> Don't overestimate how much you can study per day</li>
+                        <li><strong>Include breaks:</strong> Schedule rest days to prevent burnout</li>
+                        <li><strong>Active learning:</strong> Mix reading with quizzes and practice</li>
+                        <li><strong>Review regularly:</strong> Spaced repetition is more effective than cramming</li>
+                        <li><strong>Track honestly:</strong> Log actual study time, not planned time</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section id="resources">
+                <h2>🌐 10. Resource Viewer & External Integrations</h2>
+                
+                <p>Aetios-Med includes an in-app browser for accessing medical resources and integrating with external tools like Blackboard, Notability, and more.</p>
+                
+                <h3>In-App Resource Viewer</h3>
+                
+                <div class="screenshot-placeholder">
+                    📸 Resource Viewer / In-App Browser
+                    <p>Web browser panel showing medical resource website</p>
+                </div>
+                
+                <h4>Features:</h4>
+                <ul>
+                    <li><strong>Sandboxed browsing:</strong> Safe, isolated web browsing</li>
+                    <li><strong>Bookmarks:</strong> Save important pages</li>
+                    <li><strong>History:</strong> Track visited resources</li>
+                    <li><strong>Search:</strong> Quick search across medical databases</li>
+                    <li><strong>PDF viewer:</strong> View PDFs directly in the app</li>
+                </ul>
+                
+                <h4>How to Use:</h4>
+                <ol>
+                    <li><span class="step-number">1</span> Click <strong>"Resources"</strong> in the sidebar</li>
+                    <li><span class="step-number">2</span> Enter a URL or select a bookmark</li>
+                    <li><span class="step-number">3</span> Browse normally with standard web controls</li>
+                    <li><span class="step-number">4</span> Click <strong>"Add Bookmark"</strong> to save important pages</li>
+                </ol>
+                
+                <h3>Recommended Medical Resources</h3>
+                
+                <p>Pre-configured quick links to essential UK medical resources:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Resource</th>
+                            <th>URL</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>NICE Guidelines</strong></td>
+                            <td>nice.org.uk</td>
+                            <td>UK clinical guidelines and pathways</td>
+                        </tr>
+                        <tr>
+                            <td><strong>BNF</strong></td>
+                            <td>bnf.nice.org.uk</td>
+                            <td>British National Formulary - drug information</td>
+                        </tr>
+                        <tr>
+                            <td><strong>BMJ Best Practice</strong></td>
+                            <td>bestpractice.bmj.com</td>
+                            <td>Evidence-based clinical guidance</td>
+                        </tr>
+                        <tr>
+                            <td><strong>PubMed</strong></td>
+                            <td>pubmed.ncbi.nlm.nih.gov</td>
+                            <td>Medical literature search</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Radiopaedia</strong></td>
+                            <td>radiopaedia.org</td>
+                            <td>Radiology reference</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Teach Me Anatomy</strong></td>
+                            <td>teachmeanatomy.info</td>
+                            <td>Anatomical diagrams and explanations</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Blackboard / VLE Integration</h3>
+                
+                <p>Access your university's Virtual Learning Environment (VLE) directly within Aetios-Med.</p>
+                
+                <h4>Setup:</h4>
+                <ol>
+                    <li><span class="step-number">1</span> Go to <strong>Settings → Integrations</strong></li>
+                    <li><span class="step-number">2</span> Click <strong>"Add VLE"</strong></li>
+                    <li><span class="step-number">3</span> Enter your VLE details:
+                        <ul>
+                            <li><strong>Name:</strong> e.g., "UCL Moodle" or "Edinburgh Blackboard"</li>
+                            <li><strong>URL:</strong> Your VLE login page</li>
+                        </ul>
+                    </li>
+                    <li><span class="step-number">4</span> Click <strong>Save</strong></li>
+                </ol>
+                
+                <h4>Accessing Your VLE:</h4>
+                <ol>
+                    <li>Click <strong>"Resources"</strong> → <strong>"My VLE"</strong></li>
+                    <li>Log in to your VLE (credentials are not stored by Aetios-Med)</li>
+                    <li>Browse courses, download materials, view announcements</li>
+                    <li>Download PDFs/slides directly to your Resources folder</li>
+                </ol>
+                
+                <div class="info-box">
+                    <h4>💡 VLE Tips</h4>
+                    <ul>
+                        <li>Stay logged in for the session (cookies are temporary)</li>
+                        <li>Download lecture slides to your Resources folder for offline access</li>
+                        <li>Use the VLE to check deadlines, then add them as exams in Aetios-Med</li>
+                        <li>Aetios-Med doesn't track your VLE activity (privacy preserved)</li>
+                    </ul>
+                </div>
+                
+                <h3>Notability Integration</h3>
+                
+                <p>Notability is a popular note-taking app on iPad. While Aetios-Med doesn't directly integrate with Notability, you can import your notes:</p>
+                
+                <h4>Method 1: PDF Export</h4>
+                <ol>
+                    <li><span class="step-number">1</span> In Notability, export notes as PDF</li>
+                    <li><span class="step-number">2</span> Save to a folder (e.g., "Medical Notes")</li>
+                    <li><span class="step-number">3</span> In Aetios-Med, go to <strong>Settings → Folders</strong></li>
+                    <li><span class="step-number">4</span> Set "Notes Folder" to your PDF folder</li>
+                    <li><span class="step-number">5</span> Aetios-Med will index and search these PDFs</li>
+                </ol>
+                
+                <h4>Method 2: Text Export</h4>
+                <ol>
+                    <li><span class="step-number">1</span> In Notability, export as text (.txt) or markdown (.md)</li>
+                    <li><span class="step-number">2</span> Save to your Notes folder</li>
+                    <li><span class="step-number">3</span> Aetios-Med can search and reference these notes</li>
+                    <li><span class="step-number">4</span> The AI tutor can quote from your notes when answering questions</li>
+                </ol>
+                
+                <div class="screenshot-placeholder">
+                    📸 Notes Search Results
+                    <p>Search results showing relevant sections from imported notes</p>
+                </div>
+                
+                <h4>Searchable Notes:</h4>
+                <p>Once imported, you can:</p>
+                <ul>
+                    <li>Search across all your notes</li>
+                    <li>Ask the AI tutor "What did I write about [topic]?"</li>
+                    <li>See relevant notes when viewing a curriculum topic</li>
+                    <li>Link notes to specific topics in the knowledge graph</li>
+                </ul>
+                
+                <h3>Other Note-Taking Apps</h3>
+                
+                <p>Similar workflows work for other apps:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>App</th>
+                            <th>Export Format</th>
+                            <th>Import to Aetios-Med</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>OneNote</strong></td>
+                            <td>PDF or .docx</td>
+                            <td>Save to Resources folder</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Notion</strong></td>
+                            <td>Markdown export</td>
+                            <td>Save to Notes folder</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Evernote</strong></td>
+                            <td>.enex or HTML</td>
+                            <td>Convert to PDF, save to Resources</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GoodNotes</strong></td>
+                            <td>PDF export</td>
+                            <td>Save to Resources folder</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Obsidian</strong></td>
+                            <td>Markdown files</td>
+                            <td>Point Notes folder to Obsidian vault</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>PDF Management</h3>
+                
+                <h4>Importing PDFs:</h4>
+                <p>Textbooks, lecture slides, research papers, etc.</p>
+                
+                <ol>
+                    <li>Save PDFs to your configured Resources folder</li>
+                    <li>Aetios-Med automatically detects new files</li>
+                    <li>PDFs are indexed for full-text search</li>
+                    <li>You can tag PDFs with topics</li>
+                </ol>
+                
+                <h4>PDF Features:</h4>
+                <ul>
+                    <li><strong>Full-text search:</strong> Find content across all PDFs</li>
+                    <li><strong>In-app viewer:</strong> Read PDFs without leaving Aetios-Med</li>
+                    <li><strong>Highlights:</strong> Highlight and annotate (if PDF supports it)</li>
+                    <li><strong>Topic mapping:</strong> Link PDFs to curriculum topics</li>
+                    <li><strong>AI references:</strong> AI tutor can quote from your PDFs</li>
+                </ul>
+                
+                <div class="screenshot-placeholder">
+                    📸 PDF Viewer with Annotations
+                    <p>PDF displayed with highlighting and notes panel</p>
+                </div>
+                
+                <h3>Managing External Resources</h3>
+                
+                <h4>Organizing Resources:</h4>
+                <ul>
+                    <li><strong>Folders:</strong> Organize by subject, year, or type</li>
+                    <li><strong>Tags:</strong> Add tags for cross-referencing</li>
+                    <li><strong>Favorites:</strong> Star important resources</li>
+                    <li><strong>Collections:</strong> Group resources by exam or topic</li>
+                </ul>
+                
+                <h4>Resource Statistics:</h4>
+                <p>Track your resource usage:</p>
+                <ul>
+                    <li>Most accessed resources</li>
+                    <li>Time spent reading each document</li>
+                    <li>Resources linked to weak topics</li>
+                    <li>Recommended resources based on study plan</li>
+                </ul>
+                
+                <div class="warning-box">
+                    <h4>⚠️ Privacy & Data</h4>
+                    <ul>
+                        <li>All resources are stored locally on your computer</li>
+                        <li>Web browsing in the resource viewer doesn't share data with external servers</li>
+                        <li>VLE credentials are never stored by Aetios-Med</li>
+                        <li>PDF content is indexed locally, never sent to external services</li>
+                        <li>You can clear browser data anytime in Settings</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section id="troubleshooting">
+                <h2>🔧 11. Troubleshooting & FAQ</h2>
+                
+                <h3>Common Installation Issues</h3>
+                
+                <h4>Problem: "Node not found" or "Python not found"</h4>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Verify installation: <code>node --version</code> and <code>python --version</code></li>
+                    <li>On Windows, check "Add to PATH" was selected during installation</li>
+                    <li>On macOS/Linux, try <code>python3</code> instead of <code>python</code></li>
+                    <li>Restart your terminal/command prompt after installation</li>
+                    <li>On macOS, install via Homebrew: <code>brew install node python@3.10</code></li>
+                </ul>
+                
+                <h4>Problem: "Permission denied" when running scripts</h4>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>On macOS/Linux: <code>chmod +x scripts/*.sh</code></li>
+                    <li>On Windows: Run PowerShell as Administrator</li>
+                    <li>Or use: <code>bash scripts/build-mac.sh</code> instead of <code>./scripts/build-mac.sh</code></li>
+                </ul>
+                
+                <h4>Problem: npm install fails with EACCES</h4>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Don't use <code>sudo</code> with npm</li>
+                    <li>Fix npm permissions: <a href="https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally">npm docs</a></li>
+                    <li>Or use <code>npm install --prefix ~/my-npm-packages</code></li>
+                </ul>
+                
+                <h4>Problem: pip install fails</h4>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Use a virtual environment (recommended)</li>
+                    <li>On macOS/Linux: <code>pip3 install --user -r requirements.txt</code></li>
+                    <li>Update pip: <code>python -m pip install --upgrade pip</code></li>
+                    <li>Check Python version is 3.10+ with <code>python --version</code></li>
+                </ul>
+                
+                <h3>Backend Connection Problems</h3>
+                
+                <h4>Problem: "Cannot connect to backend" error</h4>
+                <p><strong>Solution:</strong></p>
+                <ol>
+                    <li>Check backend is running: Visit <a href="http://localhost:8741/docs">http://localhost:8741/docs</a></li>
+                    <li>If not running, start it: <code>cd backend && uvicorn app.main:app --reload --port 8741</code></li>
+                    <li>Check firewall isn't blocking port 8741</li>
+                    <li>Check another application isn't using port 8741: <code>lsof -i :8741</code> (macOS/Linux) or <code>netstat -ano | findstr :8741</code> (Windows)</li>
+                    <li>Try a different port in <code>backend/app/config.py</code></li>
+                </ol>
+                
+                <h4>Problem: Backend starts but crashes immediately</h4>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Check Python dependencies are installed: <code>pip list</code></li>
+                    <li>Look for error messages in the backend terminal</li>
+                    <li>Common issues:
+                        <ul>
+                            <li>Missing database: The app will create it automatically on first run</li>
+                            <li>Missing ChromaDB: <code>pip install chromadb</code></li>
+                            <li>CUDA errors: Set GPU layers to 0 in settings (CPU-only mode)</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h3>Model Download Issues</h3>
+                
+                <h4>Problem: Model download is very slow</h4>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Use a stable internet connection (avoid mobile hotspots)</li>
+                    <li>Download can be paused and resumed</li>
+                    <li>Try downloading during off-peak hours</li>
+                    <li>Alternatively, manually download from HuggingFace and place in models folder</li>
+                </ul>
+                
+                <h4>Problem: Model download fails or gets corrupted</h4>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Delete partially downloaded file from models folder</li>
+                    <li>Try again with a HuggingFace token (faster servers)</li>
+                    <li>Check available disk space (need ~5GB free)</li>
+                    <li>Disable VPN if you're using one</li>
+                </ul>
+                
+                <h4>Problem: "Model not found" even after download</h4>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Check model is in correct location:
+                        <ul>
+                            <li>Windows: <code>%APPDATA%\Aetios-Med\models\llama3-openbio-8b.Q4_K_M.gguf</code></li>
+                            <li>macOS: <code>~/Library/Application Support/Aetios-Med/models/llama3-openbio-8b.Q4_K_M.gguf</code></li>
+                            <li>Linux: <code>~/.local/share/Aetios-Med/models/llama3-openbio-8b.Q4_K_M.gguf</code></li>
+                        </ul>
+                    </li>
+                    <li>Check file size is ~4.5GB (not 0 bytes)</li>
+                    <li>Restart the application</li>
+                </ul>
+                
+                <h3>Performance Issues</h3>
+                
+                <h4>Problem: AI responses are very slow (>60 seconds)</h4>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Close other applications to free RAM</li>
+                    <li>Check CPU usage - if 100%, close background apps</li>
+                    <li>On laptops, plug in power (performance mode)</li>
+                    <li>First response is slower (model loading) - subsequent responses faster</li>
+                    <li>If consistently slow, your hardware may be below minimum requirements</li>
+                </ul>
+                
+                <h4>Problem: App is laggy or unresponsive</h4>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Clear browser cache in Settings</li>
+                    <li>Reduce number of open tabs/windows</li>
+                    <li>Check RAM usage - close if using > 90%</li>
+                    <li>On knowledge graph, use fewer nodes (filter by topic)</li>
+                    <li>Restart the application</li>
+                </ul>
+                
+                <h4>Problem: GPU acceleration not working</h4>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li><strong>NVIDIA:</strong> Install CUDA toolkit and drivers</li>
+                    <li><strong>Apple Silicon:</strong> Should work automatically with Metal</li>
+                    <li>Check Settings → Model → GPU Layers (set to -1 for all)</li>
+                    <li>If problems persist, set to 0 (CPU only)</li>
+                </ul>
+                
+                <h3>Anki Integration Issues</h3>
+                
+                <h4>Problem: .apkg file won't import</h4>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Ensure file has .apkg extension (not .zip)</li>
+                    <li>Try exporting from Anki again with "Include scheduling information" checked</li>
+                    <li>Check file isn't corrupted: Open in Anki first to verify</li>
+                    <li>Large decks (5000+ cards) may take several minutes</li>
+                </ul>
+                
+                <h4>Problem: Cards not mapping to topics</h4>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Enable "Automatic topic mapping" during import</li>
+                    <li>Very specialized cards may not map well (manual mapping available)</li>
+                    <li>Check embedding model is downloaded (happens automatically)</li>
+                </ul>
+                
+                <h3>Data & Storage Issues</h3>
+                
+                <h4>Problem: "Database locked" error</h4>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Close all Aetios-Med instances</li>
+                    <li>Wait 30 seconds</li>
+                    <li>Restart the application</li>
+                    <li>If persistent, delete <code>aetios.db-shm</code> and <code>aetios.db-wal</code> files (not <code>aetios.db</code>)</li>
+                </ul>
+                
+                <h4>Problem: Running out of disk space</h4>
+                <p><strong>Solution:</strong></p>
+                <ul>
+                    <li>Model: ~4.5GB (required)</li>
+                    <li>Database: Grows with usage (~100-500MB typical)</li>
+                    <li>Vector store: ~1-2GB with many documents</li>
+                    <li>Can delete old imported Anki decks if no longer needed</li>
+                    <li>Can clear chat history (Settings → Privacy)</li>
+                </ul>
+                
+                <h3>Frequently Asked Questions</h3>
+                
+                <h4>Q: Is my data private?</h4>
+                <p><strong>A:</strong> Yes! Everything runs locally on your computer. No data is sent to external servers except:</p>
+                <ul>
+                    <li>Model download (one-time, from HuggingFace)</li>
+                    <li>Optional: Web browsing in resource viewer (same as normal browser)</li>
+                </ul>
+                
+                <h4>Q: Can I use this offline?</h4>
+                <p><strong>A:</strong> Yes! After initial model download, Aetios-Med works completely offline. The AI, knowledge graph, quizzes, and all features are available without internet.</p>
+                
+                <h4>Q: How accurate is the AI?</h4>
+                <p><strong>A:</strong> The AI is trained on medical literature and is generally accurate, but it's not perfect. Always verify important information with official guidelines (NICE, BNF) and your medical school curriculum.</p>
+                
+                <h4>Q: Can I use this for clinical decisions?</h4>
+                <p><strong>A:</strong> NO. Aetios-Med is for education only. Never use it for actual patient care or clinical decision-making.</p>
+                
+                <h4>Q: Will this replace my textbooks/lectures?</h4>
+                <p><strong>A:</strong> No. Aetios-Med is a supplement, not a replacement. It helps organize your learning, but you still need to attend lectures, read textbooks, and do clinical placements.</p>
+                
+                <h4>Q: Can I sync across multiple devices?</h4>
+                <p><strong>A:</strong> Not currently. Each installation is independent. You can export/import data manually if needed.</p>
+                
+                <h4>Q: Does this work on mobile/iPad?</h4>
+                <p><strong>A:</strong> The current version is desktop only (Windows/macOS/Linux). A mobile version may be developed in the future.</p>
+                
+                <h4>Q: How do I back up my data?</h4>
+                <p><strong>A:</strong></p>
+                <ol>
+                    <li>Go to Settings → Data</li>
+                    <li>Click "Export All Data"</li>
+                    <li>Save the backup file</li>
+                    <li>To restore: Settings → Data → "Import Data"</li>
+                </ol>
+                
+                <h4>Q: Can I customize the curriculum topics?</h4>
+                <p><strong>A:</strong> Not directly in the UI yet. Advanced users can edit <code>backend/app/data/uk_curriculum.json</code> to add custom topics.</p>
+                
+                <h4>Q: How often should I update my confidence levels?</h4>
+                <p><strong>A:</strong> They update automatically based on quiz performance and study sessions. Manual updates are rarely needed.</p>
+                
+                <h4>Q: What if I find a bug or have a feature request?</h4>
+                <p><strong>A:</strong> Please report issues on the GitHub repository: <a href="https://github.com/Hider74/Aetios-Med/issues">github.com/Hider74/Aetios-Med/issues</a></p>
+                
+                <h3>Getting Help</h3>
+                
+                <div class="info-box">
+                    <h4>Support Resources</h4>
+                    <ul>
+                        <li><strong>GitHub Issues:</strong> <a href="https://github.com/Hider74/Aetios-Med/issues">Report bugs or request features</a></li>
+                        <li><strong>Documentation:</strong> <a href="https://github.com/Hider74/Aetios-Med">README and frontend docs</a></li>
+                        <li><strong>API Documentation:</strong> <a href="http://localhost:8741/docs">http://localhost:8741/docs</a> (when running)</li>
+                        <li><strong>Community:</strong> Check for Discord/forums (if available)</li>
+                    </ul>
+                </div>
+                
+                <h3>Reporting Bugs</h3>
+                
+                <p>When reporting a bug, please include:</p>
+                <ol>
+                    <li><strong>Operating System:</strong> Windows/macOS/Linux version</li>
+                    <li><strong>Aetios-Med Version:</strong> Check Settings → About</li>
+                    <li><strong>Steps to Reproduce:</strong> Detailed steps to trigger the bug</li>
+                    <li><strong>Expected vs Actual:</strong> What should happen vs what does happen</li>
+                    <li><strong>Screenshots:</strong> If applicable</li>
+                    <li><strong>Error Messages:</strong> Full error text from console/logs</li>
+                </ol>
+            </section>
+            
+            <section id="appendix">
+                <h2>📚 12. Appendix</h2>
+                
+                <h3>Glossary of Terms</h3>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Term</th>
+                            <th>Definition</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Anki</strong></td>
+                            <td>Popular flashcard application using spaced repetition</td>
+                        </tr>
+                        <tr>
+                            <td><strong>APKG</strong></td>
+                            <td>Anki package file format containing flashcards and scheduling data</td>
+                        </tr>
+                        <tr>
+                            <td><strong>BNF</strong></td>
+                            <td>British National Formulary - UK reference for drug information</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Confidence Level</strong></td>
+                            <td>Percentage indicating your mastery of a topic (0-100%)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Embedding</strong></td>
+                            <td>Mathematical representation of text for semantic search</td>
+                        </tr>
+                        <tr>
+                            <td><strong>FSRS-4</strong></td>
+                            <td>Free Spaced Repetition Scheduler - algorithm for optimal review timing</td>
+                        </tr>
+                        <tr>
+                            <td><strong>GMC</strong></td>
+                            <td>General Medical Council - UK medical regulatory body</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Knowledge Graph</strong></td>
+                            <td>Visual representation of curriculum topics and their relationships</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LLM</strong></td>
+                            <td>Large Language Model - AI trained on text data</td>
+                        </tr>
+                        <tr>
+                            <td><strong>NICE</strong></td>
+                            <td>National Institute for Health and Care Excellence - UK clinical guidelines</td>
+                        </tr>
+                        <tr>
+                            <td><strong>OpenBioLLM</strong></td>
+                            <td>Open-source medical AI model used by Aetios-Med</td>
+                        </tr>
+                        <tr>
+                            <td><strong>OSCE</strong></td>
+                            <td>Objective Structured Clinical Examination - clinical skills exam</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quantization</strong></td>
+                            <td>Compression technique to reduce model size (Q4_K_M = 4-bit quantization)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Spaced Repetition</strong></td>
+                            <td>Learning technique with increasing intervals between reviews</td>
+                        </tr>
+                        <tr>
+                            <td><strong>UKMLA</strong></td>
+                            <td>UK Medical Licensing Assessment - standardized medical exam</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Vector Store</strong></td>
+                            <td>Database for semantic search using embeddings (ChromaDB)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>VLE</strong></td>
+                            <td>Virtual Learning Environment (e.g., Blackboard, Moodle)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Keyboard Shortcuts</h3>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Windows/Linux</th>
+                            <th>macOS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>New Chat</td>
+                            <td><code>Ctrl + N</code></td>
+                            <td><code>Cmd + N</code></td>
+                        </tr>
+                        <tr>
+                            <td>Search Graph</td>
+                            <td><code>Ctrl + F</code></td>
+                            <td><code>Cmd + F</code></td>
+                        </tr>
+                        <tr>
+                            <td>Toggle Sidebar</td>
+                            <td><code>Ctrl + B</code></td>
+                            <td><code>Cmd + B</code></td>
+                        </tr>
+                        <tr>
+                            <td>Settings</td>
+                            <td><code>Ctrl + ,</code></td>
+                            <td><code>Cmd + ,</code></td>
+                        </tr>
+                        <tr>
+                            <td>Go to Dashboard</td>
+                            <td><code>Ctrl + 1</code></td>
+                            <td><code>Cmd + 1</code></td>
+                        </tr>
+                        <tr>
+                            <td>Go to Graph</td>
+                            <td><code>Ctrl + 2</code></td>
+                            <td><code>Cmd + 2</code></td>
+                        </tr>
+                        <tr>
+                            <td>Go to Chat</td>
+                            <td><code>Ctrl + 3</code></td>
+                            <td><code>Cmd + 3</code></td>
+                        </tr>
+                        <tr>
+                            <td>Zoom In (Graph)</td>
+                            <td><code>Ctrl + =</code></td>
+                            <td><code>Cmd + =</code></td>
+                        </tr>
+                        <tr>
+                            <td>Zoom Out (Graph)</td>
+                            <td><code>Ctrl + -</code></td>
+                            <td><code>Cmd + -</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>UK Medical Education Context</h3>
+                
+                <h4>Typical Medical School Structure:</h4>
+                <ul>
+                    <li><strong>Years 1-2:</strong> Pre-clinical - Basic sciences (anatomy, physiology, pathology)</li>
+                    <li><strong>Years 3-5:</strong> Clinical rotations - Hospital placements, patient contact</li>
+                    <li><strong>Year 5:</strong> Finals exams - Written (UKMLA) and clinical (OSCEs)</li>
+                    <li><strong>Foundation Years:</strong> F1/F2 - Supervised clinical practice in NHS</li>
+                </ul>
+                
+                <h4>Key Exams:</h4>
+                <ul>
+                    <li><strong>UKMLA (Applied Knowledge Test):</strong> Multiple-choice exam testing clinical knowledge</li>
+                    <li><strong>UKMLA (Clinical):</strong> OSCE-style clinical skills assessment</li>
+                    <li><strong>Finals:</strong> Medical school's own assessments (may include UKMLA)</li>
+                    <li><strong>OSCEs:</strong> Objective Structured Clinical Examinations - stations testing clinical skills</li>
+                </ul>
+                
+                <h3>File Locations Reference</h3>
+                
+                <h4>Windows:</h4>
+                <ul>
+                    <li><strong>App Data:</strong> <code>%APPDATA%\Aetios-Med\</code></li>
+                    <li><strong>Database:</strong> <code>%APPDATA%\Aetios-Med\aetios.db</code></li>
+                    <li><strong>Models:</strong> <code>%APPDATA%\Aetios-Med\models\</code></li>
+                    <li><strong>ChromaDB:</strong> <code>%APPDATA%\Aetios-Med\chroma\</code></li>
+                </ul>
+                
+                <h4>macOS:</h4>
+                <ul>
+                    <li><strong>App Data:</strong> <code>~/Library/Application Support/Aetios-Med/</code></li>
+                    <li><strong>Database:</strong> <code>~/Library/Application Support/Aetios-Med/aetios.db</code></li>
+                    <li><strong>Models:</strong> <code>~/Library/Application Support/Aetios-Med/models/</code></li>
+                    <li><strong>ChromaDB:</strong> <code>~/Library/Application Support/Aetios-Med/chroma/</code></li>
+                </ul>
+                
+                <h4>Linux:</h4>
+                <ul>
+                    <li><strong>App Data:</strong> <code>~/.local/share/Aetios-Med/</code></li>
+                    <li><strong>Database:</strong> <code>~/.local/share/Aetios-Med/aetios.db</code></li>
+                    <li><strong>Models:</strong> <code>~/.local/share/Aetios-Med/models/</code></li>
+                    <li><strong>ChromaDB:</strong> <code>~/.local/share/Aetios-Med/chroma/</code></li>
+                </ul>
+                
+                <h3>Supported File Formats</h3>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Format</th>
+                            <th>Extension</th>
+                            <th>Use Case</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Anki Package</td>
+                            <td>.apkg</td>
+                            <td>Flashcard import</td>
+                        </tr>
+                        <tr>
+                            <td>PDF</td>
+                            <td>.pdf</td>
+                            <td>Textbooks, slides, papers</td>
+                        </tr>
+                        <tr>
+                            <td>Markdown</td>
+                            <td>.md</td>
+                            <td>Notes, documentation</td>
+                        </tr>
+                        <tr>
+                            <td>Text</td>
+                            <td>.txt</td>
+                            <td>Simple notes</td>
+                        </tr>
+                        <tr>
+                            <td>Calendar</td>
+                            <td>.ics</td>
+                            <td>Study plan export</td>
+                        </tr>
+                        <tr>
+                            <td>JSON</td>
+                            <td>.json</td>
+                            <td>Data export/import</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Contributing & Development</h3>
+                
+                <p>Aetios-Med is open-source! Contributions are welcome:</p>
+                
+                <ul>
+                    <li><strong>Repository:</strong> <a href="https://github.com/Hider74/Aetios-Med">github.com/Hider74/Aetios-Med</a></li>
+                    <li><strong>Issues:</strong> Report bugs or request features</li>
+                    <li><strong>Pull Requests:</strong> Submit code improvements</li>
+                    <li><strong>Documentation:</strong> Help improve this manual</li>
+                </ul>
+                
+                <h4>Tech Stack:</h4>
+                <ul>
+                    <li><strong>Frontend:</strong> React + TypeScript + TailwindCSS</li>
+                    <li><strong>Backend:</strong> Python + FastAPI</li>
+                    <li><strong>Desktop:</strong> Electron</li>
+                    <li><strong>AI:</strong> llama.cpp + OpenBioLLM-8B</li>
+                    <li><strong>Database:</strong> SQLite + ChromaDB</li>
+                    <li><strong>Graph:</strong> Cytoscape.js + NetworkX</li>
+                </ul>
+                
+                <div class="success-box">
+                    <h4>🎓 Final Words</h4>
+                    <p>Aetios-Med is designed to help you succeed in medical school by organizing your learning, identifying weak areas, and providing AI-powered tutoring. Remember:</p>
+                    <ul>
+                        <li><strong>Consistency > Intensity:</strong> Daily study beats cramming</li>
+                        <li><strong>Active > Passive:</strong> Testing yourself beats re-reading</li>
+                        <li><strong>Spaced > Massed:</strong> Distributed practice beats one-day marathons</li>
+                        <li><strong>Understanding > Memorization:</strong> Comprehension lasts longer than rote learning</li>
+                    </ul>
+                    <p>Good luck with your studies! 🩺</p>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p><strong>Aetios-Med</strong> - Offline-first Medical Study Assistant</p>
+            <p>Version 0.1.0 | MIT License | <a href="https://github.com/Hider74/Aetios-Med" style="color: #68d391;">GitHub Repository</a></p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">Named after Aetius of Amida (6th century Byzantine physician)</p>
+            <p style="font-size: 0.85rem; margin-top: 1rem; opacity: 0.8;">⚠️ Educational tool only. Always verify medical information with qualified professionals.</p>
+        </footer>
+    </div>
+</body>
+</html>
