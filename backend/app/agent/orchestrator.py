@@ -275,12 +275,13 @@ class AgentOrchestrator:
         
         return tool_calls if tool_calls else None
     
-    def _execute_tool_call(self, tool_call: Dict[str, Any]) -> Any:
+    async def _execute_tool_call(self, tool_call: Dict[str, Any], db=None) -> Any:
         """
         Execute a single tool call.
         
         Args:
             tool_call: Tool call specification
+            db: Database session to pass to tools
             
         Returns:
             Tool execution result
@@ -291,19 +292,23 @@ class AgentOrchestrator:
         
         try:
             arguments = json.loads(arguments_str)
-            result = execute_tool(tool_name, arguments)
+            # Add db session to arguments if not present
+            if db is not None and 'db' not in arguments:
+                arguments['db'] = db
+            result = await execute_tool(tool_name, arguments)
             logger.info(f"Executed tool {tool_name} with result: {result}")
             return result
         except Exception as e:
             logger.error(f"Error executing tool {tool_name}: {e}")
             return {"error": str(e)}
     
-    async def process_message(self, user_message: str) -> str:
+    async def process_message(self, user_message: str, db=None) -> str:
         """
         Process a user message through the agent loop.
         
         Args:
             user_message: User's input message
+            db: Database session for tool execution
             
         Returns:
             Final assistant response
@@ -335,7 +340,7 @@ class AgentOrchestrator:
                     tool_call_id = tool_call.get("id")
                     function_name = tool_call.get("function", {}).get("name")
                     
-                    result = self._execute_tool_call(tool_call)
+                    result = await self._execute_tool_call(tool_call, db=db)
                     self.add_tool_result(tool_call_id, function_name, result)
                 
                 # Continue loop to get next response
@@ -350,12 +355,13 @@ class AgentOrchestrator:
         logger.warning(f"Max iterations ({self.max_iterations}) reached")
         return "I apologize, but I need to break this down into smaller steps. Could you please rephrase your question?"
     
-    async def stream_message(self, user_message: str) -> AsyncIterator[str]:
+    async def stream_message(self, user_message: str, db=None) -> AsyncIterator[str]:
         """
         Process a user message with streaming response.
         
         Args:
             user_message: User's input message
+            db: Database session for tool execution
             
         Yields:
             Response chunks as they're generated
@@ -368,7 +374,7 @@ class AgentOrchestrator:
             
             # In a real implementation, this would stream from OpenAI
             # For now, yielding the full response
-            response = await self.process_message(user_message)
+            response = await self.process_message(user_message, db=db)
             yield response
             break
     

@@ -9,6 +9,7 @@ from .tools import (
     TOOL_DEFINITIONS,
     TOOL_FUNCTIONS,
     execute_tool,
+    init_tools,
 )
 from .prompts import (
     PromptManager,
@@ -26,6 +27,7 @@ __all__ = [
     "TOOL_DEFINITIONS",
     "TOOL_FUNCTIONS",
     "execute_tool",
+    "init_tools",
     # Prompts
     "PromptManager",
     "get_prompt_manager",

@@ -1,117 +1,323 @@
 """
 Agent tools for Aetios medical tutor.
-Defines all 17 agent tools in OpenAI function-calling format.
+Defines all 18 agent tools in OpenAI function-calling format.
 """
 from typing import List, Dict, Any, Optional
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import json
+from sqlalchemy import select, and_, func
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from ..models.database import (
+    TopicProgress, AnkiCard, Note, StudySession, 
+    QuizResult, Exam, StudyPlan
+)
+
+# Global services dictionary
+_services: Dict[str, Any] = {}
 
 
-# Tool implementations
-# NOTE: These are placeholder implementations that return empty data structures.
-# They need to be connected to actual database services and business logic.
+def init_tools(services_dict: Dict[str, Any]) -> None:
+    """
+    Initialize agent tools with service instances.
+    
+    Args:
+        services_dict: Dictionary containing service instances:
+            - graph_service: GraphService instance
+            - vector_service: VectorService instance
+            - retention_service: RetentionService instance
+            - quiz_service: QuizService instance
+            - study_plan_service: StudyPlanService instance
+    """
+    global _services
+    _services = services_dict
 
-def get_weak_topics(threshold: float = 0.3) -> List[Dict]:
+
+async def get_weak_topics(threshold: float = 0.3, db: AsyncSession = None) -> List[Dict]:
     """
     Get topics where student confidence is below threshold.
     
     Args:
         threshold: Confidence threshold (0-1), default 0.3
+        db: Database session
         
     Returns:
         List of weak topics with details
-    
-    TODO: Connect to student progress database and knowledge graph
     """
-    # Placeholder: Connect to database and query topics where confidence < threshold
-    return []
+    if db is None:
+        return []
+    
+    try:
+        result = await db.execute(
+            select(TopicProgress)
+            .where(TopicProgress.confidence < threshold)
+            .order_by(TopicProgress.confidence.asc())
+        )
+        weak_topics = result.scalars().all()
+        
+        return [
+            {
+                'topic_id': t.topic_id,
+                'confidence': t.confidence,
+                'last_studied': t.last_studied.isoformat() if t.last_studied else None,
+                'times_reviewed': t.times_reviewed,
+                'notes': t.notes
+            }
+            for t in weak_topics
+        ]
+    except Exception as e:
+        print(f"Error getting weak topics: {e}")
+        return []
 
 
-def get_decaying_topics(days: int = 7) -> List[Dict]:
+async def get_decaying_topics(days: int = 7, db: AsyncSession = None) -> List[Dict]:
     """
     Get topics not reviewed in specified days (spaced repetition).
     
     Args:
         days: Number of days since last review, default 7
+        db: Database session
         
     Returns:
         List of topics needing review
-    
-    TODO: Query study history and calculate topics needing review based on spaced repetition
     """
-    return []
+    if db is None or 'retention_service' not in _services:
+        return []
+    
+    try:
+        retention_service = _services['retention_service']
+        # Use FSRS-based retention calculation with threshold 0.8 (80%)
+        decaying_topics = await retention_service.get_decaying_topics(
+            db=db, 
+            threshold=0.8, 
+            limit=20
+        )
+        return decaying_topics
+    except Exception as e:
+        print(f"Error getting decaying topics: {e}")
+        return []
 
 
-def get_prerequisites(topic_id: str) -> List[Dict]:
+async def get_prerequisites(topic_id: str, db: AsyncSession = None) -> List[Dict]:
     """
     Get prerequisite topics for a given topic.
     
     Args:
         topic_id: Topic identifier
+        db: Database session
         
     Returns:
         List of prerequisite topics
     """
-    return []
+    if 'graph_service' not in _services:
+        return []
+    
+    try:
+        graph_service = _services['graph_service']
+        if not graph_service.is_loaded:
+            graph_service.load_curriculum()
+        
+        prereqs = graph_service.get_prerequisites(topic_id)
+        
+        return [
+            {
+                'topic_id': p.id,
+                'label': p.label,
+                'type': p.type,
+                'exam_weight': p.exam_weight
+            }
+            for p in prereqs
+        ]
+    except Exception as e:
+        print(f"Error getting prerequisites: {e}")
+        return []
 
 
-def get_dependent_topics(topic_id: str) -> List[Dict]:
+async def get_dependent_topics(topic_id: str, db: AsyncSession = None) -> List[Dict]:
     """
     Get topics that depend on this topic.
     
     Args:
         topic_id: Topic identifier
+        db: Database session
         
     Returns:
         List of dependent topics
     """
-    return []
+    if 'graph_service' not in _services:
+        return []
+    
+    try:
+        graph_service = _services['graph_service']
+        if not graph_service.is_loaded:
+            graph_service.load_curriculum()
+        
+        dependents = graph_service.get_dependents(topic_id)
+        
+        return [
+            {
+                'topic_id': d.id,
+                'label': d.label,
+                'type': d.type,
+                'exam_weight': d.exam_weight
+            }
+            for d in dependents
+        ]
+    except Exception as e:
+        print(f"Error getting dependent topics: {e}")
+        return []
 
 
-def get_topic_details(topic_id: str) -> Dict:
+async def get_topic_details(topic_id: str, db: AsyncSession = None) -> Dict:
     """
     Get detailed information about a topic.
     
     Args:
         topic_id: Topic identifier
+        db: Database session
         
     Returns:
         Topic details including confidence, last studied, resources
     """
-    return {}
+    if db is None or 'graph_service' not in _services:
+        return {}
+    
+    try:
+        graph_service = _services['graph_service']
+        if not graph_service.is_loaded:
+            graph_service.load_curriculum()
+        
+        if topic_id not in graph_service.topics:
+            return {'error': f'Topic {topic_id} not found'}
+        
+        topic = graph_service.topics[topic_id]
+        
+        # Get progress from DB
+        result = await db.execute(
+            select(TopicProgress).where(TopicProgress.topic_id == topic_id)
+        )
+        progress = result.scalar_one_or_none()
+        
+        # Count Anki cards
+        card_count = await db.execute(
+            select(func.count(AnkiCard.id)).where(AnkiCard.topic_id == topic_id)
+        )
+        total_cards = card_count.scalar() or 0
+        
+        # Count notes
+        note_count = await db.execute(
+            select(func.count(Note.id)).where(Note.topic_id == topic_id)
+        )
+        total_notes = note_count.scalar() or 0
+        
+        return {
+            'topic_id': topic.id,
+            'label': topic.label,
+            'type': topic.type,
+            'exam_weight': topic.exam_weight,
+            'confidence': progress.confidence if progress else 0.0,
+            'last_studied': progress.last_studied.isoformat() if progress and progress.last_studied else None,
+            'times_reviewed': progress.times_reviewed if progress else 0,
+            'learning_objectives': topic.learning_objectives if hasattr(topic, 'learning_objectives') else [],
+            'resources': topic.resources if hasattr(topic, 'resources') else {},
+            'total_cards': total_cards,
+            'total_notes': total_notes
+        }
+    except Exception as e:
+        print(f"Error getting topic details: {e}")
+        return {'error': str(e)}
 
 
-def search_notes(query: str, limit: int = 5) -> List[Dict]:
+async def search_notes(query: str, limit: int = 5, db: AsyncSession = None) -> List[Dict]:
     """
     Search through student's notes and annotations.
     
     Args:
         query: Search query string
         limit: Maximum number of results, default 5
+        db: Database session
         
     Returns:
         List of matching notes
     """
-    return []
+    if 'vector_service' not in _services:
+        return []
+    
+    try:
+        vector_service = _services['vector_service']
+        
+        # Use vector similarity search
+        results = vector_service.query_similar(query, n_results=limit)
+        
+        matched_notes = []
+        if results.get('ids'):
+            for i in range(len(results['ids'])):
+                matched_notes.append({
+                    'id': results['ids'][i],
+                    'content': results['documents'][i] if i < len(results['documents']) else '',
+                    'metadata': results['metadatas'][i] if i < len(results['metadatas']) else {},
+                    'score': 1.0 - results['distances'][i] if i < len(results['distances']) else 0.0
+                })
+        
+        return matched_notes
+    except Exception as e:
+        print(f"Error searching notes: {e}")
+        return []
 
 
-def get_anki_stats(topic_id: Optional[str] = None) -> Dict:
+async def get_anki_stats(topic_id: Optional[str] = None, db: AsyncSession = None) -> Dict:
     """
     Get Anki flashcard statistics.
     
     Args:
         topic_id: Optional topic filter
+        db: Database session
         
     Returns:
         Statistics including cards due, accuracy, retention
     """
-    return {}
+    if db is None:
+        return {}
+    
+    try:
+        query = select(AnkiCard)
+        if topic_id:
+            query = query.where(AnkiCard.topic_id == topic_id)
+        
+        result = await db.execute(query)
+        cards = result.scalars().all()
+        
+        if not cards:
+            return {
+                'total_cards': 0,
+                'cards_due': 0,
+                'accuracy': 0.0
+            }
+        
+        now = datetime.utcnow()
+        due_cards = [c for c in cards if c.due_date and c.due_date <= now]
+        
+        # Calculate accuracy from intervals (higher interval = better retention)
+        avg_interval = sum(c.interval for c in cards) / len(cards) if cards else 0
+        accuracy = min(1.0, avg_interval / 30.0)  # Normalize to 30 days
+        
+        return {
+            'total_cards': len(cards),
+            'cards_due': len(due_cards),
+            'accuracy': accuracy,
+            'avg_interval': avg_interval,
+            'avg_ease_factor': sum(c.ease_factor for c in cards) / len(cards) if cards else 2.5
+        }
+    except Exception as e:
+        print(f"Error getting Anki stats: {e}")
+        return {'error': str(e)}
 
 
-def generate_quiz(
+async def generate_quiz(
     topic_id: str, 
     num_questions: int = 5, 
-    difficulty: str = "medium"
+    difficulty: str = "medium",
+    db: AsyncSession = None
 ) -> Dict:
     """
     Generate a quiz for a topic.
@@ -120,19 +326,47 @@ def generate_quiz(
         topic_id: Topic identifier
         num_questions: Number of questions to generate, default 5
         difficulty: Difficulty level (easy/medium/hard), default "medium"
+        db: Database session
         
     Returns:
         Quiz with questions and metadata
     """
-    return {
-        "quiz_id": f"quiz_{datetime.utcnow().timestamp()}",
-        "topic_id": topic_id,
-        "questions": [],
-        "difficulty": difficulty
-    }
+    if 'quiz_service' not in _services or db is None:
+        return {
+            "quiz_id": f"quiz_{datetime.utcnow().timestamp()}",
+            "topic_id": topic_id,
+            "questions": [],
+            "difficulty": difficulty,
+            "error": "Quiz service not available"
+        }
+    
+    try:
+        quiz_service = _services['quiz_service']
+        questions = await quiz_service.generate_quiz(
+            topic_id=topic_id,
+            num_questions=num_questions,
+            difficulty=difficulty,
+            db=db
+        )
+        
+        return {
+            "quiz_id": f"quiz_{datetime.utcnow().timestamp()}",
+            "topic_id": topic_id,
+            "questions": questions,
+            "difficulty": difficulty
+        }
+    except Exception as e:
+        print(f"Error generating quiz: {e}")
+        return {
+            "quiz_id": f"quiz_{datetime.utcnow().timestamp()}",
+            "topic_id": topic_id,
+            "questions": [],
+            "difficulty": difficulty,
+            "error": str(e)
+        }
 
 
-def log_quiz_result(topic_id: str, correct: bool, question: str) -> Dict:
+async def log_quiz_result(topic_id: str, correct: bool, question: str, db: AsyncSession = None) -> Dict:
     """
     Log the result of a quiz question.
     
@@ -140,17 +374,65 @@ def log_quiz_result(topic_id: str, correct: bool, question: str) -> Dict:
         topic_id: Topic identifier
         correct: Whether answer was correct
         question: The question text
+        db: Database session
         
     Returns:
         Updated statistics
     """
-    return {"logged": True, "topic_id": topic_id}
+    if db is None:
+        return {"logged": False, "error": "No database session"}
+    
+    try:
+        # Save quiz result
+        quiz_result = QuizResult(
+            topic_id=topic_id,
+            question=question,
+            correct=correct,
+            difficulty="medium",
+            quiz_date=datetime.utcnow()
+        )
+        db.add(quiz_result)
+        
+        # Update topic progress confidence
+        result = await db.execute(
+            select(TopicProgress).where(TopicProgress.topic_id == topic_id)
+        )
+        progress = result.scalar_one_or_none()
+        
+        if progress:
+            # Adjust confidence based on result
+            if correct:
+                progress.confidence = min(1.0, progress.confidence + 0.05)
+            else:
+                progress.confidence = max(0.0, progress.confidence - 0.1)
+            progress.updated_at = datetime.utcnow()
+        else:
+            # Create new progress entry
+            progress = TopicProgress(
+                topic_id=topic_id,
+                confidence=0.5 if correct else 0.3,
+                times_reviewed=0
+            )
+            db.add(progress)
+        
+        await db.commit()
+        
+        return {
+            "logged": True, 
+            "topic_id": topic_id,
+            "new_confidence": progress.confidence
+        }
+    except Exception as e:
+        await db.rollback()
+        print(f"Error logging quiz result: {e}")
+        return {"logged": False, "error": str(e)}
 
 
-def log_study_session(
+async def log_study_session(
     topic_id: str, 
     duration_minutes: int, 
-    notes: Optional[str] = None
+    notes: Optional[str] = None,
+    db: AsyncSession = None
 ) -> Dict:
     """
     Log a study session.
@@ -159,20 +441,61 @@ def log_study_session(
         topic_id: Topic identifier
         duration_minutes: Session duration in minutes
         notes: Optional session notes
+        db: Database session
         
     Returns:
         Session confirmation with updated stats
     """
-    return {
-        "session_id": f"session_{datetime.utcnow().timestamp()}",
-        "topic_id": topic_id,
-        "duration_minutes": duration_minutes
-    }
+    if db is None:
+        return {"logged": False, "error": "No database session"}
+    
+    try:
+        # Create study session record
+        session = StudySession(
+            topic_id=topic_id,
+            duration_minutes=duration_minutes,
+            session_date=datetime.utcnow(),
+            notes=notes
+        )
+        db.add(session)
+        
+        # Update topic progress
+        result = await db.execute(
+            select(TopicProgress).where(TopicProgress.topic_id == topic_id)
+        )
+        progress = result.scalar_one_or_none()
+        
+        if progress:
+            progress.last_studied = datetime.utcnow()
+            progress.times_reviewed += 1
+            progress.updated_at = datetime.utcnow()
+        else:
+            progress = TopicProgress(
+                topic_id=topic_id,
+                confidence=0.3,
+                last_studied=datetime.utcnow(),
+                times_reviewed=1
+            )
+            db.add(progress)
+        
+        await db.commit()
+        
+        return {
+            "session_id": f"session_{session.id}",
+            "topic_id": topic_id,
+            "duration_minutes": duration_minutes,
+            "times_reviewed": progress.times_reviewed
+        }
+    except Exception as e:
+        await db.rollback()
+        print(f"Error logging study session: {e}")
+        return {"logged": False, "error": str(e)}
 
 
-def get_study_history(
+async def get_study_history(
     topic_id: Optional[str] = None, 
-    days: int = 30
+    days: int = 30,
+    db: AsyncSession = None
 ) -> List[Dict]:
     """
     Get study session history.
@@ -180,16 +503,46 @@ def get_study_history(
     Args:
         topic_id: Optional topic filter
         days: Number of days to look back, default 30
+        db: Database session
         
     Returns:
         List of study sessions
     """
-    return []
+    if db is None:
+        return []
+    
+    try:
+        cutoff_date = datetime.utcnow() - timedelta(days=days)
+        
+        query = select(StudySession).where(
+            StudySession.session_date >= cutoff_date
+        ).order_by(StudySession.session_date.desc())
+        
+        if topic_id:
+            query = query.where(StudySession.topic_id == topic_id)
+        
+        result = await db.execute(query)
+        sessions = result.scalars().all()
+        
+        return [
+            {
+                'session_id': s.id,
+                'topic_id': s.topic_id,
+                'duration_minutes': s.duration_minutes,
+                'session_date': s.session_date.isoformat(),
+                'notes': s.notes
+            }
+            for s in sessions
+        ]
+    except Exception as e:
+        print(f"Error getting study history: {e}")
+        return []
 
 
-def generate_study_plan(
+async def generate_study_plan(
     exam_id: Optional[int] = None, 
-    weeks: int = 4
+    weeks: int = 4,
+    db: AsyncSession = None
 ) -> Dict:
     """
     Generate a personalized study plan.
@@ -197,55 +550,260 @@ def generate_study_plan(
     Args:
         exam_id: Optional exam to prepare for
         weeks: Planning horizon in weeks, default 4
+        db: Database session
         
     Returns:
         Study plan with daily/weekly breakdown
     """
-    return {
-        "plan_id": f"plan_{datetime.utcnow().timestamp()}",
-        "weeks": weeks,
-        "exam_id": exam_id,
-        "schedule": []
-    }
+    if db is None or 'study_plan_service' not in _services:
+        return {
+            "plan_id": f"plan_{datetime.utcnow().timestamp()}",
+            "weeks": weeks,
+            "exam_id": exam_id,
+            "schedule": [],
+            "error": "Study plan service not available"
+        }
+    
+    try:
+        study_plan_service = _services['study_plan_service']
+        
+        start_date = datetime.utcnow()
+        end_date = start_date + timedelta(weeks=weeks)
+        
+        plan_id = await study_plan_service.generate_study_plan(
+            exam_id=exam_id,
+            start_date=start_date,
+            end_date=end_date,
+            hours_per_day=2.0,
+            db=db,
+            focus_weak_areas=True
+        )
+        
+        # Retrieve the plan
+        result = await db.execute(
+            select(StudyPlan).where(StudyPlan.id == plan_id)
+        )
+        plan = result.scalar_one_or_none()
+        
+        if plan:
+            plan_data = json.loads(plan.plan_json)
+            return {
+                "plan_id": plan_id,
+                "weeks": weeks,
+                "exam_id": exam_id,
+                "schedule": plan_data
+            }
+        else:
+            return {
+                "plan_id": plan_id,
+                "weeks": weeks,
+                "exam_id": exam_id,
+                "schedule": []
+            }
+    except Exception as e:
+        print(f"Error generating study plan: {e}")
+        return {
+            "plan_id": f"plan_{datetime.utcnow().timestamp()}",
+            "weeks": weeks,
+            "exam_id": exam_id,
+            "schedule": [],
+            "error": str(e)
+        }
 
 
-def get_exam_readiness(exam_id: int) -> Dict:
+async def get_exam_readiness(exam_id: int, db: AsyncSession = None) -> Dict:
     """
     Assess readiness for an upcoming exam.
     
     Args:
         exam_id: Exam identifier
+        db: Database session
         
     Returns:
         Readiness assessment with weak areas
     """
-    return {
-        "exam_id": exam_id,
-        "readiness_score": 0.0,
-        "weak_areas": [],
-        "strong_areas": []
-    }
+    if db is None:
+        return {
+            "exam_id": exam_id,
+            "readiness_score": 0.0,
+            "weak_areas": [],
+            "strong_areas": []
+        }
+    
+    try:
+        # Get exam
+        result = await db.execute(
+            select(Exam).where(Exam.id == exam_id)
+        )
+        exam = result.scalar_one_or_none()
+        
+        if not exam:
+            return {"error": f"Exam {exam_id} not found"}
+        
+        exam_topics = json.loads(exam.topics_json)
+        
+        # Get progress for exam topics
+        result = await db.execute(
+            select(TopicProgress).where(TopicProgress.topic_id.in_(exam_topics))
+        )
+        progress_list = result.scalars().all()
+        progress_map = {p.topic_id: p for p in progress_list}
+        
+        # Calculate readiness
+        confidences = []
+        weak_areas = []
+        strong_areas = []
+        
+        for topic_id in exam_topics:
+            if topic_id in progress_map:
+                confidence = progress_map[topic_id].confidence
+                confidences.append(confidence)
+                
+                if confidence < 0.5:
+                    weak_areas.append({
+                        'topic_id': topic_id,
+                        'confidence': confidence
+                    })
+                elif confidence >= 0.8:
+                    strong_areas.append({
+                        'topic_id': topic_id,
+                        'confidence': confidence
+                    })
+            else:
+                confidences.append(0.0)
+                weak_areas.append({
+                    'topic_id': topic_id,
+                    'confidence': 0.0
+                })
+        
+        readiness_score = sum(confidences) / len(confidences) if confidences else 0.0
+        
+        # Get retention scores if available
+        retention_info = []
+        if 'retention_service' in _services:
+            retention_service = _services['retention_service']
+            decaying = await retention_service.get_decaying_topics(db, threshold=0.8, limit=50)
+            retention_info = [d for d in decaying if d['topic_id'] in exam_topics]
+        
+        return {
+            "exam_id": exam_id,
+            "exam_name": exam.name,
+            "exam_date": exam.date.isoformat(),
+            "readiness_score": readiness_score,
+            "weak_areas": weak_areas,
+            "strong_areas": strong_areas,
+            "topics_needing_review": retention_info
+        }
+    except Exception as e:
+        print(f"Error getting exam readiness: {e}")
+        return {
+            "exam_id": exam_id,
+            "readiness_score": 0.0,
+            "weak_areas": [],
+            "strong_areas": [],
+            "error": str(e)
+        }
 
 
-def get_curriculum_overview() -> Dict:
+async def get_curriculum_overview(db: AsyncSession = None) -> Dict:
     """
     Get overview of the medical curriculum structure.
     
+    Args:
+        db: Database session
+        
     Returns:
         Curriculum structure with topics and progress
     """
-    return {
-        "total_topics": 0,
-        "completed_topics": 0,
-        "in_progress": 0,
-        "categories": []
-    }
+    if db is None or 'graph_service' not in _services:
+        return {
+            "total_topics": 0,
+            "completed_topics": 0,
+            "in_progress": 0,
+            "weak_topics": 0,
+            "categories": []
+        }
+    
+    try:
+        graph_service = _services['graph_service']
+        if not graph_service.is_loaded:
+            graph_service.load_curriculum()
+        
+        total_topics = len(graph_service.topics)
+        
+        # Get all progress
+        result = await db.execute(select(TopicProgress))
+        progress_list = result.scalars().all()
+        progress_map = {p.topic_id: p for p in progress_list}
+        
+        # Count by confidence levels
+        completed_topics = 0  # >= 0.8
+        in_progress = 0  # 0.3 - 0.8
+        weak_topics = 0  # < 0.3
+        
+        for topic_id in graph_service.topics.keys():
+            if topic_id in progress_map:
+                confidence = progress_map[topic_id].confidence
+                if confidence >= 0.8:
+                    completed_topics += 1
+                elif confidence >= 0.3:
+                    in_progress += 1
+                else:
+                    weak_topics += 1
+            else:
+                weak_topics += 1  # Never studied = weak
+        
+        # Group by type/category
+        categories = {}
+        for topic in graph_service.topics.values():
+            topic_type = topic.type
+            if topic_type not in categories:
+                categories[topic_type] = {
+                    'total': 0,
+                    'completed': 0,
+                    'in_progress': 0,
+                    'weak': 0
+                }
+            
+            categories[topic_type]['total'] += 1
+            
+            if topic.id in progress_map:
+                confidence = progress_map[topic.id].confidence
+                if confidence >= 0.8:
+                    categories[topic_type]['completed'] += 1
+                elif confidence >= 0.3:
+                    categories[topic_type]['in_progress'] += 1
+                else:
+                    categories[topic_type]['weak'] += 1
+            else:
+                categories[topic_type]['weak'] += 1
+        
+        return {
+            "total_topics": total_topics,
+            "completed_topics": completed_topics,
+            "in_progress": in_progress,
+            "weak_topics": weak_topics,
+            "categories": [
+                {"type": k, **v} for k, v in categories.items()
+            ]
+        }
+    except Exception as e:
+        print(f"Error getting curriculum overview: {e}")
+        return {
+            "total_topics": 0,
+            "completed_topics": 0,
+            "in_progress": 0,
+            "weak_topics": 0,
+            "categories": [],
+            "error": str(e)
+        }
 
 
-def update_confidence(
+async def update_confidence(
     topic_id: str, 
     confidence: float, 
-    notes: Optional[str] = None
+    notes: Optional[str] = None,
+    db: AsyncSession = None
 ) -> Dict:
     """
     Update confidence level for a topic.
@@ -254,48 +812,131 @@ def update_confidence(
         topic_id: Topic identifier
         confidence: Confidence level (0-1)
         notes: Optional notes about confidence change
+        db: Database session
         
     Returns:
         Updated topic details
     """
-    return {
-        "topic_id": topic_id,
-        "confidence": confidence,
-        "updated_at": datetime.utcnow().isoformat()
-    }
+    if db is None:
+        return {"error": "No database session"}
+    
+    try:
+        # Clamp confidence to [0, 1]
+        confidence = max(0.0, min(1.0, confidence))
+        
+        # Get or create progress
+        result = await db.execute(
+            select(TopicProgress).where(TopicProgress.topic_id == topic_id)
+        )
+        progress = result.scalar_one_or_none()
+        
+        if progress:
+            progress.confidence = confidence
+            if notes:
+                progress.notes = notes
+            progress.updated_at = datetime.utcnow()
+        else:
+            progress = TopicProgress(
+                topic_id=topic_id,
+                confidence=confidence,
+                notes=notes,
+                times_reviewed=0
+            )
+            db.add(progress)
+        
+        await db.commit()
+        
+        return {
+            "topic_id": topic_id,
+            "confidence": confidence,
+            "updated_at": progress.updated_at.isoformat()
+        }
+    except Exception as e:
+        await db.rollback()
+        print(f"Error updating confidence: {e}")
+        return {"error": str(e)}
 
 
-def add_exam(name: str, date: str, topics: List[str]) -> Dict:
+async def add_exam(name: str, date: str, topics: List[str], db: AsyncSession = None) -> Dict:
     """
     Add a new exam to track.
     
     Args:
         name: Exam name
-        date: Exam date (ISO format)
+        date: Exam date (ISO format YYYY-MM-DD)
         topics: List of topic IDs covered
+        db: Database session
         
     Returns:
         Created exam details
     """
-    return {
-        "exam_id": f"exam_{datetime.utcnow().timestamp()}",
-        "name": name,
-        "date": date,
-        "topics": topics
-    }
+    if db is None:
+        return {"error": "No database session"}
+    
+    try:
+        # Parse date
+        exam_date = datetime.fromisoformat(date).date()
+        
+        # Create exam
+        exam = Exam(
+            name=name,
+            date=exam_date,
+            topics_json=json.dumps(topics)
+        )
+        db.add(exam)
+        await db.commit()
+        
+        return {
+            "exam_id": exam.id,
+            "name": name,
+            "date": date,
+            "topics": topics
+        }
+    except Exception as e:
+        await db.rollback()
+        print(f"Error adding exam: {e}")
+        return {"error": str(e)}
 
 
-def get_upcoming_exams() -> List[Dict]:
+async def get_upcoming_exams(db: AsyncSession = None) -> List[Dict]:
     """
     Get list of upcoming exams.
     
+    Args:
+        db: Database session
+        
     Returns:
         List of upcoming exams with dates
     """
-    return []
+    if db is None:
+        return []
+    
+    try:
+        today = date.today()
+        
+        result = await db.execute(
+            select(Exam)
+            .where(Exam.date >= today)
+            .order_by(Exam.date.asc())
+        )
+        exams = result.scalars().all()
+        
+        return [
+            {
+                'exam_id': e.id,
+                'name': e.name,
+                'date': e.date.isoformat(),
+                'topics': json.loads(e.topics_json),
+                'days_until': (e.date - today).days
+            }
+            for e in exams
+        ]
+    except Exception as e:
+        print(f"Error getting upcoming exams: {e}")
+        return []
 
 
-def open_resource(url: str) -> Dict:
+async def open_resource(url: str, db: AsyncSession = None) -> Dict:
     """
     Open a learning resource (launches in browser/app).
     
@@ -689,7 +1330,7 @@ TOOL_FUNCTIONS = {
 }
 
 
-def execute_tool(tool_name: str, arguments: Dict[str, Any]) -> Any:
+async def execute_tool(tool_name: str, arguments: Dict[str, Any]) -> Any:
     """
     Execute a tool by name with given arguments.
     
@@ -707,4 +1348,5 @@ def execute_tool(tool_name: str, arguments: Dict[str, Any]) -> Any:
         raise ValueError(f"Unknown tool: {tool_name}")
     
     func = TOOL_FUNCTIONS[tool_name]
-    return func(**arguments)
+    # All tools are now async
+    return await func(**arguments)
