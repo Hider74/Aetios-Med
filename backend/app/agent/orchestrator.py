@@ -129,7 +129,7 @@ class AgentOrchestrator:
                 messages=messages_with_tools,
                 temperature=self.temperature,
                 max_tokens=2048,
-                stop=["<|eot_id|>", "TOOL_CALL:"]
+                stop=["<|eot_id|>"]
             )
             
             # Parse response for tool calls
@@ -183,33 +183,66 @@ class AgentOrchestrator:
     
     def _parse_tool_calls(self, response_text: str) -> Optional[List[Dict[str, Any]]]:
         """Parse tool calls from model response."""
-        # Look for TOOL_CALL: pattern
-        tool_call_pattern = r'TOOL_CALL:\s*(\w+)\((.*?)\)'
-        matches = re.finditer(tool_call_pattern, response_text, re.MULTILINE | re.DOTALL)
-        
         tool_calls = []
-        for i, match in enumerate(matches):
-            tool_name = match.group(1)
-            args_str = match.group(2).strip()
+        
+        # Process line by line looking for TOOL_CALL: pattern
+        for line in response_text.split('\n'):
+            line = line.strip()
+            if not line.startswith('TOOL_CALL:'):
+                continue
             
-            # Parse arguments
+            # Extract tool name and arguments
             try:
+                # Remove TOOL_CALL: prefix
+                call_str = line[len('TOOL_CALL:'):].strip()
+                
+                # Find tool name (before opening paren)
+                paren_idx = call_str.find('(')
+                if paren_idx == -1:
+                    logger.warning(f"Invalid tool call format (no parentheses): {line}")
+                    continue
+                
+                tool_name = call_str[:paren_idx].strip()
+                
+                # Extract JSON arguments (between parentheses)
+                # Find matching closing paren by counting braces
+                depth = 0
+                start_idx = paren_idx + 1
+                end_idx = -1
+                
+                for i in range(paren_idx + 1, len(call_str)):
+                    if call_str[i] == '(':
+                        depth += 1
+                    elif call_str[i] == ')':
+                        if depth == 0:
+                            end_idx = i
+                            break
+                        depth -= 1
+                
+                if end_idx == -1:
+                    logger.warning(f"Invalid tool call format (unmatched parentheses): {line}")
+                    continue
+                
+                args_str = call_str[start_idx:end_idx].strip()
+                
+                # Parse JSON arguments
                 if args_str:
                     arguments = json.loads(args_str)
                 else:
                     arguments = {}
-            except json.JSONDecodeError:
-                logger.warning(f"Failed to parse tool arguments: {args_str}")
-                arguments = {}
-            
-            tool_calls.append({
-                "id": f"call_{i}",
-                "type": "function",
-                "function": {
-                    "name": tool_name,
-                    "arguments": json.dumps(arguments)
-                }
-            })
+                
+                tool_calls.append({
+                    "id": f"call_{len(tool_calls)}",
+                    "type": "function",
+                    "function": {
+                        "name": tool_name,
+                        "arguments": json.dumps(arguments)
+                    }
+                })
+            except json.JSONDecodeError as e:
+                logger.warning(f"Failed to parse tool arguments in '{line}': {e}")
+            except Exception as e:
+                logger.warning(f"Failed to parse tool call '{line}': {e}")
         
         return tool_calls if tool_calls else None
     
