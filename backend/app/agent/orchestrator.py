@@ -181,7 +181,13 @@ class AgentOrchestrator:
         return tools_text
     
     def _parse_tool_calls(self, response_text: str) -> Optional[List[Dict[str, Any]]]:
-        """Parse tool calls from model response."""
+        """
+        Parse tool calls from model response.
+        
+        Expects tool calls in the format: TOOL_CALL: tool_name({"arg": "value"})
+        Arguments must be valid JSON (double quotes required, as per JSON spec).
+        Handles escape sequences (\n, \t, \", \\, etc.) correctly.
+        """
         tool_calls = []
         
         # Process line by line looking for TOOL_CALL: pattern
