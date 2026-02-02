@@ -19,7 +19,6 @@
         "resources": {
           "teachmeanatomy": "https://teachmeanatomy.info/the-basics/systems/cardiovascular-system/",
           "zerotofinals": "https://www.zerotofinals.com/medicine/cardiovascular/",
-          "teachmesurgery": "https://teachmesurgery.com/cardiovascular/",
           "quesmed": "https://quesmed.com/question-bank/cardiology"
         },
         "gmc_outcomes": [
@@ -150,7 +149,7 @@
         "resources": {
           "zerotofinals": "https://www.zerotofinals.com/medicine/cardiovascular/atrial-fibrillation/",
           "quesmed": "https://quesmed.com/question-bank/cardiology",
-          "nice": "https://www.nice.org.uk/guidance/ng185"
+          "nice": "https://www.nice.org.uk/guidance/cg180"
         },
         "gmc_outcomes": [
           "Diagnose and Manage",
@@ -179,7 +178,7 @@
           "zerotofinals": "https://www.zerotofinals.com/medicine/cardiovascular/acute-coronary-syndrome/",
           "teachmeanatomy": "https://teachmeanatomy.info/cardiovascular/pathology/ischaemic-heart-disease/",
           "quesmed": "https://quesmed.com/question-bank/cardiology",
-          "nice": "https://www.nice.org.uk/guidance/ng185"
+          "nice": "https://www.nice.org.uk/guidance/cg95"
         },
         "gmc_outcomes": [
           "Diagnose and Manage",
@@ -412,7 +411,7 @@
         "resources": {
           "zerotofinals": "https://www.zerotofinals.com/medicine/respiratory/lung-cancer/",
           "quesmed": "https://quesmed.com/question-bank/respiratory",
-          "nice": "https://www.nice.org.uk/guidance/lung-cancer"
+          "nice": "https://www.nice.org.uk/guidance/ng122"
         },
         "gmc_outcomes": [
           "Diagnose and Manage",
@@ -538,7 +537,7 @@
         "resources": {
           "zerotofinals": "https://www.zerotofinals.com/medicine/gastroenterology/ulcerative-colitis/",
           "quesmed": "https://quesmed.com/question-bank/gastroenterology",
-          "nice": "https://www.nice.org.uk/guidance/inflammatory-bowel-disease"
+          "nice": "https://www.nice.org.uk/guidance/ng129"
         },
         "gmc_outcomes": [
           "Diagnose and Manage",
@@ -612,7 +611,7 @@
         "resources": {
           "zerotofinals": "https://www.zerotofinals.com/medicine/gastroenterology/colorectal-cancer/",
           "quesmed": "https://quesmed.com/question-bank/gastroenterology",
-          "nice": "https://www.nice.org.uk/guidance/colorectal-cancer"
+          "nice": "https://www.nice.org.uk/guidance/ng151"
         },
         "gmc_outcomes": [
           "Diagnose and Manage",
@@ -1071,7 +1070,7 @@
         "resources": {
           "zerotofinals": "https://www.zerotofinals.com/medicine/endocrinology/hyperthyroidism/",
           "quesmed": "https://quesmed.com/question-bank/endocrinology",
-          "nice": "https://www.nice.org.uk/guidance/thyroid-disease"
+          "nice": "https://www.nice.org.uk/guidance/ng145"
         },
         "gmc_outcomes": [
           "Diagnose and Manage",
@@ -1357,8 +1356,7 @@
         ],
         "resources": {
           "zerotofinals": "https://www.zerotofinals.com/medicine/haematology/iron-deficiency-anaemia/",
-          "quesmed": "https://quesmed.com/question-bank/haematology",
-          "nice": "https://www.nice.org.uk/guidance/ng185"
+          "quesmed": "https://quesmed.com/question-bank/haematology"
         },
         "gmc_outcomes": [
           "Diagnose and Manage",
@@ -1381,8 +1379,7 @@
         ],
         "resources": {
           "zerotofinals": "https://www.zerotofinals.com/medicine/haematology/leukaemia/",
-          "quesmed": "https://quesmed.com/question-bank/haematology",
-          "nice": "https://www.nice.org.uk/guidance/ng185"
+          "quesmed": "https://quesmed.com/question-bank/haematology"
         },
         "gmc_outcomes": [
           "Diagnose and Manage",
@@ -1405,8 +1402,7 @@
         ],
         "resources": {
           "zerotofinals": "https://www.zerotofinals.com/medicine/haematology/lymphoma/",
-          "quesmed": "https://quesmed.com/question-bank/haematology",
-          "nice": "https://www.nice.org.uk/guidance/lymphoma"
+          "quesmed": "https://quesmed.com/question-bank/haematology"
         },
         "gmc_outcomes": [
           "Diagnose and Manage",
@@ -1596,8 +1592,7 @@
         ],
         "resources": {
           "zerotofinals": "https://www.zerotofinals.com/pharmacology/",
-          "quesmed": "https://quesmed.com/question-bank/medicine",
-          "bnf": "https://bnf.nice.org.uk/treatment-summaries/pharmacology.html"
+          "quesmed": "https://quesmed.com/question-bank/medicine"
         },
         "gmc_outcomes": [
           "Prescribing",
@@ -1645,8 +1640,7 @@
         ],
         "resources": {
           "zerotofinals": "https://www.zerotofinals.com/pharmacology/adverse-drug-reactions/",
-          "quesmed": "https://quesmed.com/question-bank/medicine",
-          "bnf": "https://bnf.nice.org.uk/treatment-summaries/adverse-drug-reactions.html"
+          "quesmed": "https://quesmed.com/question-bank/medicine"
         },
         "gmc_outcomes": [
           "Prescribing",
@@ -1725,8 +1719,7 @@
         ],
         "resources": {
           "zerotofinals": "https://www.zerotofinals.com/pharmacology/emergency-drugs/",
-          "quesmed": "https://quesmed.com/question-bank/medicine",
-          "bnf": "https://bnf.nice.org.uk/treatment-summaries/emergency-drugs.html"
+          "quesmed": "https://quesmed.com/question-bank/medicine"
         },
         "gmc_outcomes": [
           "Emergency Management",
