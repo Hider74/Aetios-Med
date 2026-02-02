@@ -187,6 +187,10 @@ class AgentOrchestrator:
         Expects tool calls in the format: TOOL_CALL: tool_name({"arg": "value"})
         Arguments must be valid JSON (double quotes required, as per JSON spec).
         Handles escape sequences (\n, \t, \", \\, etc.) correctly.
+        
+        Note: Malformed tool calls are logged as warnings and skipped. The agent
+        will continue processing valid tool calls and may try again in the next
+        iteration if the LLM detects the tool call was not executed.
         """
         tool_calls = []
         

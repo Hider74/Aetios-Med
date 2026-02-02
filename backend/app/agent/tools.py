@@ -16,6 +16,12 @@ from ..models.database import (
 # Global services dictionary
 _services: Dict[str, Any] = {}
 
+# Learning algorithm constants
+CONFIDENCE_INCREASE_CORRECT = 0.05  # Confidence boost for correct quiz answers
+CONFIDENCE_DECREASE_INCORRECT = 0.1  # Confidence penalty for incorrect quiz answers
+FSRS_RETENTION_THRESHOLD = 0.8  # 80% retention threshold for spaced repetition
+ANKI_INTERVAL_NORMALIZATION_DAYS = 30  # Normalize intervals to 30-day scale for retention estimation
+
 
 def init_tools(services_dict: Dict[str, Any]) -> None:
     """
@@ -86,10 +92,11 @@ async def get_decaying_topics(days: int = 7, db: AsyncSession = None) -> List[Di
     
     try:
         retention_service = _services['retention_service']
-        # Use FSRS-based retention calculation with threshold 0.8 (80%)
+        # Use FSRS-based retention calculation
+        # Threshold of 0.8 means topics with <80% predicted retention need review
         decaying_topics = await retention_service.get_decaying_topics(
             db=db, 
-            threshold=0.8, 
+            threshold=FSRS_RETENTION_THRESHOLD, 
             limit=20
         )
         return decaying_topics
@@ -297,15 +304,17 @@ async def get_anki_stats(topic_id: Optional[str] = None, db: AsyncSession = None
         now = datetime.utcnow()
         due_cards = [c for c in cards if c.due_date and c.due_date <= now]
         
-        # Calculate accuracy from intervals (higher interval = better retention)
+        # Estimate retention/mastery from intervals
+        # Longer intervals indicate better retention (content has "stuck" longer)
         avg_interval = sum(c.interval for c in cards) / len(cards) if cards else 0
-        accuracy = min(1.0, avg_interval / 30.0)  # Normalize to 30 days
+        # Normalize to 30-day scale: intervals >= 30 days suggest strong retention
+        retention_estimate = min(1.0, avg_interval / ANKI_INTERVAL_NORMALIZATION_DAYS)
         
         return {
             'total_cards': len(cards),
             'cards_due': len(due_cards),
-            'accuracy': accuracy,
-            'avg_interval': avg_interval,
+            'retention_estimate': retention_estimate,
+            'avg_interval_days': avg_interval,
             'avg_ease_factor': sum(c.ease_factor for c in cards) / len(cards) if cards else 2.5
         }
     except Exception as e:
@@ -402,9 +411,9 @@ async def log_quiz_result(topic_id: str, correct: bool, question: str, db: Async
         if progress:
             # Adjust confidence based on result
             if correct:
-                progress.confidence = min(1.0, progress.confidence + 0.05)
+                progress.confidence = min(1.0, progress.confidence + CONFIDENCE_INCREASE_CORRECT)
             else:
-                progress.confidence = max(0.0, progress.confidence - 0.1)
+                progress.confidence = max(0.0, progress.confidence - CONFIDENCE_DECREASE_INCORRECT)
             progress.updated_at = datetime.utcnow()
         else:
             # Create new progress entry
@@ -682,7 +691,8 @@ async def get_exam_readiness(exam_id: int, db: AsyncSession = None) -> Dict:
         retention_info = []
         if 'retention_service' in _services:
             retention_service = _services['retention_service']
-            decaying = await retention_service.get_decaying_topics(db, threshold=0.8, limit=50)
+            # Get topics with retention below threshold that need review
+            decaying = await retention_service.get_decaying_topics(db, threshold=FSRS_RETENTION_THRESHOLD, limit=50)
             retention_info = [d for d in decaying if d['topic_id'] in exam_topics]
         
         return {
