@@ -1789,8 +1789,7 @@
         ],
         "resources": {
           "zerotofinals": "https://www.zerotofinals.com/clinical-skills/examination/",
-          "quesmed": "https://quesmed.com/question-bank/medicine",
-          "nice": "https://www.nice.org.uk/guidance/ng185"
+          "quesmed": "https://quesmed.com/question-bank/medicine"
         },
         "gmc_outcomes": [
           "Clinical Examination",
