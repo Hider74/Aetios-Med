@@ -2,6 +2,7 @@ import React from 'react';
 import { ConfidenceOverview } from './ConfidenceOverview';
 import { UpcomingExams } from './UpcomingExams';
 import { DecayingTopics } from './DecayingTopics';
+import { AnkiCardsDue } from './AnkiCardsDue';
 import { useGraph } from '../../hooks/useGraph';
 
 export const Dashboard: React.FC = () => {
@@ -23,9 +24,10 @@ export const Dashboard: React.FC = () => {
       <ConfidenceOverview stats={stats} />
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <UpcomingExams />
         <DecayingTopics topics={nodesNeedingReview} />
+        <AnkiCardsDue />
       </div>
 
       {/* Quick Actions */}

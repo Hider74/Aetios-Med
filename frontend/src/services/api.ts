@@ -89,18 +89,31 @@ class ApiClient {
 
   // Exams
   async getExams(): Promise<Exam[]> {
-    const response = await this.client.get<Exam[]>('/exams');
-    return response.data;
+    const response = await this.client.get<any[]>('/study/exams');
+    return response.data.map((exam: any) => ({
+      ...exam,
+      date: new Date(exam.date),
+    }));
   }
 
   async createExam(exam: Partial<Exam>): Promise<Exam> {
-    const response = await this.client.post<Exam>('/exams', exam);
-    return response.data;
+    const response = await this.client.post<any>('/study/exam', exam);
+    return {
+      ...response.data,
+      date: new Date(response.data.date),
+    };
   }
 
   async updateExam(examId: string, updates: Partial<Exam>): Promise<Exam> {
-    const response = await this.client.patch<Exam>(`/exams/${examId}`, updates);
-    return response.data;
+    const response = await this.client.patch<any>(`/study/exam/${examId}`, updates);
+    return {
+      ...response.data,
+      date: new Date(response.data.date),
+    };
+  }
+
+  async deleteExam(examId: string): Promise<void> {
+    await this.client.delete(`/study/exam/${examId}`);
   }
 
   // Quizzes

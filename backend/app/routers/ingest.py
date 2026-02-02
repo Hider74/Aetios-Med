@@ -6,7 +6,8 @@ from fastapi import APIRouter, Request, HTTPException, UploadFile, File
 from app.models.api_models import IngestRequest, IngestResponse
 from app.models.database import get_session, AnkiCard, Note
 from pathlib import Path
-from sqlalchemy import select, func
+from sqlalchemy import select, func, and_
+from datetime import datetime, date
 import tempfile
 import os
 
@@ -178,3 +179,41 @@ async def get_ingest_status(request: Request):
             }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get status: {str(e)}")
+
+
+@router.get("/anki/due")
+async def get_anki_due(request: Request):
+    """Get count of Anki cards due today with breakdown by topic."""
+    try:
+        async with get_session() as db:
+            today = datetime.now().date()
+            
+            # Get cards due today or overdue
+            result = await db.execute(
+                select(AnkiCard).where(
+                    and_(
+                        AnkiCard.due_date.isnot(None),
+                        func.date(AnkiCard.due_date) <= today
+                    )
+                )
+            )
+            cards_due = result.scalars().all()
+            
+            # Group by topic
+            topic_counts = {}
+            for card in cards_due:
+                topic = card.topic_id if card.topic_id else "Unmapped"
+                topic_counts[topic] = topic_counts.get(topic, 0) + 1
+            
+            # Sort by count descending
+            by_topic = [
+                {"topic": topic, "count": count}
+                for topic, count in sorted(topic_counts.items(), key=lambda x: x[1], reverse=True)
+            ]
+            
+            return {
+                "total": len(cards_due),
+                "byTopic": by_topic
+            }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch Anki cards due: {str(e)}")

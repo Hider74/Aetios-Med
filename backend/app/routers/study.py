@@ -106,6 +106,40 @@ async def delete_exam(request: Request, exam_id: int):
         raise HTTPException(status_code=500, detail=f"Failed to delete exam: {str(e)}")
 
 
+@router.patch("/exam/{exam_id}", response_model=ExamResponse)
+async def update_exam(request: Request, exam_id: int, exam_update: ExamCreate):
+    """Update an existing exam."""
+    try:
+        async with get_session() as db:
+            result = await db.execute(
+                select(Exam).where(Exam.id == exam_id)
+            )
+            exam = result.scalar_one_or_none()
+            
+            if not exam:
+                raise HTTPException(status_code=404, detail="Exam not found")
+            
+            # Update fields
+            exam.name = exam_update.name
+            exam.date = exam_update.date
+            exam.topics_json = json.dumps(exam_update.topics)
+            
+            await db.commit()
+            await db.refresh(exam)
+            
+            return ExamResponse(
+                id=exam.id,
+                name=exam.name,
+                date=exam.date.isoformat(),
+                topics=json.loads(exam.topics_json),
+                created_at=exam.created_at.isoformat()
+            )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to update exam: {str(e)}")
+
+
 @router.post("/plan", response_model=StudyPlanResponse)
 async def generate_study_plan(request: Request, plan_request: StudyPlanRequest):
     """Generate a personalized study plan."""
