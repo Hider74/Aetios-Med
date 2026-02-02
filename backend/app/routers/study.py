@@ -8,7 +8,7 @@ from app.models.api_models import (
     StudyPlanResponse, StudySessionLog
 )
 from app.models.database import (
-    get_session, Exam, StudySession, TopicProgress
+    get_session, Exam, StudySession, TopicProgress, StudyPlan
 )
 from typing import List, Optional
 from datetime import datetime, date
@@ -155,8 +155,40 @@ async def generate_study_plan(request: Request, plan_request: StudyPlanRequest):
 @router.get("/plans")
 async def get_study_plans(request: Request):
     """Get all study plans."""
-    # TODO: Query database for plans
-    return {"plans": []}
+    try:
+        async with get_session() as db:
+            result = await db.execute(
+                select(StudyPlan).order_by(desc(StudyPlan.created_at))
+            )
+            plans = result.scalars().all()
+            
+            # Get exam details for each plan if exam_id is present
+            response_plans = []
+            for plan in plans:
+                plan_data = {
+                    "id": plan.id,
+                    "start_date": plan.start_date.isoformat(),
+                    "end_date": plan.end_date.isoformat(),
+                    "hours_per_day": plan.hours_per_day,
+                    "topics": json.loads(plan.topics_json),
+                    "created_at": plan.created_at.isoformat()
+                }
+                
+                # Get exam name if exam_id exists
+                if plan.exam_id:
+                    exam_result = await db.execute(
+                        select(Exam).where(Exam.id == plan.exam_id)
+                    )
+                    exam = exam_result.scalar_one_or_none()
+                    if exam:
+                        plan_data["exam_id"] = exam.id
+                        plan_data["exam_name"] = exam.name
+                
+                response_plans.append(plan_data)
+            
+            return {"plans": response_plans}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch study plans: {str(e)}")
 
 
 @router.post("/session")
