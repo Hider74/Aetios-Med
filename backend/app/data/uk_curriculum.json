@@ -16,11 +16,17 @@
           "Interpret cardiovascular investigations appropriately",
           "Recognize cardiovascular emergencies and initiate management"
         ],
-        "resources": [
-          "https://teachmeanatomy.info/the-basics/systems/cardiovascular-system/",
-          "https://www.zerotofinals.com/medicine/cardiovascular/"
+        "resources": {
+          "teachmeanatomy": "https://teachmeanatomy.info/the-basics/systems/cardiovascular-system/",
+          "zerotofinals": "https://www.zerotofinals.com/medicine/cardiovascular/",
+          "teachmesurgery": "https://teachmesurgery.com/cardiovascular/",
+          "quesmed": "https://quesmed.com/question-bank/cardiology"
+        },
+        "gmc_outcomes": [
+          "Clinical Communication",
+          "Diagnose and Manage",
+          "Clinical Examination"
         ],
-        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage", "Clinical Examination"],
         "exam_weight": 2.5
       },
       {
@@ -35,11 +41,15 @@
           "Understand the conducting system of the heart",
           "Relate cardiac anatomy to surface landmarks for clinical examination"
         ],
-        "resources": [
-          "https://teachmeanatomy.info/thorax/organs/heart/",
-          "https://www.zerotofinals.com/medicine/cardiovascular/cardiac-anatomy/"
+        "resources": {
+          "teachmeanatomy": "https://teachmeanatomy.info/thorax/organs/heart/",
+          "zerotofinals": "https://www.zerotofinals.com/medicine/cardiovascular/cardiac-anatomy/",
+          "quesmed": "https://quesmed.com/question-bank/cardiology"
+        },
+        "gmc_outcomes": [
+          "Applied Biomedical Sciences",
+          "Clinical Examination"
         ],
-        "gmc_outcomes": ["Applied Biomedical Sciences", "Clinical Examination"],
         "exam_weight": 1.5
       },
       {
@@ -47,7 +57,9 @@
         "label": "Cardiac Physiology",
         "type": "topic",
         "parent": "cardiovascular",
-        "prerequisites": ["cardiac_anatomy"],
+        "prerequisites": [
+          "cardiac_anatomy"
+        ],
         "learning_objectives": [
           "Explain the cardiac cycle and pressure-volume relationships",
           "Understand cardiac output and its determinants",
@@ -55,11 +67,14 @@
           "Explain the Frank-Starling mechanism and cardiac contractility",
           "Understand cardiac autoregulation and neural control"
         ],
-        "resources": [
-          "https://teachmeanatomy.info/the-basics/systems/cardiovascular-system/cardiac-cycle/",
-          "https://www.zerotofinals.com/medicine/cardiovascular/cardiac-physiology/"
+        "resources": {
+          "teachmeanatomy": "https://teachmeanatomy.info/the-basics/systems/cardiovascular-system/cardiac-cycle/",
+          "zerotofinals": "https://www.zerotofinals.com/medicine/cardiovascular/cardiac-physiology/",
+          "quesmed": "https://quesmed.com/question-bank/cardiology"
+        },
+        "gmc_outcomes": [
+          "Applied Biomedical Sciences"
         ],
-        "gmc_outcomes": ["Applied Biomedical Sciences"],
         "exam_weight": 2.0
       },
       {
@@ -67,18 +82,25 @@
         "label": "ECG Interpretation",
         "type": "topic",
         "parent": "cardiovascular",
-        "prerequisites": ["cardiac_anatomy", "cardiac_physiology"],
+        "prerequisites": [
+          "cardiac_anatomy",
+          "cardiac_physiology"
+        ],
         "learning_objectives": [
           "Systematically interpret a 12-lead ECG",
           "Recognize common ECG abnormalities including arrhythmias and ischaemia",
           "Identify life-threatening ECG findings requiring urgent intervention",
           "Correlate ECG findings with clinical presentations"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/cardiovascular/ecg-interpretation/",
-          "https://teachmeanatomy.info/the-basics/investigations/electrocardiogram/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/cardiovascular/ecg-interpretation/",
+          "teachmeanatomy": "https://teachmeanatomy.info/the-basics/investigations/electrocardiogram/",
+          "quesmed": "https://quesmed.com/question-bank/cardiology"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Clinical Skills"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Clinical Skills"],
         "exam_weight": 3.0
       },
       {
@@ -86,7 +108,9 @@
         "label": "Heart Failure",
         "type": "topic",
         "parent": "cardiovascular",
-        "prerequisites": ["cardiac_physiology"],
+        "prerequisites": [
+          "cardiac_physiology"
+        ],
         "learning_objectives": [
           "Define and classify heart failure (acute vs chronic, systolic vs diastolic)",
           "Identify common causes and risk factors for heart failure",
@@ -94,11 +118,17 @@
           "Initiate and optimize medical management according to guidelines",
           "Understand prognosis and when to refer for specialist input"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/cardiovascular/heart-failure/",
-          "https://teachmeanatomy.info/cardiovascular/pathology/heart-failure/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/cardiovascular/heart-failure/",
+          "teachmeanatomy": "https://teachmeanatomy.info/cardiovascular/pathology/heart-failure/",
+          "quesmed": "https://quesmed.com/question-bank/cardiology",
+          "nice": "https://www.nice.org.uk/guidance/ng106"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Clinical Communication",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication", "Prescribing"],
         "exam_weight": 2.5
       },
       {
@@ -106,7 +136,10 @@
         "label": "Arrhythmias",
         "type": "topic",
         "parent": "cardiovascular",
-        "prerequisites": ["cardiac_physiology", "ecg_interpretation"],
+        "prerequisites": [
+          "cardiac_physiology",
+          "ecg_interpretation"
+        ],
         "learning_objectives": [
           "Classify arrhythmias into bradycardias and tachycardias",
           "Recognize atrial fibrillation and understand anticoagulation management",
@@ -114,11 +147,16 @@
           "Understand indications for cardioversion and pacing",
           "Calculate CHA2DS2-VASc and HAS-BLED scores"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/cardiovascular/arrhythmias/",
-          "https://www.zerotofinals.com/medicine/cardiovascular/atrial-fibrillation/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/cardiovascular/atrial-fibrillation/",
+          "quesmed": "https://quesmed.com/question-bank/cardiology",
+          "nice": "https://www.nice.org.uk/guidance/ng185"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Emergency Management",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Emergency Management", "Prescribing"],
         "exam_weight": 2.5
       },
       {
@@ -126,7 +164,10 @@
         "label": "Ischaemic Heart Disease",
         "type": "topic",
         "parent": "cardiovascular",
-        "prerequisites": ["cardiac_anatomy", "ecg_interpretation"],
+        "prerequisites": [
+          "cardiac_anatomy",
+          "ecg_interpretation"
+        ],
         "learning_objectives": [
           "Understand the pathophysiology of atherosclerosis and coronary artery disease",
           "Differentiate between stable angina, unstable angina, NSTEMI and STEMI",
@@ -134,11 +175,17 @@
           "Manage acute coronary syndromes according to current guidelines",
           "Recognize complications of MI and initiate appropriate management"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/cardiovascular/acute-coronary-syndrome/",
-          "https://teachmeanatomy.info/cardiovascular/pathology/ischaemic-heart-disease/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/cardiovascular/acute-coronary-syndrome/",
+          "teachmeanatomy": "https://teachmeanatomy.info/cardiovascular/pathology/ischaemic-heart-disease/",
+          "quesmed": "https://quesmed.com/question-bank/cardiology",
+          "nice": "https://www.nice.org.uk/guidance/ng185"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Emergency Management",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Emergency Management", "Prescribing"],
         "exam_weight": 3.0
       },
       {
@@ -146,7 +193,10 @@
         "label": "Valvular Heart Disease",
         "type": "topic",
         "parent": "cardiovascular",
-        "prerequisites": ["cardiac_anatomy", "cardiac_physiology"],
+        "prerequisites": [
+          "cardiac_anatomy",
+          "cardiac_physiology"
+        ],
         "learning_objectives": [
           "Describe the pathophysiology of common valvular lesions",
           "Recognize clinical features of aortic stenosis, mitral regurgitation, and other valve diseases",
@@ -154,11 +204,15 @@
           "Understand indications for valve repair or replacement",
           "Recognize complications of prosthetic valves"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/cardiovascular/valvular-heart-disease/",
-          "https://teachmeanatomy.info/cardiovascular/pathology/valvular-disease/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/cardiovascular/valvular-heart-disease/",
+          "teachmeanatomy": "https://teachmeanatomy.info/cardiovascular/pathology/valvular-disease/",
+          "quesmed": "https://quesmed.com/question-bank/cardiology"
+        },
+        "gmc_outcomes": [
+          "Clinical Examination",
+          "Diagnose and Manage"
         ],
-        "gmc_outcomes": ["Clinical Examination", "Diagnose and Manage"],
         "exam_weight": 2.0
       },
       {
@@ -166,7 +220,9 @@
         "label": "Hypertension",
         "type": "topic",
         "parent": "cardiovascular",
-        "prerequisites": ["cardiac_physiology"],
+        "prerequisites": [
+          "cardiac_physiology"
+        ],
         "learning_objectives": [
           "Define hypertension and classify according to severity",
           "Investigate to exclude secondary causes of hypertension",
@@ -174,10 +230,16 @@
           "Manage hypertension according to NICE guidelines",
           "Recognize and manage hypertensive emergencies"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/cardiovascular/hypertension/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/cardiovascular/hypertension/",
+          "quesmed": "https://quesmed.com/question-bank/cardiology",
+          "nice": "https://www.nice.org.uk/guidance/ng136"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Health Promotion"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
         "exam_weight": 2.0
       },
       {
@@ -192,11 +254,16 @@
           "Interpret respiratory investigations including chest X-rays and spirometry",
           "Recognize respiratory emergencies and initiate appropriate management"
         ],
-        "resources": [
-          "https://teachmeanatomy.info/thorax/organs/lungs/",
-          "https://www.zerotofinals.com/medicine/respiratory/"
+        "resources": {
+          "teachmeanatomy": "https://teachmeanatomy.info/thorax/organs/lungs/",
+          "zerotofinals": "https://www.zerotofinals.com/medicine/respiratory/",
+          "quesmed": "https://quesmed.com/question-bank/respiratory"
+        },
+        "gmc_outcomes": [
+          "Clinical Communication",
+          "Diagnose and Manage",
+          "Clinical Examination"
         ],
-        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage", "Clinical Examination"],
         "exam_weight": 2.5
       },
       {
@@ -211,11 +278,14 @@
           "Explain the blood supply and innervation of the lungs",
           "Relate respiratory anatomy to surface landmarks for examination"
         ],
-        "resources": [
-          "https://teachmeanatomy.info/thorax/organs/lungs/",
-          "https://teachmeanatomy.info/thorax/organs/trachea/"
+        "resources": {
+          "teachmeanatomy": "https://teachmeanatomy.info/thorax/organs/trachea/",
+          "quesmed": "https://quesmed.com/question-bank/respiratory"
+        },
+        "gmc_outcomes": [
+          "Applied Biomedical Sciences",
+          "Clinical Examination"
         ],
-        "gmc_outcomes": ["Applied Biomedical Sciences", "Clinical Examination"],
         "exam_weight": 1.5
       },
       {
@@ -223,7 +293,9 @@
         "label": "Respiratory Physiology",
         "type": "topic",
         "parent": "respiratory",
-        "prerequisites": ["respiratory_anatomy"],
+        "prerequisites": [
+          "respiratory_anatomy"
+        ],
         "learning_objectives": [
           "Explain the mechanics of breathing and gas exchange",
           "Understand ventilation-perfusion matching",
@@ -231,11 +303,14 @@
           "Interpret spirometry and other lung function tests",
           "Understand control of respiration"
         ],
-        "resources": [
-          "https://teachmeanatomy.info/the-basics/systems/respiratory-system/",
-          "https://www.zerotofinals.com/medicine/respiratory/respiratory-physiology/"
+        "resources": {
+          "teachmeanatomy": "https://teachmeanatomy.info/the-basics/systems/respiratory-system/",
+          "zerotofinals": "https://www.zerotofinals.com/medicine/respiratory/respiratory-physiology/",
+          "quesmed": "https://quesmed.com/question-bank/respiratory"
+        },
+        "gmc_outcomes": [
+          "Applied Biomedical Sciences"
         ],
-        "gmc_outcomes": ["Applied Biomedical Sciences"],
         "exam_weight": 2.0
       },
       {
@@ -243,7 +318,9 @@
         "label": "Asthma",
         "type": "topic",
         "parent": "respiratory",
-        "prerequisites": ["respiratory_physiology"],
+        "prerequisites": [
+          "respiratory_physiology"
+        ],
         "learning_objectives": [
           "Understand the pathophysiology of asthma",
           "Diagnose asthma using clinical features and investigations",
@@ -251,10 +328,16 @@
           "Recognize and manage acute asthma exacerbations",
           "Educate patients on inhaler technique and self-management"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/respiratory/asthma/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/respiratory/asthma/",
+          "quesmed": "https://quesmed.com/question-bank/respiratory",
+          "nice": "https://www.nice.org.uk/guidance/ng80"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Health Promotion"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
         "exam_weight": 2.5
       },
       {
@@ -262,7 +345,9 @@
         "label": "Chronic Obstructive Pulmonary Disease",
         "type": "topic",
         "parent": "respiratory",
-        "prerequisites": ["respiratory_physiology"],
+        "prerequisites": [
+          "respiratory_physiology"
+        ],
         "learning_objectives": [
           "Understand the pathophysiology of COPD and emphysema",
           "Diagnose COPD using spirometry and clinical assessment",
@@ -270,10 +355,16 @@
           "Recognize and manage acute exacerbations of COPD",
           "Understand indications for long-term oxygen therapy"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/respiratory/copd/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/respiratory/copd/",
+          "quesmed": "https://quesmed.com/question-bank/respiratory",
+          "nice": "https://www.nice.org.uk/guidance/ng115"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Health Promotion"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
         "exam_weight": 2.5
       },
       {
@@ -281,7 +372,9 @@
         "label": "Pneumonia",
         "type": "topic",
         "parent": "respiratory",
-        "prerequisites": ["respiratory_anatomy"],
+        "prerequisites": [
+          "respiratory_anatomy"
+        ],
         "learning_objectives": [
           "Classify pneumonia by setting and likely organisms",
           "Recognize clinical features and investigate appropriately",
@@ -289,10 +382,16 @@
           "Select appropriate antibiotic therapy",
           "Identify complications of pneumonia"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/respiratory/pneumonia/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/respiratory/pneumonia/",
+          "quesmed": "https://quesmed.com/question-bank/respiratory",
+          "nice": "https://www.nice.org.uk/guidance/cg191"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Emergency Management"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Emergency Management"],
         "exam_weight": 2.5
       },
       {
@@ -300,7 +399,9 @@
         "label": "Lung Cancer",
         "type": "topic",
         "parent": "respiratory",
-        "prerequisites": ["respiratory_anatomy"],
+        "prerequisites": [
+          "respiratory_anatomy"
+        ],
         "learning_objectives": [
           "Classify lung cancers and understand staging systems",
           "Recognize clinical presentations including paraneoplastic syndromes",
@@ -308,10 +409,16 @@
           "Understand management options including surgery, chemotherapy, and radiotherapy",
           "Communicate sensitively about diagnosis and prognosis"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/respiratory/lung-cancer/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/respiratory/lung-cancer/",
+          "quesmed": "https://quesmed.com/question-bank/respiratory",
+          "nice": "https://www.nice.org.uk/guidance/lung-cancer"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Clinical Communication",
+          "Breaking Bad News"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication", "Breaking Bad News"],
         "exam_weight": 2.0
       },
       {
@@ -319,7 +426,9 @@
         "label": "Pulmonary Embolism",
         "type": "topic",
         "parent": "respiratory",
-        "prerequisites": ["respiratory_physiology"],
+        "prerequisites": [
+          "respiratory_physiology"
+        ],
         "learning_objectives": [
           "Understand risk factors for venous thromboembolism",
           "Recognize clinical features of PE and calculate Wells score",
@@ -327,10 +436,16 @@
           "Manage acute PE including anticoagulation",
           "Understand prophylaxis strategies"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/respiratory/pulmonary-embolism/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/respiratory/pulmonary-embolism/",
+          "quesmed": "https://quesmed.com/question-bank/respiratory",
+          "nice": "https://www.nice.org.uk/guidance/ng158"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Emergency Management",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Emergency Management", "Prescribing"],
         "exam_weight": 2.5
       },
       {
@@ -338,7 +453,9 @@
         "label": "Tuberculosis",
         "type": "topic",
         "parent": "respiratory",
-        "prerequisites": ["respiratory_anatomy"],
+        "prerequisites": [
+          "respiratory_anatomy"
+        ],
         "learning_objectives": [
           "Understand the pathophysiology and epidemiology of TB",
           "Recognize primary, latent, and reactivated TB",
@@ -346,10 +463,15 @@
           "Manage TB with directly observed therapy",
           "Understand public health implications and contact tracing"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/respiratory/tuberculosis/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/respiratory/tuberculosis/",
+          "quesmed": "https://quesmed.com/question-bank/respiratory"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Public Health"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Public Health"],
         "exam_weight": 2.0
       },
       {
@@ -364,11 +486,16 @@
           "Interpret GI investigations appropriately",
           "Recognize GI emergencies and initiate management"
         ],
-        "resources": [
-          "https://teachmeanatomy.info/abdomen/",
-          "https://www.zerotofinals.com/medicine/gastroenterology/"
+        "resources": {
+          "teachmeanatomy": "https://teachmeanatomy.info/abdomen/",
+          "zerotofinals": "https://www.zerotofinals.com/medicine/gastroenterology/",
+          "quesmed": "https://quesmed.com/question-bank/gastroenterology"
+        },
+        "gmc_outcomes": [
+          "Clinical Communication",
+          "Diagnose and Manage",
+          "Clinical Examination"
         ],
-        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage", "Clinical Examination"],
         "exam_weight": 2.5
       },
       {
@@ -384,10 +511,15 @@
           "Understand indications for endoscopy",
           "Manage variceal bleeding appropriately"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/gastroenterology/upper-gi-bleeding/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/gastroenterology/upper-gi-bleeding/",
+          "quesmed": "https://quesmed.com/question-bank/gastroenterology"
+        },
+        "gmc_outcomes": [
+          "Emergency Management",
+          "Diagnose and Manage",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Emergency Management", "Diagnose and Manage", "Prescribing"],
         "exam_weight": 2.5
       },
       {
@@ -403,12 +535,16 @@
           "Manage according to disease severity and location",
           "Identify complications requiring surgical intervention"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/gastroenterology/inflammatory-bowel-disease/",
-          "https://www.zerotofinals.com/medicine/gastroenterology/crohns-disease/",
-          "https://www.zerotofinals.com/medicine/gastroenterology/ulcerative-colitis/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/gastroenterology/ulcerative-colitis/",
+          "quesmed": "https://quesmed.com/question-bank/gastroenterology",
+          "nice": "https://www.nice.org.uk/guidance/inflammatory-bowel-disease"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Clinical Communication"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Clinical Communication"],
         "exam_weight": 2.0
       },
       {
@@ -424,11 +560,16 @@
           "Manage complications including ascites, encephalopathy, and varices",
           "Understand indications for liver transplantation"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/gastroenterology/chronic-liver-disease/",
-          "https://teachmeanatomy.info/abdomen/organs/liver/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/gastroenterology/chronic-liver-disease/",
+          "teachmeanatomy": "https://teachmeanatomy.info/abdomen/organs/liver/",
+          "quesmed": "https://quesmed.com/question-bank/gastroenterology"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Clinical Examination",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Clinical Examination", "Prescribing"],
         "exam_weight": 2.0
       },
       {
@@ -444,10 +585,15 @@
           "Investigate appropriately with imaging and laboratory tests",
           "Provide initial management and resuscitation"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/surgery/acute-abdomen/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/surgery/acute-abdomen/",
+          "quesmed": "https://quesmed.com/question-bank/gastroenterology"
+        },
+        "gmc_outcomes": [
+          "Emergency Management",
+          "Clinical Examination",
+          "Diagnose and Manage"
         ],
-        "gmc_outcomes": ["Emergency Management", "Clinical Examination", "Diagnose and Manage"],
         "exam_weight": 2.5
       },
       {
@@ -463,10 +609,16 @@
           "Understand staging and treatment options",
           "Communicate sensitively about diagnosis and prognosis"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/gastroenterology/colorectal-cancer/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/gastroenterology/colorectal-cancer/",
+          "quesmed": "https://quesmed.com/question-bank/gastroenterology",
+          "nice": "https://www.nice.org.uk/guidance/colorectal-cancer"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Clinical Communication",
+          "Health Promotion"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication", "Health Promotion"],
         "exam_weight": 2.0
       },
       {
@@ -482,10 +634,15 @@
           "Provide dietary advice and long-term management",
           "Identify associated conditions and complications"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/gastroenterology/coeliac-disease/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/gastroenterology/coeliac-disease/",
+          "quesmed": "https://quesmed.com/question-bank/gastroenterology"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Health Promotion",
+          "Clinical Communication"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Health Promotion", "Clinical Communication"],
         "exam_weight": 1.5
       },
       {
@@ -501,10 +658,15 @@
           "Manage acute pancreatitis including fluid resuscitation",
           "Recognize complications including pseudocysts and necrosis"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/gastroenterology/acute-pancreatitis/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/gastroenterology/acute-pancreatitis/",
+          "teachmesurgery": "https://teachmesurgery.com/pancreatitis/",
+          "quesmed": "https://quesmed.com/question-bank/gastroenterology"
+        },
+        "gmc_outcomes": [
+          "Emergency Management",
+          "Diagnose and Manage"
         ],
-        "gmc_outcomes": ["Emergency Management", "Diagnose and Manage"],
         "exam_weight": 2.0
       },
       {
@@ -519,11 +681,16 @@
           "Diagnose and manage common neurological conditions",
           "Recognize neurological emergencies"
         ],
-        "resources": [
-          "https://teachmeanatomy.info/neuroanatomy/",
-          "https://www.zerotofinals.com/medicine/neurology/"
+        "resources": {
+          "teachmeanatomy": "https://teachmeanatomy.info/neuroanatomy/",
+          "zerotofinals": "https://www.zerotofinals.com/medicine/neurology/",
+          "quesmed": "https://quesmed.com/question-bank/neurology"
+        },
+        "gmc_outcomes": [
+          "Clinical Communication",
+          "Diagnose and Manage",
+          "Clinical Examination"
         ],
-        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage", "Clinical Examination"],
         "exam_weight": 2.5
       },
       {
@@ -539,10 +706,16 @@
           "Manage acute stroke including thrombolysis criteria",
           "Implement secondary prevention strategies"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/neurology/stroke/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/neurology/stroke/",
+          "quesmed": "https://quesmed.com/question-bank/neurology",
+          "nice": "https://www.nice.org.uk/guidance/ng128"
+        },
+        "gmc_outcomes": [
+          "Emergency Management",
+          "Diagnose and Manage",
+          "Clinical Examination"
         ],
-        "gmc_outcomes": ["Emergency Management", "Diagnose and Manage", "Clinical Examination"],
         "exam_weight": 3.0
       },
       {
@@ -558,10 +731,16 @@
           "Recognize and manage status epilepticus",
           "Counsel patients on driving and pregnancy"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/neurology/epilepsy/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/neurology/epilepsy/",
+          "quesmed": "https://quesmed.com/question-bank/neurology",
+          "nice": "https://www.nice.org.uk/guidance/cg137"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Clinical Communication"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Clinical Communication"],
         "exam_weight": 2.5
       },
       {
@@ -577,10 +756,15 @@
           "Manage headaches appropriately including prophylaxis",
           "Identify when imaging is indicated"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/neurology/headache/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/neurology/headache/",
+          "quesmed": "https://quesmed.com/question-bank/neurology"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Clinical Communication",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication", "Prescribing"],
         "exam_weight": 2.0
       },
       {
@@ -596,10 +780,16 @@
           "Identify motor and non-motor complications",
           "Understand multidisciplinary management"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/neurology/parkinsons-disease/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/neurology/parkinsons-disease/",
+          "quesmed": "https://quesmed.com/question-bank/neurology",
+          "nice": "https://www.nice.org.uk/guidance/ng71"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Clinical Examination"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Clinical Examination"],
         "exam_weight": 2.0
       },
       {
@@ -615,10 +805,15 @@
           "Manage relapses and disease-modifying treatments",
           "Provide holistic and multidisciplinary care"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/neurology/multiple-sclerosis/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/neurology/multiple-sclerosis/",
+          "quesmed": "https://quesmed.com/question-bank/neurology"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Clinical Communication",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication", "Prescribing"],
         "exam_weight": 2.0
       },
       {
@@ -634,10 +829,15 @@
           "Manage bacterial meningitis with urgent antibiotics",
           "Understand vaccination and prophylaxis"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/neurology/meningitis/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/neurology/meningitis/",
+          "quesmed": "https://quesmed.com/question-bank/neurology"
+        },
+        "gmc_outcomes": [
+          "Emergency Management",
+          "Diagnose and Manage",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Emergency Management", "Diagnose and Manage", "Prescribing"],
         "exam_weight": 2.5
       },
       {
@@ -653,10 +853,15 @@
           "Provide palliative and multidisciplinary care",
           "Discuss end-of-life decisions sensitively"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/neurology/motor-neurone-disease/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/neurology/motor-neurone-disease/",
+          "quesmed": "https://quesmed.com/question-bank/neurology"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Clinical Communication",
+          "End of Life Care"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication", "End of Life Care"],
         "exam_weight": 1.5
       },
       {
@@ -671,11 +876,16 @@
           "Interpret renal function tests and urinalysis",
           "Recognize acute kidney injury and chronic kidney disease"
         ],
-        "resources": [
-          "https://teachmeanatomy.info/abdomen/kidneys/",
-          "https://www.zerotofinals.com/medicine/renal/"
+        "resources": {
+          "teachmeanatomy": "https://teachmeanatomy.info/abdomen/kidneys/",
+          "zerotofinals": "https://www.zerotofinals.com/medicine/renal/",
+          "quesmed": "https://quesmed.com/question-bank/nephrology"
+        },
+        "gmc_outcomes": [
+          "Clinical Communication",
+          "Diagnose and Manage",
+          "Clinical Examination"
         ],
-        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage", "Clinical Examination"],
         "exam_weight": 2.0
       },
       {
@@ -691,10 +901,15 @@
           "Manage AKI including fluid balance and medication review",
           "Recognize indications for renal replacement therapy"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/renal/acute-kidney-injury/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/renal/acute-kidney-injury/",
+          "quesmed": "https://quesmed.com/question-bank/nephrology"
+        },
+        "gmc_outcomes": [
+          "Emergency Management",
+          "Diagnose and Manage",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Emergency Management", "Diagnose and Manage", "Prescribing"],
         "exam_weight": 2.5
       },
       {
@@ -710,10 +925,16 @@
           "Recognize complications including anaemia and bone disease",
           "Understand indications for dialysis and transplantation"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/renal/chronic-kidney-disease/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/renal/chronic-kidney-disease/",
+          "quesmed": "https://quesmed.com/question-bank/nephrology",
+          "nice": "https://www.nice.org.uk/guidance/ng203"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Health Promotion"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
         "exam_weight": 2.0
       },
       {
@@ -729,10 +950,14 @@
           "Manage with immunosuppression where appropriate",
           "Identify rapidly progressive glomerulonephritis"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/renal/glomerulonephritis/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/renal/glomerulonephritis/",
+          "quesmed": "https://quesmed.com/question-bank/nephrology"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing"],
         "exam_weight": 1.5
       },
       {
@@ -748,10 +973,14 @@
           "Prescribe appropriate antibiotics",
           "Identify complications including urosepsis"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/renal/urinary-tract-infection/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/renal/urinary-tract-infection/",
+          "quesmed": "https://quesmed.com/question-bank/nephrology"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing"],
         "exam_weight": 2.0
       },
       {
@@ -767,10 +996,15 @@
           "Identify and treat hypocalcaemia and hypercalcaemia",
           "Understand acid-base disorders"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/renal/electrolyte-imbalance/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/renal/electrolyte-imbalance/",
+          "quesmed": "https://quesmed.com/question-bank/nephrology"
+        },
+        "gmc_outcomes": [
+          "Emergency Management",
+          "Diagnose and Manage",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Emergency Management", "Diagnose and Manage", "Prescribing"],
         "exam_weight": 2.5
       },
       {
@@ -785,11 +1019,15 @@
           "Interpret hormone assays appropriately",
           "Recognize endocrine emergencies"
         ],
-        "resources": [
-          "https://teachmeanatomy.info/the-basics/systems/endocrine-system/",
-          "https://www.zerotofinals.com/medicine/endocrinology/"
+        "resources": {
+          "teachmeanatomy": "https://teachmeanatomy.info/the-basics/systems/endocrine-system/",
+          "zerotofinals": "https://www.zerotofinals.com/medicine/endocrinology/",
+          "quesmed": "https://quesmed.com/question-bank/endocrinology"
+        },
+        "gmc_outcomes": [
+          "Clinical Communication",
+          "Diagnose and Manage"
         ],
-        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage"],
         "exam_weight": 2.0
       },
       {
@@ -805,11 +1043,16 @@
           "Recognize acute complications including DKA and HHS",
           "Screen for and manage chronic complications"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/endocrinology/diabetes-mellitus/",
-          "https://www.zerotofinals.com/medicine/endocrinology/diabetic-ketoacidosis/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/endocrinology/diabetic-ketoacidosis/",
+          "quesmed": "https://quesmed.com/question-bank/endocrinology",
+          "nice": "https://www.nice.org.uk/guidance/ng28"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Health Promotion"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
         "exam_weight": 3.0
       },
       {
@@ -825,11 +1068,15 @@
           "Manage thyroid disorders medically and surgically",
           "Recognize thyroid cancer and thyrotoxic crisis"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/endocrinology/thyroid-disease/",
-          "https://www.zerotofinals.com/medicine/endocrinology/hyperthyroidism/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/endocrinology/hyperthyroidism/",
+          "quesmed": "https://quesmed.com/question-bank/endocrinology",
+          "nice": "https://www.nice.org.uk/guidance/thyroid-disease"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing"],
         "exam_weight": 2.0
       },
       {
@@ -845,11 +1092,15 @@
           "Recognize and treat adrenal crisis as an emergency",
           "Understand steroid replacement therapy"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/endocrinology/cushings-syndrome/",
-          "https://www.zerotofinals.com/medicine/endocrinology/addisons-disease/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/endocrinology/addisons-disease/",
+          "quesmed": "https://quesmed.com/question-bank/endocrinology"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Emergency Management",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Emergency Management", "Prescribing"],
         "exam_weight": 1.5
       },
       {
@@ -865,10 +1116,14 @@
           "Investigate pituitary masses with imaging",
           "Understand hormone replacement therapy"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/endocrinology/pituitary-disorders/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/endocrinology/pituitary-disorders/",
+          "quesmed": "https://quesmed.com/question-bank/endocrinology"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing"],
         "exam_weight": 1.5
       },
       {
@@ -884,10 +1139,15 @@
           "Understand parathyroid disorders",
           "Manage osteoporosis and fracture prevention"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/endocrinology/calcium-disorders/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/endocrinology/calcium-disorders/",
+          "quesmed": "https://quesmed.com/question-bank/endocrinology"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Health Promotion"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
         "exam_weight": 1.5
       },
       {
@@ -902,11 +1162,16 @@
           "Diagnose and manage common rheumatological conditions",
           "Interpret joint X-rays and inflammatory markers"
         ],
-        "resources": [
-          "https://teachmeanatomy.info/the-basics/systems/musculoskeletal-system/",
-          "https://www.zerotofinals.com/medicine/rheumatology/"
+        "resources": {
+          "teachmeanatomy": "https://teachmeanatomy.info/the-basics/systems/musculoskeletal-system/",
+          "zerotofinals": "https://www.zerotofinals.com/medicine/rheumatology/",
+          "quesmed": "https://quesmed.com/question-bank/rheumatology"
+        },
+        "gmc_outcomes": [
+          "Clinical Communication",
+          "Diagnose and Manage",
+          "Clinical Examination"
         ],
-        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage", "Clinical Examination"],
         "exam_weight": 2.0
       },
       {
@@ -922,10 +1187,16 @@
           "Manage with DMARDs and biologics",
           "Monitor for complications and drug side effects"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/rheumatology/rheumatoid-arthritis/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/rheumatology/rheumatoid-arthritis/",
+          "quesmed": "https://quesmed.com/question-bank/rheumatology",
+          "nice": "https://www.nice.org.uk/guidance/ng100"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Clinical Examination"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Clinical Examination"],
         "exam_weight": 2.0
       },
       {
@@ -941,10 +1212,16 @@
           "Manage conservatively and with analgesia",
           "Understand indications for joint replacement"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/rheumatology/osteoarthritis/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/rheumatology/osteoarthritis/",
+          "quesmed": "https://quesmed.com/question-bank/rheumatology",
+          "nice": "https://www.nice.org.uk/guidance/cg177"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Clinical Examination"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Clinical Examination"],
         "exam_weight": 2.0
       },
       {
@@ -960,10 +1237,16 @@
           "Manage acute attacks and provide prophylaxis",
           "Counsel on lifestyle modifications"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/rheumatology/gout/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/rheumatology/gout/",
+          "quesmed": "https://quesmed.com/question-bank/rheumatology",
+          "nice": "https://www.nice.org.uk/guidance/cg59"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Health Promotion"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
         "exam_weight": 1.5
       },
       {
@@ -979,10 +1262,14 @@
           "Manage with immunosuppression",
           "Recognize complications including lupus nephritis"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/rheumatology/systemic-lupus-erythematosus/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/rheumatology/systemic-lupus-erythematosus/",
+          "quesmed": "https://quesmed.com/question-bank/rheumatology"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing"],
         "exam_weight": 1.5
       },
       {
@@ -998,10 +1285,15 @@
           "Differentiate mechanical from inflammatory back pain",
           "Manage conservatively and refer appropriately"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/rheumatology/back-pain/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/rheumatology/back-pain/",
+          "quesmed": "https://quesmed.com/question-bank/rheumatology"
+        },
+        "gmc_outcomes": [
+          "Clinical Examination",
+          "Emergency Management",
+          "Diagnose and Manage"
         ],
-        "gmc_outcomes": ["Clinical Examination", "Emergency Management", "Diagnose and Manage"],
         "exam_weight": 2.0
       },
       {
@@ -1017,10 +1309,15 @@
           "Manage with immunosuppression urgently",
           "Recognize giant cell arteritis as an emergency"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/rheumatology/vasculitis/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/rheumatology/vasculitis/",
+          "quesmed": "https://quesmed.com/question-bank/rheumatology"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Emergency Management",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Emergency Management", "Prescribing"],
         "exam_weight": 1.5
       },
       {
@@ -1035,10 +1332,14 @@
           "Interpret full blood counts and blood films",
           "Recognize haematological emergencies"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/haematology/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/haematology/",
+          "quesmed": "https://quesmed.com/question-bank/haematology"
+        },
+        "gmc_outcomes": [
+          "Clinical Communication",
+          "Diagnose and Manage"
         ],
-        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage"],
         "exam_weight": 2.0
       },
       {
@@ -1054,11 +1355,15 @@
           "Recognize haemolytic anaemia",
           "Understand when to transfuse"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/haematology/anaemia/",
-          "https://www.zerotofinals.com/medicine/haematology/iron-deficiency-anaemia/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/haematology/iron-deficiency-anaemia/",
+          "quesmed": "https://quesmed.com/question-bank/haematology",
+          "nice": "https://www.nice.org.uk/guidance/ng185"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing"],
         "exam_weight": 2.0
       },
       {
@@ -1074,10 +1379,15 @@
           "Understand treatment principles including chemotherapy",
           "Recognize complications including tumour lysis syndrome"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/haematology/leukaemia/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/haematology/leukaemia/",
+          "quesmed": "https://quesmed.com/question-bank/haematology",
+          "nice": "https://www.nice.org.uk/guidance/ng185"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Clinical Communication"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication"],
         "exam_weight": 1.5
       },
       {
@@ -1093,10 +1403,15 @@
           "Understand staging systems",
           "Explain treatment with chemotherapy and radiotherapy"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/haematology/lymphoma/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/haematology/lymphoma/",
+          "quesmed": "https://quesmed.com/question-bank/haematology",
+          "nice": "https://www.nice.org.uk/guidance/lymphoma"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Clinical Communication"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Clinical Communication"],
         "exam_weight": 1.5
       },
       {
@@ -1112,10 +1427,15 @@
           "Manage anticoagulation and reversal",
           "Recognize DIC and thrombotic thrombocytopenic purpura"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/haematology/coagulation-disorders/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/haematology/coagulation-disorders/",
+          "quesmed": "https://quesmed.com/question-bank/haematology"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Emergency Management",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Emergency Management", "Prescribing"],
         "exam_weight": 2.0
       },
       {
@@ -1130,10 +1450,15 @@
           "Prescribe antibiotics appropriately",
           "Recognize sepsis and initiate management"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/infectious-diseases/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/infectious-diseases/",
+          "quesmed": "https://quesmed.com/question-bank/medicine"
+        },
+        "gmc_outcomes": [
+          "Clinical Communication",
+          "Diagnose and Manage",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Clinical Communication", "Diagnose and Manage", "Prescribing"],
         "exam_weight": 2.5
       },
       {
@@ -1149,10 +1474,16 @@
           "Prescribe broad-spectrum antibiotics urgently",
           "Provide critical care support"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/infectious-diseases/sepsis/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/infectious-diseases/sepsis/",
+          "quesmed": "https://quesmed.com/question-bank/medicine",
+          "nice": "https://www.nice.org.uk/guidance/ng51"
+        },
+        "gmc_outcomes": [
+          "Emergency Management",
+          "Diagnose and Manage",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Emergency Management", "Diagnose and Manage", "Prescribing"],
         "exam_weight": 3.0
       },
       {
@@ -1168,10 +1499,15 @@
           "Manage with antiretroviral therapy",
           "Understand prevention including PrEP and PEP"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/infectious-diseases/hiv/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/infectious-diseases/hiv/",
+          "quesmed": "https://quesmed.com/question-bank/medicine"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Public Health"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Public Health"],
         "exam_weight": 2.0
       },
       {
@@ -1187,10 +1523,15 @@
           "Manage according to species and severity",
           "Provide travel advice and prophylaxis"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/infectious-diseases/malaria/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/infectious-diseases/malaria/",
+          "quesmed": "https://quesmed.com/question-bank/medicine"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Health Promotion"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Health Promotion"],
         "exam_weight": 1.5
       },
       {
@@ -1206,10 +1547,15 @@
           "Recognize MRSA and understand infection control",
           "Identify diabetic foot infections"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/infectious-diseases/cellulitis/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/infectious-diseases/cellulitis/",
+          "quesmed": "https://quesmed.com/question-bank/medicine"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Emergency Management",
+          "Prescribing"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Emergency Management", "Prescribing"],
         "exam_weight": 2.0
       },
       {
@@ -1225,10 +1571,15 @@
           "Manage chronic hepatitis B and C",
           "Understand vaccination and prevention"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/medicine/infectious-diseases/viral-hepatitis/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/medicine/infectious-diseases/viral-hepatitis/",
+          "quesmed": "https://quesmed.com/question-bank/medicine"
+        },
+        "gmc_outcomes": [
+          "Diagnose and Manage",
+          "Prescribing",
+          "Public Health"
         ],
-        "gmc_outcomes": ["Diagnose and Manage", "Prescribing", "Public Health"],
         "exam_weight": 1.5
       },
       {
@@ -1243,10 +1594,15 @@
           "Recognize and manage adverse drug reactions",
           "Understand drug interactions"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/pharmacology/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/pharmacology/",
+          "quesmed": "https://quesmed.com/question-bank/medicine",
+          "bnf": "https://bnf.nice.org.uk/treatment-summaries/pharmacology.html"
+        },
+        "gmc_outcomes": [
+          "Prescribing",
+          "Patient Safety"
         ],
-        "gmc_outcomes": ["Prescribing", "Patient Safety"],
         "exam_weight": 2.5
       },
       {
@@ -1262,10 +1618,14 @@
           "Recognize high-risk medications requiring monitoring",
           "Understand controlled drug regulations"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/pharmacology/prescribing/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/pharmacology/prescribing/",
+          "quesmed": "https://quesmed.com/question-bank/medicine"
+        },
+        "gmc_outcomes": [
+          "Prescribing",
+          "Patient Safety"
         ],
-        "gmc_outcomes": ["Prescribing", "Patient Safety"],
         "exam_weight": 2.5
       },
       {
@@ -1273,7 +1633,9 @@
         "label": "Adverse Drug Reactions",
         "type": "topic",
         "parent": "pharmacology",
-        "prerequisites": ["prescribing_principles"],
+        "prerequisites": [
+          "prescribing_principles"
+        ],
         "learning_objectives": [
           "Classify adverse drug reactions",
           "Recognize common and serious ADRs",
@@ -1281,10 +1643,16 @@
           "Manage drug allergies and anaphylaxis",
           "Understand drug interactions"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/pharmacology/adverse-drug-reactions/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/pharmacology/adverse-drug-reactions/",
+          "quesmed": "https://quesmed.com/question-bank/medicine",
+          "bnf": "https://bnf.nice.org.uk/treatment-summaries/adverse-drug-reactions.html"
+        },
+        "gmc_outcomes": [
+          "Prescribing",
+          "Patient Safety",
+          "Emergency Management"
         ],
-        "gmc_outcomes": ["Prescribing", "Patient Safety", "Emergency Management"],
         "exam_weight": 2.0
       },
       {
@@ -1292,7 +1660,9 @@
         "label": "Analgesia and Pain Management",
         "type": "topic",
         "parent": "pharmacology",
-        "prerequisites": ["prescribing_principles"],
+        "prerequisites": [
+          "prescribing_principles"
+        ],
         "learning_objectives": [
           "Understand the WHO analgesic ladder",
           "Prescribe opioids safely including dose conversions",
@@ -1300,10 +1670,14 @@
           "Recognize opioid toxicity and reversal",
           "Understand neuropathic pain management"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/pharmacology/analgesia/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/pharmacology/analgesia/",
+          "quesmed": "https://quesmed.com/question-bank/medicine"
+        },
+        "gmc_outcomes": [
+          "Prescribing",
+          "Patient Safety"
         ],
-        "gmc_outcomes": ["Prescribing", "Patient Safety"],
         "exam_weight": 2.0
       },
       {
@@ -1311,7 +1685,9 @@
         "label": "Antimicrobial Prescribing",
         "type": "topic",
         "parent": "pharmacology",
-        "prerequisites": ["prescribing_principles"],
+        "prerequisites": [
+          "prescribing_principles"
+        ],
         "learning_objectives": [
           "Understand antimicrobial mechanisms and resistance",
           "Practice antimicrobial stewardship",
@@ -1319,10 +1695,17 @@
           "Recognize Clostridium difficile infection",
           "Understand allergy and cross-reactivity"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/pharmacology/antibiotics/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/pharmacology/antibiotics/",
+          "quesmed": "https://quesmed.com/question-bank/medicine",
+          "nice": "https://www.nice.org.uk/guidance/ng185",
+          "bnf": "https://bnf.nice.org.uk/drugs/antibacterials.html"
+        },
+        "gmc_outcomes": [
+          "Prescribing",
+          "Patient Safety",
+          "Public Health"
         ],
-        "gmc_outcomes": ["Prescribing", "Patient Safety", "Public Health"],
         "exam_weight": 2.5
       },
       {
@@ -1330,7 +1713,9 @@
         "label": "Emergency Drugs",
         "type": "topic",
         "parent": "pharmacology",
-        "prerequisites": ["prescribing_principles"],
+        "prerequisites": [
+          "prescribing_principles"
+        ],
         "learning_objectives": [
           "Know the drugs used in cardiac arrest",
           "Understand adrenaline dosing in anaphylaxis",
@@ -1338,10 +1723,16 @@
           "Manage benzodiazepine overdose with flumazenil",
           "Understand emergency reversal agents"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/pharmacology/emergency-drugs/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/pharmacology/emergency-drugs/",
+          "quesmed": "https://quesmed.com/question-bank/medicine",
+          "bnf": "https://bnf.nice.org.uk/treatment-summaries/emergency-drugs.html"
+        },
+        "gmc_outcomes": [
+          "Emergency Management",
+          "Prescribing",
+          "Patient Safety"
         ],
-        "gmc_outcomes": ["Emergency Management", "Prescribing", "Patient Safety"],
         "exam_weight": 2.5
       },
       {
@@ -1356,10 +1747,15 @@
           "Communicate effectively with patients and colleagues",
           "Demonstrate practical procedures safely"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/clinical-skills/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/clinical-skills/",
+          "quesmed": "https://quesmed.com/question-bank/medicine"
+        },
+        "gmc_outcomes": [
+          "Clinical Examination",
+          "Clinical Communication",
+          "Clinical Skills"
         ],
-        "gmc_outcomes": ["Clinical Examination", "Clinical Communication", "Clinical Skills"],
         "exam_weight": 3.0
       },
       {
@@ -1375,10 +1771,14 @@
           "Take social, family, and drug histories",
           "Summarize and present findings clearly"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/clinical-skills/history-taking/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/clinical-skills/history-taking/",
+          "quesmed": "https://quesmed.com/question-bank/medicine"
+        },
+        "gmc_outcomes": [
+          "Clinical Communication",
+          "Patient-Centered Care"
         ],
-        "gmc_outcomes": ["Clinical Communication", "Patient-Centered Care"],
         "exam_weight": 2.5
       },
       {
@@ -1394,10 +1794,15 @@
           "Identify and interpret clinical signs",
           "Present examination findings professionally"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/clinical-skills/examination/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/clinical-skills/examination/",
+          "quesmed": "https://quesmed.com/question-bank/medicine",
+          "nice": "https://www.nice.org.uk/guidance/ng185"
+        },
+        "gmc_outcomes": [
+          "Clinical Examination",
+          "Clinical Communication"
         ],
-        "gmc_outcomes": ["Clinical Examination", "Clinical Communication"],
         "exam_weight": 3.0
       },
       {
@@ -1413,10 +1818,15 @@
           "Demonstrate NG tube insertion",
           "Understand consent and complications"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/clinical-skills/procedures/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/clinical-skills/procedures/",
+          "quesmed": "https://quesmed.com/question-bank/medicine"
+        },
+        "gmc_outcomes": [
+          "Clinical Skills",
+          "Patient Safety",
+          "Infection Control"
         ],
-        "gmc_outcomes": ["Clinical Skills", "Patient Safety", "Infection Control"],
         "exam_weight": 2.5
       },
       {
@@ -1432,10 +1842,15 @@
           "Communicate with multidisciplinary teams",
           "Handle difficult conversations professionally"
         ],
-        "resources": [
-          "https://www.zerotofinals.com/clinical-skills/communication/"
+        "resources": {
+          "zerotofinals": "https://www.zerotofinals.com/clinical-skills/communication/",
+          "quesmed": "https://quesmed.com/question-bank/medicine"
+        },
+        "gmc_outcomes": [
+          "Clinical Communication",
+          "Breaking Bad News",
+          "Patient-Centered Care"
         ],
-        "gmc_outcomes": ["Clinical Communication", "Breaking Bad News", "Patient-Centered Care"],
         "exam_weight": 2.5
       }
     ]
