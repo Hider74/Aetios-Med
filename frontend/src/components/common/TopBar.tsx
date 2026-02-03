@@ -38,10 +38,46 @@ export const TopBar: React.FC<TopBarProps> = ({ title, subtitle }) => {
     };
 
     checkBackend();
-    const interval = setInterval(checkBackend, 10000); // Check every 10 seconds
-
-    return () => clearInterval(interval);
-  }, []);
+    
+    // Use exponential backoff: check frequently at first, then less often when stable
+    let checkInterval = 5000; // Start with 5 seconds
+    let consecutiveSuccesses = 0;
+    
+    const scheduleNextCheck = () => {
+      setTimeout(async () => {
+        if (!document.hidden) { // Only check when tab is visible
+          await checkBackend();
+          
+          if (backendStatus === 'connected') {
+            consecutiveSuccesses++;
+            // Gradually increase interval up to 30 seconds when stable
+            checkInterval = Math.min(30000, 5000 + consecutiveSuccesses * 2500);
+          } else {
+            consecutiveSuccesses = 0;
+            checkInterval = 5000; // Check more frequently when disconnected
+          }
+        }
+        scheduleNextCheck();
+      }, checkInterval);
+    };
+    
+    scheduleNextCheck();
+    
+    // Reset check interval when tab becomes visible
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        consecutiveSuccesses = 0;
+        checkInterval = 5000;
+        checkBackend();
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [backendStatus]);
 
   const getModelStatusColor = () => {
     if (status.error) return 'text-red-500';

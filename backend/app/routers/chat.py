@@ -22,8 +22,12 @@ async def send_message(request: Request, chat_request: ChatRequest):
     if not llm_service.is_loaded:
         raise HTTPException(status_code=503, detail="LLM model not loaded")
     
-    # Store user message in database
+    # Get the user's latest message
+    user_content = chat_request.messages[-1].content if chat_request.messages else ""
+    
+    # Use a single database session for all operations
     async with get_session() as db:
+        # Store user message in database
         if chat_request.messages:
             user_message = chat_request.messages[-1]
             if user_message.role == "user":
@@ -34,30 +38,20 @@ async def send_message(request: Request, chat_request: ChatRequest):
                 )
                 db.add(db_user_message)
                 await db.commit()
-    
-    # Use agent orchestrator if available, otherwise fall back to basic completion
-    if agent:
-        # Get the user's latest message
-        user_content = chat_request.messages[-1].content if chat_request.messages else ""
         
-        async with get_session() as db:
+        # Use agent orchestrator if available, otherwise fall back to basic completion
+        if agent:
             # Process message through agent with tool calling
             response_text = await agent.process_message(user_content, db=db)
-    else:
-        # Fallback to basic completion without agent
-        response_text = await llm_service.complete(
-            messages=chat_request.messages,
-            temperature=chat_request.temperature,
-            max_tokens=chat_request.max_tokens
-        )
-    
-    response_message = ChatMessage(
-        role="assistant",
-        content=response_text
-    )
-    
-    # Store assistant response in database
-    async with get_session() as db:
+        else:
+            # Fallback to basic completion without agent
+            response_text = await llm_service.complete(
+                messages=chat_request.messages,
+                temperature=chat_request.temperature,
+                max_tokens=chat_request.max_tokens
+            )
+        
+        # Store assistant response in database
         db_assistant_message = DBChatMessage(
             role="assistant",
             content=response_text,
@@ -65,6 +59,11 @@ async def send_message(request: Request, chat_request: ChatRequest):
         )
         db.add(db_assistant_message)
         await db.commit()
+    
+    response_message = ChatMessage(
+        role="assistant",
+        content=response_text
+    )
     
     return ChatResponse(
         message=response_message,
