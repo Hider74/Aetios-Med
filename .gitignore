@@ -81,3 +81,6 @@ htmlcov/
 backend/dist/
 frontend/dist/
 electron/dist/
+
+# Generated icons
+assets/icons/

@@ -40,12 +40,25 @@ export const TopBar: React.FC<TopBarProps> = ({ title, subtitle }) => {
 
   return (
     <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-6">
-      {/* Title */}
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{title}</h2>
-        {subtitle && (
-          <p className="text-sm text-gray-600 dark:text-gray-400">{subtitle}</p>
-        )}
+      {/* App Branding and Title */}
+      <div className="flex items-center gap-4">
+        {/* Aetios Med Logo and Name */}
+        <div className="flex items-center gap-2 pr-4 border-r border-gray-300 dark:border-gray-600">
+          <img 
+            src="/logo.png" 
+            alt="Aetios Med Logo" 
+            className="h-10 w-10 object-contain"
+          />
+          <span className="text-xl font-bold text-gray-900 dark:text-white">Aetios Med</span>
+        </div>
+        
+        {/* Page Title */}
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{title}</h2>
+          {subtitle && (
+            <p className="text-sm text-gray-600 dark:text-gray-400">{subtitle}</p>
+          )}
+        </div>
       </div>
 
       {/* Status Indicators */}
