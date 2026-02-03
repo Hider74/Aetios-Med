@@ -22,6 +22,7 @@ export { useModelStatus } from './hooks/useModelStatus';
 export { Sidebar } from './components/common/Sidebar';
 export { TopBar } from './components/common/TopBar';
 export { LoadingSpinner } from './components/common/LoadingSpinner';
+export { UserGuidePanel } from './components/common/UserGuidePanel';
 
 // Component exports - Dashboard
 export { Dashboard } from './components/Dashboard/Dashboard';

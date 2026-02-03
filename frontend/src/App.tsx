@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Sidebar } from './components/common/Sidebar';
 import { TopBar } from './components/common/TopBar';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
+import { UserGuidePanel } from './components/common/UserGuidePanel';
 import { Dashboard } from './components/Dashboard/Dashboard';
 import { GraphCanvas } from './components/KnowledgeGraph/GraphCanvas';
 import { GraphControls } from './components/KnowledgeGraph/GraphControls';
@@ -16,10 +17,12 @@ import { FolderConfig } from './components/Setup/FolderConfig';
 import { useGraph } from './hooks/useGraph';
 import { useSettingsStore } from './stores/settingsStore';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
+import { HelpCircle } from 'lucide-react';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [chatInitialMessage, setChatInitialMessage] = useState<string | null>(null);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
   const { selectedNode, setSelectedNode } = useGraph();
   const { theme } = useSettingsStore();
   const chatInputRef = useRef<HTMLTextAreaElement>(null);
@@ -185,6 +188,19 @@ function App() {
           {renderPage()}
         </main>
       </div>
+
+      {/* Floating help button */}
+      <button
+        onClick={() => setIsGuideOpen(true)}
+        className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110"
+        aria-label="Open user guide"
+        title="User Guide"
+      >
+        <HelpCircle className="w-6 h-6" />
+      </button>
+
+      {/* User guide panel */}
+      <UserGuidePanel isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />
     </div>
   );
 }

@@ -20,6 +20,15 @@ export default {
           high: '#10b981',
         },
       },
+      animation: {
+        fadeIn: 'fadeIn 0.2s ease-in-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+      },
     },
   },
   plugins: [],
