@@ -358,6 +358,137 @@
                     <li>Covers UKMLA, Finals, and OSCE preparation</li>
                     <li>NHS clinical practice context</li>
                 </ul>
+                
+                <h3>Dashboard Features</h3>
+                <p>The dashboard provides at-a-glance insights into your learning progress with three powerful widgets:</p>
+                
+                <h4>Study Health Indicator</h4>
+                <p>The Study Health Indicator gives you a quick overview of your overall learning health based on multiple factors:</p>
+                
+                <div class="info-box">
+                    <h4>What It Shows:</h4>
+                    <ul>
+                        <li><strong>Overall learning health</strong> - Composite score based on activity, weak topics, and knowledge decay</li>
+                        <li><strong>Recent study activity</strong> - How consistently you've been studying</li>
+                        <li><strong>Weak topic concentration</strong> - Number of topics with low confidence</li>
+                        <li><strong>Decaying knowledge</strong> - Topics you've studied but are beginning to forget</li>
+                    </ul>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Color/State</th>
+                            <th>Meaning</th>
+                            <th>Action Needed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge badge-green">🟢 Excellent</span></td>
+                            <td>High activity, few weak areas, minimal decay</td>
+                            <td>Keep up the good work! Maintain current habits</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-green">🟢 Good</span></td>
+                            <td>Consistent study, manageable weak areas</td>
+                            <td>Continue regular study sessions</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-amber">🟡 Fair</span></td>
+                            <td>Irregular activity or some weak areas building up</td>
+                            <td>Increase study frequency, address weak topics</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-amber">🟡 Needs Attention</span></td>
+                            <td>Multiple issues: low activity, many weak areas, or significant decay</td>
+                            <td>Review study schedule, prioritize weak areas</td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-red">🔴 Critical</span></td>
+                            <td>No recent activity or extensive knowledge gaps</td>
+                            <td>Urgent action needed - return to regular study</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4>Study Streak Tracker</h4>
+                <p>The Study Streak Tracker helps you build consistency by tracking consecutive days of study activity:</p>
+                
+                <div class="feature-box">
+                    <h4>How Streaks Work:</h4>
+                    <ul>
+                        <li><strong>Counted as:</strong> Consecutive calendar days with any study activity</li>
+                        <li><strong>Study activity includes:</strong>
+                            <ul>
+                                <li>Completing quizzes or reviewing questions</li>
+                                <li>Logging study sessions (time spent on topics)</li>
+                                <li>Reviewing Anki flashcards</li>
+                                <li>Updating topic confidence levels</li>
+                                <li>Interacting with the AI tutor for learning (not just casual chat)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Streak breaks:</strong> If you miss a full calendar day with no study activity</li>
+                        <li><strong>Best streak:</strong> The tracker remembers your longest ever streak as motivation</li>
+                    </ul>
+                </div>
+                
+                <div class="success-box">
+                    <h4>💡 Streak Tips</h4>
+                    <ul>
+                        <li><strong>Start small:</strong> Even 10 minutes counts - consistency beats intensity</li>
+                        <li><strong>Set reminders:</strong> Study at the same time each day to build a habit</li>
+                        <li><strong>Don't stress:</strong> If you break a streak, just start a new one - it's about the habit, not perfection</li>
+                        <li><strong>Celebrate milestones:</strong> 7 days, 14 days, 30 days are major achievements</li>
+                    </ul>
+                </div>
+                
+                <h4>Daily Goals</h4>
+                <p>Set and track daily learning goals to maintain focus and motivation. The system supports four types of goals:</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Goal Type</th>
+                            <th>Description</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Study Time</strong></td>
+                            <td>Minutes or hours of active study</td>
+                            <td>"Study for 2 hours today"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quiz Questions</strong></td>
+                            <td>Number of quiz questions to attempt</td>
+                            <td>"Answer 20 quiz questions"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Topics Reviewed</strong></td>
+                            <td>Number of curriculum topics to study</td>
+                            <td>"Review 3 different topics"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cards Reviewed</strong></td>
+                            <td>Number of Anki flashcards to review</td>
+                            <td>"Review 50 Anki cards"</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <p><strong>How to set goals:</strong> Click on the Daily Goals widget in the dashboard, select your goal type, set your target, and the system will track your progress throughout the day. Goals reset at midnight.</p>
+                
+                <div class="info-box">
+                    <h4>💡 Setting Effective Goals</h4>
+                    <ul>
+                        <li><strong>Be realistic:</strong> Start with achievable goals and increase gradually</li>
+                        <li><strong>Match your schedule:</strong> Lighter goals on busy clinical days, more ambitious on study days</li>
+                        <li><strong>Combine goal types:</strong> Mix time-based and output-based goals for balance</li>
+                        <li><strong>Review weekly:</strong> Adjust goals based on what's working</li>
+                    </ul>
+                </div>
             </section>
             
             <section id="requirements">
@@ -974,6 +1105,77 @@ npm run dev</code></pre>
                     <li><strong>Update Confidence</strong> - Manually adjust your confidence level</li>
                 </ul>
                 
+                <h3>Context Menu Actions</h3>
+                <p>For quick access to common actions, <strong>right-click any node</strong> in the knowledge graph to open a context menu with powerful shortcuts:</p>
+                
+                <div class="feature-box">
+                    <h4>Available Context Menu Actions:</h4>
+                    <ul>
+                        <li><strong>🎯 Start Quiz</strong> - Instantly generate a quiz for this topic</li>
+                        <li><strong>🤖 Ask AI</strong> - Open the AI tutor chat with this topic as context for focused discussion</li>
+                        <li><strong>🎴 View Cards</strong> - See all Anki flashcards related to this topic</li>
+                        <li><strong>✅ Confident</strong> - Quick confidence update to "High" (green)</li>
+                        <li><strong>🤔 Reviewing</strong> - Quick confidence update to "Medium" (amber)</li>
+                        <li><strong>❌ Struggling</strong> - Quick confidence update to "Low" (red)</li>
+                        <li><strong>📊 View Study History</strong> - See your complete study history for this topic</li>
+                        <li><strong>🔗 Show Prerequisites</strong> - Highlight prerequisite topics you should study first</li>
+                    </ul>
+                </div>
+                
+                <p><strong>When to use context menu actions:</strong></p>
+                <ul>
+                    <li><strong>After study sessions:</strong> Right-click and update confidence based on how you feel</li>
+                    <li><strong>Quick testing:</strong> Right-click → Start Quiz for rapid practice</li>
+                    <li><strong>Focused learning:</strong> Right-click → Ask AI to discuss specific topics</li>
+                    <li><strong>Prerequisites check:</strong> Before studying a topic, right-click → Show Prerequisites to ensure you're ready</li>
+                </ul>
+                
+                <h3>Quick Confidence Updates</h3>
+                <p>The Quick Confidence Update buttons (✅ Confident, 🤔 Reviewing, ❌ Struggling) provide one-click confidence adjustments, making it easy to keep your knowledge graph up-to-date without interrupting your workflow.</p>
+                
+                <div class="info-box">
+                    <h4>How to Use Quick Confidence Updates:</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Button</th>
+                                <th>Sets Confidence To</th>
+                                <th>Use When</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>✅ Confident</strong></td>
+                                <td>70-80% (Green)</td>
+                                <td>You understand the topic well and can explain it to others</td>
+                            </tr>
+                            <tr>
+                                <td><strong>🤔 Reviewing</strong></td>
+                                <td>40-50% (Amber)</td>
+                                <td>You have basic understanding but need more practice</td>
+                            </tr>
+                            <tr>
+                                <td><strong>❌ Struggling</strong></td>
+                                <td>10-20% (Red)</td>
+                                <td>Topic is unclear or you're having difficulty with the material</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="success-box">
+                    <h4>💡 When to Update Confidence</h4>
+                    <ul>
+                        <li><strong>After study sessions:</strong> Reflect on how well you understood the material</li>
+                        <li><strong>After completing quizzes:</strong> Adjust based on your performance</li>
+                        <li><strong>During self-assessment:</strong> Periodically review topics and update your confidence</li>
+                        <li><strong>After teaching others:</strong> If you can teach it, you know it - mark as confident</li>
+                        <li><strong>When planning study sessions:</strong> Identify struggling topics to prioritize</li>
+                    </ul>
+                </div>
+                
+                <p><strong>Tip:</strong> Regular confidence updates help the AI tutor provide better recommendations and ensure the knowledge graph accurately reflects your current mastery level.</p>
+                
                 <h3>Understanding Topic Relationships</h3>
                 
                 <h4>Prerequisites (Incoming Edges):</h4>
@@ -1126,6 +1328,193 @@ npm run dev</code></pre>
                     📸 Inline Quiz Card
                     <p>Multiple choice question embedded in chat</p>
                 </div>
+                
+                <h3>How Aetios Works Behind the Scenes</h3>
+                
+                <p>Aetios isn't just a chatbot—it's a sophisticated AI agent with access to <strong>18 specialized tools</strong> that connect to your personal learning data. Understanding what Aetios can do will help you get much more value from your interactions.</p>
+                
+                <div class="feature-box">
+                    <h4>🛠️ Aetios's 18 Tools:</h4>
+                    
+                    <p><strong>Knowledge Graph & Progress Tracking:</strong></p>
+                    <ul>
+                        <li><strong>get_weak_topics</strong> - Automatically identify topics with low confidence</li>
+                        <li><strong>get_decaying_topics</strong> - Find topics you studied but are beginning to forget (memory decay)</li>
+                        <li><strong>get_prerequisites</strong> - Check what you need to know before studying a topic</li>
+                        <li><strong>get_dependent_topics</strong> - See what topics build on current knowledge</li>
+                        <li><strong>get_topic_details</strong> - Access detailed stats for any topic</li>
+                        <li><strong>get_curriculum_overview</strong> - View the complete curriculum structure</li>
+                    </ul>
+                    
+                    <p><strong>Learning Resources:</strong></p>
+                    <ul>
+                        <li><strong>search_notes</strong> - Search through all your uploaded notes and documents</li>
+                        <li><strong>get_anki_stats</strong> - Check your Anki flashcard performance and due cards</li>
+                        <li><strong>open_resource</strong> - Open relevant learning resources and websites</li>
+                    </ul>
+                    
+                    <p><strong>Assessment:</strong></p>
+                    <ul>
+                        <li><strong>generate_quiz</strong> - Create targeted quizzes based on weak areas</li>
+                        <li><strong>log_quiz_result</strong> - Track quiz performance to update confidence</li>
+                    </ul>
+                    
+                    <p><strong>Study Planning:</strong></p>
+                    <ul>
+                        <li><strong>log_study_session</strong> - Record time spent studying specific topics</li>
+                        <li><strong>get_study_history</strong> - View your study patterns over time</li>
+                        <li><strong>generate_study_plan</strong> - Create personalized study plans for exams</li>
+                        <li><strong>get_exam_readiness</strong> - Assess your preparation for upcoming exams</li>
+                    </ul>
+                    
+                    <p><strong>Exam Management:</strong></p>
+                    <ul>
+                        <li><strong>add_exam</strong> - Register upcoming exams</li>
+                        <li><strong>get_upcoming_exams</strong> - See your exam schedule</li>
+                    </ul>
+                    
+                    <p><strong>Progress Updates:</strong></p>
+                    <ul>
+                        <li><strong>update_confidence</strong> - Adjust confidence levels for topics</li>
+                    </ul>
+                </div>
+                
+                <p><strong>What this means for you:</strong> When you interact with Aetios, it's not just answering based on general medical knowledge—it's actively checking your weak areas, looking for gaps, and tailoring responses to <em>your specific learning needs</em>.</p>
+                
+                <h3>Getting the Most from Aetios - Prompt Examples</h3>
+                
+                <p>The way you phrase your questions makes a big difference. Here's how to phrase requests so Aetios uses its tools effectively:</p>
+                
+                <div class="success-box">
+                    <h4>✅ Excellent Prompts (Trigger Tool Usage):</h4>
+                    
+                    <p><strong>For Identifying Weak Areas:</strong></p>
+                    <ul>
+                        <li><em>"What topics should I focus on today?"</em> → Uses <code>get_weak_topics</code> and <code>get_decaying_topics</code></li>
+                        <li><em>"Show me my weakest areas in cardiology"</em> → Uses <code>get_weak_topics</code> filtered by subject</li>
+                        <li><em>"What have I studied before that needs review?"</em> → Uses <code>get_decaying_topics</code></li>
+                    </ul>
+                    
+                    <p><strong>For Exam Preparation:</strong></p>
+                    <ul>
+                        <li><em>"I have a cardiology exam in 4 weeks, help me prepare"</em> → Uses <code>generate_study_plan</code> and <code>get_exam_readiness</code></li>
+                        <li><em>"Am I ready for my upcoming UKMLA exam?"</em> → Uses <code>get_exam_readiness</code> and <code>get_weak_topics</code></li>
+                        <li><em>"Create a study plan for my finals in 8 weeks"</em> → Uses <code>generate_study_plan</code></li>
+                    </ul>
+                    
+                    <p><strong>For Logging Study:</strong></p>
+                    <ul>
+                        <li><em>"I just studied cardiology for 2 hours"</em> → Uses <code>log_study_session</code></li>
+                        <li><em>"Log 90 minutes of respiratory physiology study"</em> → Uses <code>log_study_session</code></li>
+                    </ul>
+                    
+                    <p><strong>For Targeted Practice:</strong></p>
+                    <ul>
+                        <li><em>"Quiz me on my weakest respiratory topic"</em> → Uses <code>get_weak_topics</code> + <code>generate_quiz</code></li>
+                        <li><em>"Generate a hard quiz on pharmacology"</em> → Uses <code>generate_quiz</code></li>
+                        <li><em>"Test me on topics I haven't reviewed in a while"</em> → Uses <code>get_decaying_topics</code> + <code>generate_quiz</code></li>
+                    </ul>
+                    
+                    <p><strong>For Understanding Prerequisites:</strong></p>
+                    <ul>
+                        <li><em>"What should I know before studying cardiac pathology?"</em> → Uses <code>get_prerequisites</code></li>
+                        <li><em>"Am I ready to study renal pharmacology?"</em> → Uses <code>get_prerequisites</code> + checks confidence</li>
+                    </ul>
+                    
+                    <p><strong>For Searching Your Materials:</strong></p>
+                    <ul>
+                        <li><em>"Search my notes for information about hypertension"</em> → Uses <code>search_notes</code></li>
+                        <li><em>"What do my notes say about diabetes management?"</em> → Uses <code>search_notes</code></li>
+                    </ul>
+                    
+                    <p><strong>For Anki Integration:</strong></p>
+                    <ul>
+                        <li><em>"How am I doing with my Anki cards on pharmacology?"</em> → Uses <code>get_anki_stats</code></li>
+                        <li><em>"Which Anki decks need the most attention?"</em> → Uses <code>get_anki_stats</code></li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h4>⚠️ Less Effective Prompts (Still Work, But Don't Leverage Tools):</h4>
+                    <p>These prompts will get you general medical knowledge, but won't tap into your personal data:</p>
+                    <ul>
+                        <li><em>"Tell me about the heart"</em> → Just uses general knowledge</li>
+                        <li><em>"Explain diabetes"</em> → Just uses general knowledge</li>
+                        <li><em>"What is hypertension?"</em> → Just uses general knowledge</li>
+                    </ul>
+                    <p><strong>How to improve them:</strong> Add context about <em>your</em> learning needs:</p>
+                    <ul>
+                        <li>"Tell me about the heart <strong>based on my weak areas</strong>"</li>
+                        <li>"Explain diabetes <strong>and quiz me if I'm struggling</strong>"</li>
+                        <li>"What is hypertension? <strong>Check if I have prerequisites covered</strong>"</li>
+                    </ul>
+                </div>
+                
+                <h3>Proactive Behaviors to Expect</h3>
+                
+                <p>Aetios doesn't just wait for you to ask—it actively monitors your learning and makes intelligent suggestions:</p>
+                
+                <div class="feature-box">
+                    <h4>🤖 What Aetios Does Proactively:</h4>
+                    
+                    <p><strong>Identifies Knowledge Gaps Without Being Asked:</strong></p>
+                    <ul>
+                        <li>When you ask about a topic, Aetios checks if you have the prerequisites mastered</li>
+                        <li>If you're missing foundational knowledge, it will suggest studying those first</li>
+                        <li>Example: "Before we dive into cardiac pathology, I notice you haven't studied cardiac anatomy yet. Let's start there."</li>
+                    </ul>
+                    
+                    <p><strong>Checks Memory Decay:</strong></p>
+                    <ul>
+                        <li>Aetios monitors the forgetting curve for topics you've studied</li>
+                        <li>Suggests reviews before you forget material</li>
+                        <li>Example: "You studied respiratory physiology 2 weeks ago. Let's do a quick review to maintain your knowledge."</li>
+                    </ul>
+                    
+                    <p><strong>Recommends Quizzes for Weak Areas:</strong></p>
+                    <ul>
+                        <li>After explaining a concept, may offer to test your understanding</li>
+                        <li>Automatically adjusts quiz difficulty based on your confidence level</li>
+                        <li>Example: "Since you're still building confidence in pharmacokinetics, let me generate some practice questions."</li>
+                    </ul>
+                    
+                    <p><strong>Tracks Study Patterns:</strong></p>
+                    <ul>
+                        <li>Notices when you haven't studied certain topics in a while</li>
+                        <li>Suggests balanced coverage across all curriculum areas</li>
+                        <li>Example: "I notice you've been focusing on cardiovascular topics. Don't forget to review neurology too!"</li>
+                    </ul>
+                    
+                    <p><strong>Optimizes Study Approach:</strong></p>
+                    <ul>
+                        <li>Recommends studying related topics together (clustered learning)</li>
+                        <li>Suggests active learning methods (quizzes, practice) over passive reading</li>
+                        <li>Encourages spaced repetition over cramming</li>
+                    </ul>
+                </div>
+                
+                <div class="success-box">
+                    <h4>💡 Pro Tips for Working with Aetios</h4>
+                    <ul>
+                        <li><strong>Be specific about your goals:</strong> "Help me prepare for cardiology exam" is better than "Help me study"</li>
+                        <li><strong>Mention time constraints:</strong> "I have 2 hours today" helps Aetios prioritize</li>
+                        <li><strong>Ask for action:</strong> "Quiz me", "Create a plan", "Check my progress" trigger tool usage</li>
+                        <li><strong>Log your study:</strong> Tell Aetios when you've studied so it can track your progress</li>
+                        <li><strong>Trust the recommendations:</strong> If Aetios suggests reviewing prerequisites, there's a data-driven reason</li>
+                        <li><strong>Use follow-up questions:</strong> "Why did you recommend that?" helps you understand the reasoning</li>
+                    </ul>
+                </div>
+                
+                <h3>Chat Interface Features</h3>
+                
+                <h4>Auto-Resizing Text Input:</h4>
+                <p>The chat input box automatically expands as you type longer messages, making it easy to write detailed questions or describe complex scenarios without scrolling in a tiny box.</p>
+                
+                <ul>
+                    <li><strong>Automatic expansion:</strong> Type as much as you need—the box grows with your message</li>
+                    <li><strong>Multi-line support:</strong> Press Enter to add line breaks; your message won't send until you're ready</li>
+                    <li><strong>Send shortcuts:</strong> Use <code>Ctrl/Cmd + Enter</code> to send your message, or click the Send button</li>
+                </ul>
                 
                 <h3>Best Practices for Using the AI Tutor</h3>
                 
@@ -1284,7 +1673,49 @@ npm run dev</code></pre>
                     </tbody>
                 </table>
                 
-                <p>The system automatically adjusts difficulty based on your confidence level in each topic.</p>
+                <h3>Adaptive Difficulty</h3>
+                
+                <p>Aetios uses <strong>adaptive difficulty</strong> to ensure questions are appropriately challenging based on your current mastery level. This means the quiz system automatically adjusts question difficulty to match your confidence in each topic.</p>
+                
+                <div class="feature-box">
+                    <h4>How Adaptive Difficulty Works:</h4>
+                    
+                    <p><strong>For Low Confidence Topics (Red, 0-30%):</strong></p>
+                    <ul>
+                        <li>Generates <strong>easier, foundational questions</strong> to build understanding</li>
+                        <li>Focuses on basic definitions, simple recall, and fundamental concepts</li>
+                        <li>Provides detailed explanations with each answer to support learning</li>
+                        <li><strong>Goal:</strong> Build confidence and establish core knowledge</li>
+                    </ul>
+                    
+                    <p><strong>For Medium Confidence Topics (Amber, 30-60%):</strong></p>
+                    <ul>
+                        <li>Generates <strong>medium difficulty questions</strong> requiring application and understanding</li>
+                        <li>Tests mechanisms, relationships, and ability to apply knowledge</li>
+                        <li>Includes some clinical context questions</li>
+                        <li><strong>Goal:</strong> Deepen understanding and move toward mastery</li>
+                    </ul>
+                    
+                    <p><strong>For High Confidence Topics (Green, 60-100%):</strong></p>
+                    <ul>
+                        <li>Generates <strong>harder, challenging questions</strong> to maintain and extend mastery</li>
+                        <li>Complex clinical vignettes, differential diagnoses, and edge cases</li>
+                        <li>May include multi-step reasoning and integration with other topics</li>
+                        <li><strong>Goal:</strong> Maintain mastery and push for expert-level understanding</li>
+                    </ul>
+                </div>
+                
+                <div class="info-box">
+                    <h4>💡 Benefits of Adaptive Difficulty</h4>
+                    <ul>
+                        <li><strong>Prevents frustration:</strong> You won't be overwhelmed by questions that are too hard</li>
+                        <li><strong>Maintains challenge:</strong> Questions stay engaging even for mastered topics</li>
+                        <li><strong>Optimizes learning:</strong> Questions are always in your "zone of proximal development"</li>
+                        <li><strong>Tracks progress:</strong> As you improve, questions automatically get harder</li>
+                    </ul>
+                </div>
+                
+                <p><strong>Manual Override:</strong> While the system adapts automatically, you can still manually select a specific difficulty level if you want to practice easier or harder questions regardless of your confidence level.</p>
                 
                 <h3>Taking a Quiz</h3>
                 
@@ -2269,6 +2700,26 @@ npm run dev</code></pre>
                     </thead>
                     <tbody>
                         <tr>
+                            <td>Quick Search</td>
+                            <td><code>Ctrl + K</code></td>
+                            <td><code>Cmd + K</code></td>
+                        </tr>
+                        <tr>
+                            <td>Show All Shortcuts</td>
+                            <td><code>Ctrl + /</code></td>
+                            <td><code>Cmd + /</code></td>
+                        </tr>
+                        <tr>
+                            <td>Open Knowledge Graph</td>
+                            <td><code>Ctrl + G</code></td>
+                            <td><code>Cmd + G</code></td>
+                        </tr>
+                        <tr>
+                            <td>Send Chat Message</td>
+                            <td><code>Ctrl + Enter</code></td>
+                            <td><code>Cmd + Enter</code></td>
+                        </tr>
+                        <tr>
                             <td>New Chat</td>
                             <td><code>Ctrl + N</code></td>
                             <td><code>Cmd + N</code></td>
@@ -2316,6 +2767,11 @@ npm run dev</code></pre>
                     </tbody>
                 </table>
                 
+                <div class="info-box">
+                    <h4>💡 Context Menu Shortcut</h4>
+                    <p><strong>Right-click on any node</strong> in the Knowledge Graph to access a quick actions context menu with options like Start Quiz, Ask AI, View Cards, Quick Confidence Updates (✅ Confident, 🤔 Reviewing, ❌ Struggling), View Study History, and Show Prerequisites.</p>
+                </div>
+                
                 <h3>UK Medical Education Context</h3>
                 
                 <h4>Typical Medical School Structure:</h4>
@@ -2342,6 +2798,7 @@ npm run dev</code></pre>
                     <li><strong>Database:</strong> <code>%APPDATA%\Aetios-Med\aetios.db</code></li>
                     <li><strong>Models:</strong> <code>%APPDATA%\Aetios-Med\models\</code></li>
                     <li><strong>ChromaDB:</strong> <code>%APPDATA%\Aetios-Med\chroma\</code></li>
+                    <li><strong>Conversation History:</strong> <code>%APPDATA%\Aetios-Med\conversations\</code></li>
                 </ul>
                 
                 <h4>macOS:</h4>
@@ -2350,6 +2807,7 @@ npm run dev</code></pre>
                     <li><strong>Database:</strong> <code>~/Library/Application Support/Aetios-Med/aetios.db</code></li>
                     <li><strong>Models:</strong> <code>~/Library/Application Support/Aetios-Med/models/</code></li>
                     <li><strong>ChromaDB:</strong> <code>~/Library/Application Support/Aetios-Med/chroma/</code></li>
+                    <li><strong>Conversation History:</strong> <code>~/Library/Application Support/Aetios-Med/conversations/</code></li>
                 </ul>
                 
                 <h4>Linux:</h4>
@@ -2358,6 +2816,7 @@ npm run dev</code></pre>
                     <li><strong>Database:</strong> <code>~/.local/share/Aetios-Med/aetios.db</code></li>
                     <li><strong>Models:</strong> <code>~/.local/share/Aetios-Med/models/</code></li>
                     <li><strong>ChromaDB:</strong> <code>~/.local/share/Aetios-Med/chroma/</code></li>
+                    <li><strong>Conversation History:</strong> <code>~/.local/share/Aetios-Med/conversations/</code></li>
                 </ul>
                 
                 <h3>Supported File Formats</h3>
