@@ -12,8 +12,9 @@
     "build": "npm run build:frontend && npm run build:backend",
     "build:frontend": "cd frontend && vite build",
     "build:backend": "cd backend && pyinstaller --onefile run.py",
+    "generate-icons": "electron-icon-builder --input=./assets/icon.png --output=./assets --flatten",
     "electron:dev": "electron .",
-    "electron:build": "electron-builder",
+    "electron:build": "npm run generate-icons && electron-builder",
     "start": "electron .",
     "lint": "eslint frontend/src --ext .ts,.tsx",
     "test": "vitest",
@@ -25,6 +26,7 @@
   "devDependencies": {
     "concurrently": "^8.2.2",
     "electron-builder": "^24.9.1",
+    "electron-icon-builder": "^2.0.1",
     "eslint": "^8.56.0",
     "typescript": "^5.3.3",
     "vitest": "^1.2.0"
