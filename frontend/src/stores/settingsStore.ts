@@ -14,6 +14,18 @@ interface AppSettings {
   reminderTime: string;
   studyMode: 'casual' | 'focused' | 'exam_prep';
   
+  // Streak tracking
+  currentStreak: number;
+  longestStreak: number;
+  lastStudyDate: string | null; // ISO date string
+  
+  // Daily goals
+  dailyGoalTopics: number;
+  dailyGoalQuizzes: number;
+  topicsReviewedToday: number;
+  quizzesCompletedToday: number;
+  lastGoalResetDate: string | null; // ISO date string
+  
   // Model
   modelName: string;
   modelPath: string;
@@ -49,6 +61,10 @@ interface SettingsState extends AppSettings {
   addResourceFolder: (path: string) => void;
   removeResourceFolder: (path: string) => void;
   clearError: () => void;
+  incrementStreak: () => void;
+  incrementTopicsReviewed: () => void;
+  incrementQuizzesCompleted: () => void;
+  checkAndResetDailyGoals: () => void;
 }
 
 const defaultSettings: AppSettings = {
@@ -59,7 +75,15 @@ const defaultSettings: AppSettings = {
   reminderEnabled: false,
   reminderTime: '09:00',
   studyMode: 'casual',
-  modelName: 'BioMistral-7B',
+  currentStreak: 0,
+  longestStreak: 0,
+  lastStudyDate: null,
+  dailyGoalTopics: 5,
+  dailyGoalQuizzes: 3,
+  topicsReviewedToday: 0,
+  quizzesCompletedToday: 0,
+  lastGoalResetDate: null,
+  modelName: 'OpenBioLLM-8B',
   modelPath: '',
   useGPU: true,
   resourceFolders: [],
@@ -127,6 +151,76 @@ export const useSettingsStore = create<SettingsState>()(
 
       clearError: () => {
         set({ error: null });
+      },
+
+      incrementStreak: () => {
+        const today = new Date().toISOString().split('T')[0];
+        const { lastStudyDate, currentStreak, longestStreak } = get();
+        
+        if (lastStudyDate === today) {
+          // Already studied today
+          return;
+        }
+        
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toISOString().split('T')[0];
+        
+        let newStreak: number;
+        if (lastStudyDate === yesterdayStr) {
+          // Continuing streak
+          newStreak = currentStreak + 1;
+        } else {
+          // Starting new streak
+          newStreak = 1;
+        }
+        
+        const newLongestStreak = Math.max(longestStreak, newStreak);
+        
+        set({ 
+          currentStreak: newStreak,
+          longestStreak: newLongestStreak,
+          lastStudyDate: today 
+        });
+        
+        // Persist to IPC
+        ipc.saveSetting('currentStreak', newStreak).catch(console.error);
+        ipc.saveSetting('longestStreak', newLongestStreak).catch(console.error);
+        ipc.saveSetting('lastStudyDate', today).catch(console.error);
+      },
+
+      checkAndResetDailyGoals: () => {
+        const today = new Date().toISOString().split('T')[0];
+        const { lastGoalResetDate } = get();
+        
+        if (lastGoalResetDate !== today) {
+          // Reset daily counters
+          set({
+            topicsReviewedToday: 0,
+            quizzesCompletedToday: 0,
+            lastGoalResetDate: today,
+          });
+          
+          ipc.saveSetting('topicsReviewedToday', 0).catch(console.error);
+          ipc.saveSetting('quizzesCompletedToday', 0).catch(console.error);
+          ipc.saveSetting('lastGoalResetDate', today).catch(console.error);
+        }
+      },
+
+      incrementTopicsReviewed: () => {
+        get().checkAndResetDailyGoals();
+        const newCount = get().topicsReviewedToday + 1;
+        set({ topicsReviewedToday: newCount });
+        ipc.saveSetting('topicsReviewedToday', newCount).catch(console.error);
+        get().incrementStreak();
+      },
+
+      incrementQuizzesCompleted: () => {
+        get().checkAndResetDailyGoals();
+        const newCount = get().quizzesCompletedToday + 1;
+        set({ quizzesCompletedToday: newCount });
+        ipc.saveSetting('quizzesCompletedToday', newCount).catch(console.error);
+        get().incrementStreak();
       },
     }),
     {

@@ -79,20 +79,6 @@ export const TopBar: React.FC<TopBarProps> = ({ title, subtitle }) => {
     };
   }, [backendStatus]);
 
-  const getModelStatusColor = () => {
-    if (status.error) return 'text-red-500';
-    if (status.downloading) return 'text-yellow-500';
-    if (isReady) return 'text-green-500';
-    return 'text-gray-500';
-  };
-
-  const getModelStatusText = () => {
-    if (status.error) return 'Model Error';
-    if (status.downloading) return `Downloading... ${status.progress || 0}%`;
-    if (isReady) return `Model Ready: ${status.model}`;
-    return 'Model Not Loaded';
-  };
-
   return (
     <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-6">
       {/* App Branding and Title */}
@@ -153,18 +139,29 @@ export const TopBar: React.FC<TopBarProps> = ({ title, subtitle }) => {
           )}
         </div>
 
-        {/* Model Status */}
+        {/* AI Status Indicator */}
         <div className="flex items-center gap-2 px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-700">
-          {status.downloading ? (
-            <Download size={18} className={getModelStatusColor()} />
-          ) : status.error ? (
-            <AlertCircle size={18} className={getModelStatusColor()} />
+          {backendStatus !== 'connected' ? (
+            <>
+              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+              <span className="text-sm font-medium text-red-500">Offline</span>
+            </>
+          ) : status.downloading ? (
+            <>
+              <div className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" />
+              <span className="text-sm font-medium text-yellow-500">AI Loading...</span>
+            </>
+          ) : isReady ? (
+            <>
+              <div className="w-2 h-2 rounded-full bg-green-500" />
+              <span className="text-sm font-medium text-green-500">AI Ready</span>
+            </>
           ) : (
-            <div className={`w-2 h-2 rounded-full ${isReady ? 'bg-green-500' : 'bg-gray-400'}`} />
+            <>
+              <div className="w-2 h-2 rounded-full bg-gray-400" />
+              <span className="text-sm font-medium text-gray-500">Not Loaded</span>
+            </>
           )}
-          <span className={`text-sm font-medium ${getModelStatusColor()}`}>
-            {getModelStatusText()}
-          </span>
         </div>
       </div>
     </header>

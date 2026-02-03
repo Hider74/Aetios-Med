@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Sidebar } from './components/common/Sidebar';
 import { TopBar } from './components/common/TopBar';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
@@ -15,11 +15,51 @@ import { HuggingFaceAuth } from './components/Setup/HuggingFaceAuth';
 import { FolderConfig } from './components/Setup/FolderConfig';
 import { useGraph } from './hooks/useGraph';
 import { useSettingsStore } from './stores/settingsStore';
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
+  const [chatInitialMessage, setChatInitialMessage] = useState<string | null>(null);
   const { selectedNode, setSelectedNode } = useGraph();
   const { theme } = useSettingsStore();
+  const chatInputRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleQuickStudy = (topic: string) => {
+    setChatInitialMessage(`Let's study ${topic}. Start with a quick overview.`);
+    setCurrentPage('chat');
+  };
+
+  // Helper function to focus chat input
+  const focusChatInput = () => {
+    const chatInput = document.querySelector('textarea[placeholder*="Ask a question"]') as HTMLTextAreaElement;
+    if (chatInput) {
+      chatInput.focus();
+    }
+  };
+
+  // Setup keyboard shortcuts
+  useKeyboardShortcuts({
+    onNavigateDashboard: () => setCurrentPage('dashboard'),
+    onNavigateGraph: () => setCurrentPage('graph'),
+    onNavigateChat: () => setCurrentPage('chat'),
+    onNavigateStudyPlan: () => setCurrentPage('study'),
+    onFocusChatInput: () => {
+      // Focus chat input if on chat page
+      if (currentPage === 'chat') {
+        focusChatInput();
+      } else {
+        // Navigate to chat page and focus input
+        setCurrentPage('chat');
+        setTimeout(focusChatInput, 100);
+      }
+    },
+    onCloseModal: () => {
+      // Close node detail panel if open
+      if (selectedNode) {
+        setSelectedNode(null);
+      }
+    },
+  });
 
   const getPageTitle = () => {
     switch (currentPage) {
@@ -50,7 +90,7 @@ function App() {
       case 'dashboard':
         return (
           <ErrorBoundary>
-            <Dashboard />
+            <Dashboard onNavigate={setCurrentPage} onQuickStudy={handleQuickStudy} />
           </ErrorBoundary>
         );
       
@@ -58,7 +98,13 @@ function App() {
         return (
           <ErrorBoundary>
             <div className="relative h-full">
-              <GraphCanvas onNodeSelect={(id) => console.log('Selected:', id)} />
+              <GraphCanvas 
+                onNodeSelect={(id) => console.log('Selected:', id)}
+                onNavigateToChat={(message) => {
+                  setChatInitialMessage(message);
+                  setCurrentPage('chat');
+                }}
+              />
               <GraphControls />
               {selectedNode && (
                 <NodeDetail 
@@ -76,7 +122,7 @@ function App() {
       case 'chat':
         return (
           <ErrorBoundary>
-            <ChatInterface />
+            <ChatInterface initialMessage={chatInitialMessage} onMessageSent={() => setChatInitialMessage(null)} />
           </ErrorBoundary>
         );
       
