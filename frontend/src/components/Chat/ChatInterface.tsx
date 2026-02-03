@@ -4,7 +4,10 @@ import { useChat } from '../../hooks/useChat';
 import { MessageBubble } from './MessageBubble';
 import { QuizCard } from './QuizCard';
 
-export const ChatInterface: React.FC = () => {
+export const ChatInterface: React.FC<{
+  initialMessage?: string | null;
+  onMessageSent?: () => void;
+}> = ({ initialMessage, onMessageSent }) => {
   const { 
     messages, 
     loading, 
@@ -18,6 +21,38 @@ export const ChatInterface: React.FC = () => {
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Handle initial message from Quick Study
+  useEffect(() => {
+    if (initialMessage && input === '') {
+      setInput(initialMessage);
+      if (onMessageSent) {
+        onMessageSent();
+      }
+      // Auto-send after a brief delay
+      setTimeout(() => {
+        if (inputRef.current) {
+          const form = inputRef.current.form;
+          if (form) {
+            form.requestSubmit();
+          }
+        }
+      }, 300);
+    }
+  }, [initialMessage, onMessageSent]);
+
+  // Auto-resize textarea based on content
+  useEffect(() => {
+    const textarea = inputRef.current;
+    if (!textarea) return;
+
+    // Reset height to calculate new height
+    textarea.style.height = '48px';
+    
+    // Calculate new height
+    const newHeight = Math.min(Math.max(textarea.scrollHeight, 48), 200);
+    textarea.style.height = `${newHeight}px`;
+  }, [input]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -134,9 +169,9 @@ export const ChatInterface: React.FC = () => {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Ask a question or request a quiz..."
-            className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none transition-all duration-200"
             rows={1}
-            style={{ minHeight: '48px', maxHeight: '200px' }}
+            style={{ minHeight: '48px', maxHeight: '200px', height: '48px' }}
             disabled={loading}
           />
           <button

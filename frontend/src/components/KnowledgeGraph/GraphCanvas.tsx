@@ -14,9 +14,10 @@ cytoscape.use(dagre);
 
 interface GraphCanvasProps {
   onNodeSelect?: (nodeId: string) => void;
+  onNavigateToChat?: (message: string) => void;
 }
 
-export const GraphCanvas: React.FC<GraphCanvasProps> = ({ onNodeSelect }) => {
+export const GraphCanvas: React.FC<GraphCanvasProps> = ({ onNodeSelect, onNavigateToChat }) => {
   const { graph, loading, filteredNodes, layout, setSelectedNode } = useGraph();
   const containerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<Core | null>(null);
@@ -115,6 +116,57 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({ onNodeSelect }) => {
       }
     });
 
+    // Right-click context menu
+    cy.on('cxttap', 'node', (event: EventObject) => {
+      event.preventDefault();
+      const node = event.target;
+      const nodeData = filteredNodes.find(n => n.id === node.id());
+      
+      if (nodeData && onNavigateToChat) {
+        const topicName = nodeData.label;
+        
+        // Create a custom context menu
+        const menu = document.createElement('div');
+        menu.className = 'absolute bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl p-2 z-50';
+        menu.style.left = `${event.renderedPosition.x}px`;
+        menu.style.top = `${event.renderedPosition.y}px`;
+        
+        const menuOptions = [
+          { label: 'Explain this topic', icon: '📖', message: `Explain ${topicName} in detail` },
+          { label: 'Quiz me on this', icon: '🎯', message: `Give me a quiz on ${topicName}` },
+          { label: 'Show prerequisites', icon: '🔗', message: `What are the prerequisites for understanding ${topicName}?` },
+        ];
+        
+        menuOptions.forEach(option => {
+          const button = document.createElement('button');
+          button.className = 'w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex items-center gap-2 text-sm text-gray-900 dark:text-white';
+          button.innerHTML = `<span>${option.icon}</span> <span>${option.label}</span>`;
+          button.onclick = () => {
+            onNavigateToChat(option.message);
+            menu.remove();
+          };
+          menu.appendChild(button);
+        });
+        
+        // Add to container
+        const container = containerRef.current;
+        if (container) {
+          container.appendChild(menu);
+          
+          // Close menu on click outside
+          const closeMenu = (e: MouseEvent) => {
+            if (!menu.contains(e.target as Node)) {
+              menu.remove();
+              document.removeEventListener('click', closeMenu);
+            }
+          };
+          setTimeout(() => {
+            document.addEventListener('click', closeMenu);
+          }, 0);
+        }
+      }
+    });
+
     // Background click (deselect)
     cy.on('tap', (event: EventObject) => {
       if (event.target === cy) {
@@ -122,7 +174,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({ onNodeSelect }) => {
       }
     });
 
-  }, [graph, filteredNodes, layout, setSelectedNode, onNodeSelect]);
+  }, [graph, filteredNodes, layout, setSelectedNode, onNodeSelect, onNavigateToChat]);
 
   // Handle layout changes
   useEffect(() => {

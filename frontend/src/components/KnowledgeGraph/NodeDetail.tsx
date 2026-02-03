@@ -95,6 +95,34 @@ export const NodeDetail: React.FC<NodeDetailProps> = ({ onClose, onStartStudy })
             </button>
           </div>
           
+          {/* Quick Update Buttons */}
+          <div className="flex gap-2 mb-3">
+            <button
+              onClick={() => updateNodeConfidence(selectedNode.id, 0.3)}
+              className="flex-1 flex flex-col items-center gap-1 p-3 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors"
+              title="Struggling - 30%"
+            >
+              <span className="text-2xl">😕</span>
+              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Struggling</span>
+            </button>
+            <button
+              onClick={() => updateNodeConfidence(selectedNode.id, 0.6)}
+              className="flex-1 flex flex-col items-center gap-1 p-3 bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 rounded-lg transition-colors"
+              title="Getting There - 60%"
+            >
+              <span className="text-2xl">🤔</span>
+              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Getting There</span>
+            </button>
+            <button
+              onClick={() => updateNodeConfidence(selectedNode.id, 0.9)}
+              className="flex-1 flex flex-col items-center gap-1 p-3 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-lg transition-colors"
+              title="Confident - 90%"
+            >
+              <span className="text-2xl">😊</span>
+              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Confident</span>
+            </button>
+          </div>
+          
           {isEditing ? (
             <div className="space-y-3">
               <input
