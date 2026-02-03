@@ -17,8 +17,7 @@ router = APIRouter()
 async def send_message(request: Request, chat_request: ChatRequest):
     """Send a message to the AI tutor."""
     llm_service = request.app.state.llm
-    graph_service = request.app.state.graph
-    vector_service = request.app.state.vector
+    agent = request.app.state.agent if hasattr(request.app.state, 'agent') else None
     
     if not llm_service.is_loaded:
         raise HTTPException(status_code=503, detail="LLM model not loaded")
@@ -31,18 +30,26 @@ async def send_message(request: Request, chat_request: ChatRequest):
                 db_user_message = DBChatMessage(
                     role=user_message.role,
                     content=user_message.content,
-                    session_id="default"
+                    session_id=chat_request.session_id or "default"
                 )
                 db.add(db_user_message)
                 await db.commit()
     
-    # TODO: Implement agent orchestration with tool calling
-    # For now, basic completion
-    response_text = await llm_service.complete(
-        messages=chat_request.messages,
-        temperature=chat_request.temperature,
-        max_tokens=chat_request.max_tokens
-    )
+    # Use agent orchestrator if available, otherwise fall back to basic completion
+    if agent:
+        # Get the user's latest message
+        user_content = chat_request.messages[-1].content if chat_request.messages else ""
+        
+        async with get_session() as db:
+            # Process message through agent with tool calling
+            response_text = await agent.process_message(user_content, db=db)
+    else:
+        # Fallback to basic completion without agent
+        response_text = await llm_service.complete(
+            messages=chat_request.messages,
+            temperature=chat_request.temperature,
+            max_tokens=chat_request.max_tokens
+        )
     
     response_message = ChatMessage(
         role="assistant",
@@ -54,7 +61,7 @@ async def send_message(request: Request, chat_request: ChatRequest):
         db_assistant_message = DBChatMessage(
             role="assistant",
             content=response_text,
-            session_id="default"
+            session_id=chat_request.session_id or "default"
         )
         db.add(db_assistant_message)
         await db.commit()
