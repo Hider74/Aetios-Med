@@ -29,6 +29,16 @@ class ApiClient {
     );
   }
 
+  // Health Check
+  async checkHealth(): Promise<{ status: string; services: Record<string, boolean> }> {
+    try {
+      const response = await this.client.get('/system/health');
+      return response.data;
+    } catch (error) {
+      return { status: 'error', services: {} };
+    }
+  }
+
   // Knowledge Graph
   async getGraph(): Promise<KnowledgeGraph> {
     const response = await this.client.get<KnowledgeGraph>('/graph');
@@ -54,10 +64,16 @@ class ApiClient {
 
   // Chat
   async sendMessage(message: string, context?: any): Promise<ChatResponse> {
-    const response = await this.client.post<ChatResponse>('/chat', {
-      message,
-      context,
-      timestamp: new Date().toISOString(),
+    const response = await this.client.post<ChatResponse>('/chat/message', {
+      messages: [
+        {
+          role: 'user',
+          content: message,
+        },
+      ],
+      temperature: 0.7,
+      max_tokens: 2048,
+      session_id: 'default',
     });
     return response.data;
   }
@@ -117,12 +133,13 @@ class ApiClient {
   }
 
   // Quizzes
-  async generateQuiz(topicId: string, count: number = 5): Promise<QuizQuestion[]> {
-    const response = await this.client.post<QuizQuestion[]>('/quiz/generate', {
-      topicId,
-      count,
+  async generateQuiz(topicIds: string[], count: number = 5): Promise<QuizQuestion[]> {
+    const response = await this.client.post<any>('/quiz/generate', {
+      topic_ids: topicIds,
+      num_questions: count,
+      difficulty: 'medium',
     });
-    return response.data;
+    return response.data.questions || [];
   }
 
   async submitQuizAnswer(questionId: string, answer: number): Promise<{ correct: boolean; explanation: string }> {
@@ -152,7 +169,7 @@ class ApiClient {
 
   // Model Status
   async getModelStatus(): Promise<{ loaded: boolean; model: string; progress?: number }> {
-    const response = await this.client.get('/model/status');
+    const response = await this.client.get('/system/model-status');
     return response.data;
   }
 

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Wifi, WifiOff, Download, AlertCircle } from 'lucide-react';
+import { Wifi, WifiOff, Download, AlertCircle, Activity } from 'lucide-react';
 import { useModelStatus } from '../../hooks/useModelStatus';
+import { api } from '../../services/api';
 
 interface TopBarProps {
   title: string;
@@ -10,6 +11,7 @@ interface TopBarProps {
 export const TopBar: React.FC<TopBarProps> = ({ title, subtitle }) => {
   const { status, isReady } = useModelStatus();
   const [isOnline, setIsOnline] = React.useState(navigator.onLine);
+  const [backendStatus, setBackendStatus] = React.useState<'connected' | 'disconnected' | 'checking'>('checking');
 
   React.useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -22,6 +24,23 @@ export const TopBar: React.FC<TopBarProps> = ({ title, subtitle }) => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
+  }, []);
+
+  React.useEffect(() => {
+    // Check backend connection on mount and periodically
+    const checkBackend = async () => {
+      try {
+        const health = await api.checkHealth();
+        setBackendStatus(health.status === 'ok' ? 'connected' : 'disconnected');
+      } catch (error) {
+        setBackendStatus('disconnected');
+      }
+    };
+
+    checkBackend();
+    const interval = setInterval(checkBackend, 10000); // Check every 10 seconds
+
+    return () => clearInterval(interval);
   }, []);
 
   const getModelStatusColor = () => {
@@ -63,6 +82,26 @@ export const TopBar: React.FC<TopBarProps> = ({ title, subtitle }) => {
 
       {/* Status Indicators */}
       <div className="flex items-center gap-4">
+        {/* Backend Connection Status */}
+        <div className="flex items-center gap-2">
+          {backendStatus === 'connected' ? (
+            <>
+              <Activity size={18} className="text-green-500" />
+              <span className="text-sm text-gray-600 dark:text-gray-400">Backend Connected</span>
+            </>
+          ) : backendStatus === 'checking' ? (
+            <>
+              <Activity size={18} className="text-yellow-500 animate-pulse" />
+              <span className="text-sm text-gray-600 dark:text-gray-400">Checking...</span>
+            </>
+          ) : (
+            <>
+              <AlertCircle size={18} className="text-red-500" />
+              <span className="text-sm text-gray-600 dark:text-gray-400">Backend Offline</span>
+            </>
+          )}
+        </div>
+
         {/* Network Status */}
         <div className="flex items-center gap-2">
           {isOnline ? (

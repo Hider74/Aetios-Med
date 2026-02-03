@@ -151,10 +151,12 @@ Return ONLY a JSON array with this structure:
         difficulty: str
     ) -> List[Dict[str, Any]]:
         """
-        Return empty list when LLM fails to generate quiz questions.
-        Do not generate placeholder questions with meaningless options.
+        Handle failed quiz generation gracefully.
+        Returns empty list and logs the error for troubleshooting.
+        The frontend should handle empty quiz responses appropriately.
         """
-        print(f"Quiz generation failed for topic {topic.id}. Returning empty list.")
+        print(f"Quiz generation failed for topic {topic.id}. LLM may not be loaded or available.")
+        print(f"Check that the model is loaded and functioning correctly.")
         return []
     
     async def submit_quiz_answer(
