@@ -65,7 +65,7 @@ export const UserGuidePanel: React.FC<UserGuidePanelProps> = ({ isOpen, onClose 
             src="/INSTRUCTION_MANUAL.html"
             className="w-full h-full border-0"
             title="Aetios-Med User Manual"
-            sandbox="allow-same-origin allow-scripts"
+            sandbox="allow-same-origin"
           />
         </div>
       </div>

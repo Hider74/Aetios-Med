@@ -192,7 +192,7 @@ function App() {
       {/* Floating help button */}
       <button
         onClick={() => setIsGuideOpen(true)}
-        className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110"
+        className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110 focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2"
         aria-label="Open user guide"
         title="User Guide"
       >
