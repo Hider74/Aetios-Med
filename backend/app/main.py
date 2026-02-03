@@ -20,6 +20,7 @@ from app.services.retention_service import RetentionService
 from app.services.study_plan_service import StudyPlanService
 from app.services.encryption_service import EncryptionService
 from app.models.database import init_database
+from app.agent import create_agent, init_tools
 
 
 # Global service instances
@@ -94,6 +95,18 @@ async def lifespan(app: FastAPI):
     # Initialize encryption service
     encryption_service = EncryptionService()
     
+    # Initialize agent tools with services
+    init_tools({
+        'graph_service': graph_service,
+        'vector_service': vector_service,
+        'retention_service': retention_service,
+        'quiz_service': quiz_service,
+        'study_plan_service': study_plan_service
+    })
+    
+    # Create agent orchestrator
+    agent = create_agent(llm_service=llm_service)
+    
     # Make services available to routers
     app.state.llm = llm_service
     app.state.graph = graph_service
@@ -103,6 +116,7 @@ async def lifespan(app: FastAPI):
     app.state.retention = retention_service
     app.state.study = study_plan_service
     app.state.encryption = encryption_service
+    app.state.agent = agent
     
     yield
     

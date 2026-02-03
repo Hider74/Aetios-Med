@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sidebar } from './components/common/Sidebar';
 import { TopBar } from './components/common/TopBar';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { Dashboard } from './components/Dashboard/Dashboard';
 import { GraphCanvas } from './components/KnowledgeGraph/GraphCanvas';
 import { GraphControls } from './components/KnowledgeGraph/GraphControls';
@@ -47,61 +48,83 @@ function App() {
   const renderPage = () => {
     switch (currentPage) {
       case 'dashboard':
-        return <Dashboard />;
+        return (
+          <ErrorBoundary>
+            <Dashboard />
+          </ErrorBoundary>
+        );
       
       case 'graph':
         return (
-          <div className="relative h-full">
-            <GraphCanvas onNodeSelect={(id) => console.log('Selected:', id)} />
-            <GraphControls />
-            {selectedNode && (
-              <NodeDetail 
-                onClose={() => setSelectedNode(null)}
-                onStartStudy={(id) => {
-                  setCurrentPage('chat');
-                  console.log('Start study:', id);
-                }}
-              />
-            )}
-          </div>
+          <ErrorBoundary>
+            <div className="relative h-full">
+              <GraphCanvas onNodeSelect={(id) => console.log('Selected:', id)} />
+              <GraphControls />
+              {selectedNode && (
+                <NodeDetail 
+                  onClose={() => setSelectedNode(null)}
+                  onStartStudy={(id) => {
+                    setCurrentPage('chat');
+                    console.log('Start study:', id);
+                  }}
+                />
+              )}
+            </div>
+          </ErrorBoundary>
         );
       
       case 'chat':
-        return <ChatInterface />;
+        return (
+          <ErrorBoundary>
+            <ChatInterface />
+          </ErrorBoundary>
+        );
       
       case 'study':
         return (
-          <div className="p-6 space-y-6 max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <PlanGenerator />
-              <CalendarView />
+          <ErrorBoundary>
+            <div className="p-6 space-y-6 max-w-7xl mx-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <PlanGenerator />
+                <CalendarView />
+              </div>
             </div>
-          </div>
+          </ErrorBoundary>
         );
       
       case 'resources':
-        return <WebViewPanel />;
+        return (
+          <ErrorBoundary>
+            <WebViewPanel />
+          </ErrorBoundary>
+        );
       
       case 'settings':
         return (
-          <div className="p-6 space-y-6 max-w-4xl mx-auto">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Setup</h2>
-              <div className="space-y-8">
-                <ModelDownload />
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-8">
-                  <HuggingFaceAuth />
-                </div>
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-8">
-                  <FolderConfig />
+          <ErrorBoundary>
+            <div className="p-6 space-y-6 max-w-4xl mx-auto">
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Setup</h2>
+                <div className="space-y-8">
+                  <ModelDownload />
+                  <div className="border-t border-gray-200 dark:border-gray-700 pt-8">
+                    <HuggingFaceAuth />
+                  </div>
+                  <div className="border-t border-gray-200 dark:border-gray-700 pt-8">
+                    <FolderConfig />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </ErrorBoundary>
         );
       
       default:
-        return <Dashboard />;
+        return (
+          <ErrorBoundary>
+            <Dashboard />
+          </ErrorBoundary>
+        );
     }
   };
 

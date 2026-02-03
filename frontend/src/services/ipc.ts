@@ -7,7 +7,7 @@ interface ElectronAPI {
   getModelStatus: () => Promise<{ loaded: boolean; model?: string; progress?: number }>;
   
   // File System
-  selectFolder: () => Promise<string | null>;
+  selectDirectory: () => Promise<string | null>;
   selectFile: (filters?: any[]) => Promise<string | null>;
   readFile: (path: string) => Promise<string>;
   writeFile: (path: string, content: string) => Promise<void>;
@@ -79,7 +79,7 @@ class IpcService {
       console.warn('File selection not available in browser mode');
       return null;
     }
-    return this.electron.selectFolder();
+    return this.electron.selectDirectory();
   }
 
   async selectFile(filters?: any[]): Promise<string | null> {
