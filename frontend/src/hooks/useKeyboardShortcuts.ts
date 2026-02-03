@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface KeyboardShortcutHandlers {
   onNavigateDashboard?: () => void;
@@ -10,6 +10,13 @@ interface KeyboardShortcutHandlers {
 }
 
 export const useKeyboardShortcuts = (handlers: KeyboardShortcutHandlers) => {
+  // Use ref to avoid re-creating event listener on every render
+  const handlersRef = useRef(handlers);
+  
+  useEffect(() => {
+    handlersRef.current = handlers;
+  }, [handlers]);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Check for Cmd (Mac) or Ctrl (Windows/Linux)
@@ -21,16 +28,16 @@ export const useKeyboardShortcuts = (handlers: KeyboardShortcutHandlers) => {
         
         switch (event.key) {
           case '1':
-            handlers.onNavigateDashboard?.();
+            handlersRef.current.onNavigateDashboard?.();
             break;
           case '2':
-            handlers.onNavigateGraph?.();
+            handlersRef.current.onNavigateGraph?.();
             break;
           case '3':
-            handlers.onNavigateChat?.();
+            handlersRef.current.onNavigateChat?.();
             break;
           case '4':
-            handlers.onNavigateStudyPlan?.();
+            handlersRef.current.onNavigateStudyPlan?.();
             break;
         }
         return;
@@ -39,13 +46,13 @@ export const useKeyboardShortcuts = (handlers: KeyboardShortcutHandlers) => {
       // Focus chat input (Cmd/Ctrl + K)
       if (isModifierKey && event.key === 'k') {
         event.preventDefault();
-        handlers.onFocusChatInput?.();
+        handlersRef.current.onFocusChatInput?.();
         return;
       }
 
       // Close modals/panels (Escape)
       if (event.key === 'Escape') {
-        handlers.onCloseModal?.();
+        handlersRef.current.onCloseModal?.();
         return;
       }
     };
@@ -55,5 +62,5 @@ export const useKeyboardShortcuts = (handlers: KeyboardShortcutHandlers) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handlers]);
+  }, []);
 };

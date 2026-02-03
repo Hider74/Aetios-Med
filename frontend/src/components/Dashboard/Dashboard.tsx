@@ -15,14 +15,16 @@ interface DashboardProps {
 
 export const Dashboard: React.FC<DashboardProps> = ({ onNavigate, onQuickStudy }) => {
   const { stats, nodesNeedingReview } = useGraph();
+  const [showNoTopicsMessage, setShowNoTopicsMessage] = React.useState(false);
 
   const handleQuickStudy = () => {
     // Find the weakest topic
     const weakestTopic = nodesNeedingReview[0];
     
     if (!weakestTopic) {
-      // If no topics need review, alert user
-      alert('Great job! No topics need immediate review.');
+      // If no topics need review, show inline message
+      setShowNoTopicsMessage(true);
+      setTimeout(() => setShowNoTopicsMessage(false), 3000);
       return;
     }
 
@@ -46,14 +48,23 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate, onQuickStudy }
         </div>
         
         {/* Quick Study Button */}
-        <button
-          onClick={handleQuickStudy}
-          disabled={nodesNeedingReview.length === 0}
-          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold rounded-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105"
-        >
-          <Zap size={20} />
-          <span>Quick Study</span>
-        </button>
+        <div className="flex flex-col items-end gap-2">
+          <button
+            onClick={handleQuickStudy}
+            disabled={nodesNeedingReview.length === 0}
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold rounded-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105"
+          >
+            <Zap size={20} />
+            <span>Quick Study</span>
+          </button>
+          
+          {/* Success message */}
+          {showNoTopicsMessage && (
+            <div className="px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-lg text-sm animate-fade-in">
+              🎉 Great job! No topics need immediate review.
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Stats Grid */}

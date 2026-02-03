@@ -4,6 +4,10 @@ import { useChat } from '../../hooks/useChat';
 import { MessageBubble } from './MessageBubble';
 import { QuizCard } from './QuizCard';
 
+// Chat textarea constants
+const MIN_TEXTAREA_HEIGHT = 48;
+const MAX_TEXTAREA_HEIGHT = 200;
+
 export const ChatInterface: React.FC<{
   initialMessage?: string | null;
   onMessageSent?: () => void;
@@ -19,13 +23,15 @@ export const ChatInterface: React.FC<{
   } = useChat();
   
   const [input, setInput] = useState('');
+  const [initialMessageSent, setInitialMessageSent] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Handle initial message from Quick Study
   useEffect(() => {
-    if (initialMessage && input === '') {
+    if (initialMessage && !initialMessageSent) {
       setInput(initialMessage);
+      setInitialMessageSent(true);
       if (onMessageSent) {
         onMessageSent();
       }
@@ -39,7 +45,7 @@ export const ChatInterface: React.FC<{
         }
       }, 300);
     }
-  }, [initialMessage, onMessageSent]);
+  }, [initialMessage, initialMessageSent, onMessageSent]);
 
   // Auto-resize textarea based on content
   useEffect(() => {
@@ -47,10 +53,10 @@ export const ChatInterface: React.FC<{
     if (!textarea) return;
 
     // Reset height to calculate new height
-    textarea.style.height = '48px';
+    textarea.style.height = `${MIN_TEXTAREA_HEIGHT}px`;
     
     // Calculate new height
-    const newHeight = Math.min(Math.max(textarea.scrollHeight, 48), 200);
+    const newHeight = Math.min(Math.max(textarea.scrollHeight, MIN_TEXTAREA_HEIGHT), MAX_TEXTAREA_HEIGHT);
     textarea.style.height = `${newHeight}px`;
   }, [input]);
 
@@ -171,7 +177,11 @@ export const ChatInterface: React.FC<{
             placeholder="Ask a question or request a quiz..."
             className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none transition-all duration-200"
             rows={1}
-            style={{ minHeight: '48px', maxHeight: '200px', height: '48px' }}
+            style={{ 
+              minHeight: `${MIN_TEXTAREA_HEIGHT}px`, 
+              maxHeight: `${MAX_TEXTAREA_HEIGHT}px`, 
+              height: `${MIN_TEXTAREA_HEIGHT}px` 
+            }}
             disabled={loading}
           />
           <button

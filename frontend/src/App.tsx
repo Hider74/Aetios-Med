@@ -29,6 +29,14 @@ function App() {
     setCurrentPage('chat');
   };
 
+  // Helper function to focus chat input
+  const focusChatInput = () => {
+    const chatInput = document.querySelector('textarea[placeholder*="Ask a question"]') as HTMLTextAreaElement;
+    if (chatInput) {
+      chatInput.focus();
+    }
+  };
+
   // Setup keyboard shortcuts
   useKeyboardShortcuts({
     onNavigateDashboard: () => setCurrentPage('dashboard'),
@@ -38,20 +46,11 @@ function App() {
     onFocusChatInput: () => {
       // Focus chat input if on chat page
       if (currentPage === 'chat') {
-        // Try to find and focus the chat input
-        const chatInput = document.querySelector('textarea[placeholder*="Ask a question"]') as HTMLTextAreaElement;
-        if (chatInput) {
-          chatInput.focus();
-        }
+        focusChatInput();
       } else {
         // Navigate to chat page and focus input
         setCurrentPage('chat');
-        setTimeout(() => {
-          const chatInput = document.querySelector('textarea[placeholder*="Ask a question"]') as HTMLTextAreaElement;
-          if (chatInput) {
-            chatInput.focus();
-          }
-        }, 100);
+        setTimeout(focusChatInput, 100);
       }
     },
     onCloseModal: () => {
