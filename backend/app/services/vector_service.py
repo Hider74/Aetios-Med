@@ -216,12 +216,22 @@ class VectorService:
             'distances': results['_distance'].tolist()
         }
     
+    def _escape_string(self, value: str) -> str:
+        """Escape string values to prevent SQL injection."""
+        # Replace single quotes with double single quotes for SQL escaping
+        return value.replace("'", "''")
+    
     def _build_filter_string(self, where: Dict[str, Any]) -> str:
         """Build LanceDB filter string from where dict."""
         conditions = []
         for key, value in where.items():
+            # Sanitize key to prevent injection (allow only alphanumeric and underscore)
+            if not key.replace('_', '').isalnum():
+                continue
+            
             if isinstance(value, str):
-                conditions.append(f"{key} = '{value}'")
+                escaped_value = self._escape_string(value)
+                conditions.append(f"{key} = '{escaped_value}'")
             elif isinstance(value, (int, float)):
                 conditions.append(f"{key} = {value}")
             elif isinstance(value, bool):
@@ -240,7 +250,8 @@ class VectorService:
             return []
         
         # Query with filter
-        filter_str = f"topic_id = '{topic_id}'"
+        escaped_topic_id = self._escape_string(topic_id)
+        filter_str = f"topic_id = '{escaped_topic_id}'"
         results = self.table.search().where(filter_str).limit(n_results).to_pandas()
         
         if results.empty:
@@ -267,7 +278,8 @@ class VectorService:
         if self.table is None:
             return None
         
-        filter_str = f"id = '{doc_id}'"
+        escaped_doc_id = self._escape_string(doc_id)
+        filter_str = f"id = '{escaped_doc_id}'"
         results = self.table.search().where(filter_str).limit(1).to_pandas()
         
         if results.empty:
@@ -291,8 +303,9 @@ class VectorService:
         if not ids or self.table is None:
             return
         
-        # Build delete filter
-        ids_str = "', '".join(ids)
+        # Build delete filter with proper escaping
+        escaped_ids = [self._escape_string(id_val) for id_val in ids]
+        ids_str = "', '".join(escaped_ids)
         filter_str = f"id IN ('{ids_str}')"
         self.table.delete(filter_str)
     
@@ -303,7 +316,8 @@ class VectorService:
         if self.table is None:
             return
         
-        filter_str = f"topic_id = '{topic_id}'"
+        escaped_topic_id = self._escape_string(topic_id)
+        filter_str = f"topic_id = '{escaped_topic_id}'"
         self.table.delete(filter_str)
     
     def count_documents(self, where: Optional[Dict[str, Any]] = None) -> int:

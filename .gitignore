@@ -59,8 +59,9 @@ out/
 *.bin
 models/
 
-# ChromaDB
+# ChromaDB & LanceDB
 chroma/
+lancedb/
 
 # Temporary
 tmp/
