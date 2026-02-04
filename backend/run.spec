@@ -67,7 +67,7 @@ a = Analysis(
         'huggingface_hub',
         'tqdm',
         'bs4',
-        'pypdf2',
+        'PyPDF2',
         'pdfplumber',
         'icalendar',
     ],

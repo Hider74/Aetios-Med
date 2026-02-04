@@ -221,13 +221,18 @@ class VectorService:
         # Replace single quotes with double single quotes for SQL escaping
         return value.replace("'", "''")
     
+    def _validate_column_name(self, name: str) -> None:
+        """Validate column name to prevent injection."""
+        import re
+        # Allow only valid Python identifiers (letters, digits, underscores, must start with letter or underscore)
+        if not re.match(r'^[a-zA-Z_][a-zA-Z0-9_]*$', name):
+            raise ValueError(f"Invalid column name: {name}. Must be a valid identifier.")
+    
     def _build_filter_string(self, where: Dict[str, Any]) -> str:
         """Build LanceDB filter string from where dict."""
         conditions = []
         for key, value in where.items():
-            # Sanitize key to prevent injection (allow only alphanumeric and underscore)
-            if not key.replace('_', '').isalnum():
-                raise ValueError(f"Invalid column name: {key}. Only alphanumeric characters and underscores are allowed.")
+            self._validate_column_name(key)
             
             if isinstance(value, str):
                 escaped_value = self._escape_string(value)
@@ -237,6 +242,22 @@ class VectorService:
             elif isinstance(value, bool):
                 conditions.append(f"{key} = {str(value).lower()}")
         return " AND ".join(conditions) if conditions else ""
+    
+    def _build_pandas_query(self, where: Dict[str, Any]) -> str:
+        """Build pandas query string from where dict."""
+        conditions = []
+        for key, value in where.items():
+            self._validate_column_name(key)
+            
+            if isinstance(value, str):
+                # Escape backslashes and double quotes for pandas query
+                escaped_value = value.replace('\\', '\\\\').replace('"', '\\"')
+                conditions.append(f'{key} == "{escaped_value}"')
+            elif isinstance(value, (int, float)):
+                conditions.append(f"{key} == {value}")
+            elif isinstance(value, bool):
+                conditions.append(f"{key} == {value}")
+        return " & ".join(conditions) if conditions else ""
     
     def get_documents_by_topic(
         self,
@@ -249,13 +270,14 @@ class VectorService:
         if self.table is None:
             return []
         
-        # Query with filter using to_pandas with filter
-        escaped_topic_id = self._escape_string(topic_id)
-        filter_str = f"topic_id = '{escaped_topic_id}'"
-        
-        # Use to_pandas() with filter for non-vector queries
+        # Query with filter using to_pandas with proper pandas query syntax
         df = self.table.to_pandas()
-        results = df.query(filter_str.replace("'", '"')).head(n_results) if not df.empty else df
+        if not df.empty:
+            # Build pandas query
+            query_str = f'topic_id == "{self._escape_string(topic_id).replace(chr(34), chr(92)+chr(34))}"'
+            results = df.query(query_str).head(n_results)
+        else:
+            results = df
         
         if results.empty:
             return []
@@ -281,12 +303,13 @@ class VectorService:
         if self.table is None:
             return None
         
-        escaped_doc_id = self._escape_string(doc_id)
-        filter_str = f"id = '{escaped_doc_id}'"
-        
-        # Use to_pandas() with filter for non-vector queries
+        # Use to_pandas() with proper pandas query syntax
         df = self.table.to_pandas()
-        results = df.query(filter_str.replace("'", '"')).head(1) if not df.empty else df
+        if not df.empty:
+            query_str = f'id == "{self._escape_string(doc_id).replace(chr(34), chr(92)+chr(34))}"'
+            results = df.query(query_str).head(1)
+        else:
+            results = df
         
         if results.empty:
             return None
@@ -334,14 +357,13 @@ class VectorService:
             return 0
         
         if where:
-            filter_str = self._build_filter_string(where)
-            if filter_str:
-                # Use to_pandas() with filter for counting
-                df = self.table.to_pandas()
-                # Convert filter from SQL-like to pandas query syntax
-                pandas_filter = filter_str.replace(" = '", ' == "').replace("'", '"')
-                results = df.query(pandas_filter) if not df.empty else df
+            # Use to_pandas() with proper pandas query for counting
+            df = self.table.to_pandas()
+            if not df.empty:
+                pandas_query = self._build_pandas_query(where)
+                results = df.query(pandas_query)
                 return len(results)
+            return 0
         
         return self.table.count_rows()
     
