@@ -66,7 +66,7 @@ cd frontend && npm test
 ## 🏗️ Development
 
 ### Prerequisites
-- Node.js 18+
+- Node.js 18-22 (LTS recommended, avoid odd-numbered versions)
 - Python 3.10+
 - Git
 

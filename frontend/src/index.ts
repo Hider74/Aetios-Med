@@ -17,6 +17,7 @@ export { useGraph } from './hooks/useGraph';
 export { useChat } from './hooks/useChat';
 export { useStudySession } from './hooks/useStudySession';
 export { useModelStatus } from './hooks/useModelStatus';
+export { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 
 // Component exports - Common
 export { Sidebar } from './components/common/Sidebar';

@@ -5,6 +5,9 @@
   "author": "Hider74",
   "license": "MIT",
   "main": "electron/main.js",
+  "engines": {
+    "node": ">=18.0.0 <25.0.0"
+  },
   "scripts": {
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "dev:frontend": "cd frontend && vite",
