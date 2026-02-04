@@ -166,6 +166,29 @@ Print-Info "Installing root dependencies..."
 npm install --silent
 Print-Success "Root dependencies installed"
 
+# Copy backend executable to Electron resources directory (for npm start)
+Print-Info "Copying backend to Electron resources..."
+
+# Verify backend executable exists
+if (-not (Test-Path "backend\dist\run.exe")) {
+    Print-Error "Backend executable not found at backend\dist\run.exe"
+    Print-Error "The PyInstaller build may have failed. Check the output above."
+    exit 1
+}
+
+# Determine Electron resources path (Windows uses the same path structure)
+$electronResources = "node_modules\electron\dist\resources\backend"
+
+# Create directory and copy executable
+try {
+    New-Item -ItemType Directory -Force -Path $electronResources -ErrorAction Stop | Out-Null
+    Copy-Item "backend\dist\run.exe" "$electronResources\run.exe" -ErrorAction Stop
+    Print-Success "Backend copied to Electron resources"
+} catch {
+    Print-Error "Failed to copy backend executable: $_"
+    exit 1
+}
+
 Write-Host ""
 Write-Host "======================================" -ForegroundColor Cyan
 Write-Host " Optional: Download AI Model" -ForegroundColor Cyan
