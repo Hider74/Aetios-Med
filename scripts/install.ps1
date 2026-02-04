@@ -1,6 +1,10 @@
 # Aetios-Med Installation Script for Windows
 # Installs dependencies, sets up environment, and initializes the database
 
+param(
+    [switch]$WithModel
+)
+
 $ErrorActionPreference = "Stop"
 
 Write-Host "======================================" -ForegroundColor Cyan
@@ -164,20 +168,55 @@ Print-Success "Root dependencies installed"
 
 Write-Host ""
 Write-Host "======================================" -ForegroundColor Cyan
+Write-Host " Optional: Download AI Model" -ForegroundColor Cyan
+Write-Host "======================================" -ForegroundColor Cyan
+Write-Host ""
+
+# Handle model download
+$ModelDownloaded = $false
+if ($WithModel) {
+    Print-Info "Downloading AI model (4.5GB)..."
+    node scripts/download-model.js
+    $ModelDownloaded = $true
+} else {
+    Print-Info "AI Model Download: You can download the 4.5GB AI model now or later."
+    $response = Read-Host "Download AI model now? [Y/n]"
+    if ($response -eq "" -or $response -eq "Y" -or $response -eq "y") {
+        Print-Info "Downloading AI model (4.5GB)..."
+        node scripts/download-model.js
+        $ModelDownloaded = $true
+    } else {
+        Print-Info "Skipping model download. You can download it later from Settings."
+    }
+}
+
+Write-Host ""
+Write-Host "======================================" -ForegroundColor Cyan
 Write-Host " Installation Complete! 🎉" -ForegroundColor Cyan
 Write-Host "======================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "Next steps:"
-Write-Host "  1. Run the application:"
+Write-Host "  1. Start the application:"
 Write-Host "     " -NoNewline
 Write-Host "npm start" -ForegroundColor Green
 Write-Host ""
-Write-Host "  2. On first launch:"
-Write-Host "     - Open Settings → Download AI Model"
-Write-Host "     - Configure your Anki export folder"
-Write-Host "     - Configure your Notability folder (optional)"
+if ($ModelDownloaded) {
+    Write-Host "  2. The app will launch with:"
+    Write-Host "     ✓ All dependencies installed"
+    Write-Host "     ✓ Backend executable built"
+    Write-Host "     ✓ AI model ready (4.5GB downloaded)"
+    Write-Host "     ✓ Database initialized"
+} else {
+    Write-Host "  2. On first launch:"
+    Write-Host "     - Open Settings → Download AI Model (4.5GB)"
+    Write-Host "     - Configure your Anki export folder"
+    Write-Host "     - Configure your Notability folder (optional)"
+}
 Write-Host ""
-Write-Host "  3. Start studying!"
+Write-Host "  3. Configure on first launch:"
+Write-Host "     - Set your Anki export folder"
+Write-Host "     - Set your notes folder (optional)"
+Write-Host "     - Start studying!"
 Write-Host ""
 Write-Host "Documentation: https://github.com/Hider74/Aetios-Med"
 Write-Host ""

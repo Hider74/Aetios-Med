@@ -4,6 +4,12 @@
 
 set -e  # Exit on error
 
+# Parse command line arguments
+DOWNLOAD_MODEL=false
+if [ "$1" = "--with-model" ]; then
+    DOWNLOAD_MODEL=true
+fi
+
 echo "======================================"
 echo " Aetios-Med Installation"
 echo "======================================"
@@ -169,19 +175,55 @@ print_success "Root dependencies installed"
 
 echo ""
 echo "======================================"
+echo " Optional: Download AI Model"
+echo "======================================"
+echo ""
+
+# Handle model download
+if [ "$DOWNLOAD_MODEL" = true ]; then
+    print_info "Downloading AI model (4.5GB)..."
+    node scripts/download-model.js
+    MODEL_DOWNLOADED=true
+else
+    print_info "AI Model Download: You can download the 4.5GB AI model now or later."
+    read -p "Download AI model now? [Y/n] " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+        print_info "Downloading AI model (4.5GB)..."
+        node scripts/download-model.js
+        MODEL_DOWNLOADED=true
+    else
+        print_info "Skipping model download. You can download it later from Settings."
+        MODEL_DOWNLOADED=false
+    fi
+fi
+
+echo ""
+echo "======================================"
 echo " Installation Complete! 🎉"
 echo "======================================"
 echo ""
 echo "Next steps:"
-echo "  1. Run the application:"
+echo "  1. Start the application:"
 echo "     ${GREEN}npm start${NC}"
 echo ""
-echo "  2. On first launch:"
-echo "     - Open Settings → Download AI Model"
-echo "     - Configure your Anki export folder"
-echo "     - Configure your Notability folder (optional)"
+if [ "$MODEL_DOWNLOADED" = true ]; then
+    echo "  2. The app will launch with:"
+    echo "     ✓ All dependencies installed"
+    echo "     ✓ Backend executable built"
+    echo "     ✓ AI model ready (4.5GB downloaded)"
+    echo "     ✓ Database initialized"
+else
+    echo "  2. On first launch:"
+    echo "     - Open Settings → Download AI Model (4.5GB)"
+    echo "     - Configure your Anki export folder"
+    echo "     - Configure your Notability folder (optional)"
+fi
 echo ""
-echo "  3. Start studying!"
+echo "  3. Configure on first launch:"
+echo "     - Set your Anki export folder"
+echo "     - Set your notes folder (optional)"
+echo "     - Start studying!"
 echo ""
 echo "Documentation: https://github.com/Hider74/Aetios-Med"
 echo ""

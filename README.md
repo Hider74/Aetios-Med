@@ -6,26 +6,38 @@ An Electron app that wraps a quantized medical LLM (OpenBioLLM-8B) to act as a M
 
 ## 🚀 Quick Start
 
-### One-Command Install
+### One-Command Install (Recommended)
+
+**macOS/Linux - Complete Installation with AI Model:**
+```bash
+./scripts/install.sh --with-model
+npm start
+```
+
+**Windows - Complete Installation with AI Model:**
+```powershell
+.\scripts\install.ps1 -WithModel
+npm start
+```
+
+### Without Model (Download Later in App)
 
 **macOS/Linux:**
 ```bash
 ./scripts/install.sh
+npm start
 ```
 
 **Windows:**
 ```powershell
 .\scripts\install.ps1
-```
-
-### Run
-```bash
 npm start
 ```
 
 ### First-Time Setup
-1. Open Settings → Download AI Model (one-time, ~4GB download)
-2. Configure your Anki export folder
+After installation:
+1. The app will prompt to download AI model if not already downloaded (one-time, ~4.5GB)
+2. Configure your Anki export folder in Settings
 3. Configure your Notability folder (optional)
 4. Start studying!
 
@@ -95,15 +107,29 @@ npm run electron:dev
 
 ### Build for Production
 
-**macOS:**
+**macOS/Linux - With AI Model:**
 ```bash
-./scripts/build-mac.sh
+./scripts/build-production.sh --with-model
 ```
 
-**Windows:**
+**Windows - With AI Model:**
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts/build-win.ps1
+.\scripts\build-production.ps1 -WithModel
 ```
+
+**Without Model (users download separately):**
+```bash
+# macOS/Linux
+./scripts/build-production.sh
+
+# Windows
+.\scripts\build-production.ps1
+```
+
+Distributables will be created in the `dist/` folder:
+- **macOS:** .dmg and .zip files
+- **Windows:** .exe installer and portable version
+- **Linux:** .AppImage and .deb packages
 
 ## 📄 License
 
