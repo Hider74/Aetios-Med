@@ -92,6 +92,22 @@ function startPythonBackend() {
     }
     
     const pythonPath = path.join(process.resourcesPath, 'backend', 'run');
+    
+    // Check if backend executable exists
+    try {
+      await fs.access(pythonPath);
+    } catch (error) {
+      const errorMsg = `Backend executable not found at: ${pythonPath}\n\n` +
+        `This usually means the installation is incomplete.\n\n` +
+        `Please run the installation script:\n` +
+        `  macOS/Linux: ./scripts/install.sh\n` +
+        `  Windows: .\\scripts\\install.ps1\n\n` +
+        `This will build the required backend executable.`;
+      console.error(errorMsg);
+      reject(new Error(errorMsg));
+      return;
+    }
+    
     pythonProcess = spawn(pythonPath, [], { 
       stdio: 'pipe',
       detached: false
@@ -133,9 +149,10 @@ app.whenReady().then(async () => {
     createWindow();
   } catch (error) {
     console.error('Failed to start backend:', error);
+    const errorMessage = error.message || 'The Python backend failed to start. Please check the logs.';
     dialog.showErrorBox(
       'Backend Failed to Start',
-      'The Python backend failed to start. Please check the logs.'
+      errorMessage
     );
     app.quit();
   }

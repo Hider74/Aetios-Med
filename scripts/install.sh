@@ -31,13 +31,19 @@ print_info() {
 # Check Node.js version
 echo "Checking prerequisites..."
 if ! command -v node &> /dev/null; then
-    print_error "Node.js not found. Please install Node.js 18+ from https://nodejs.org/"
+    print_error "Node.js not found. Please install Node.js 18-22 (LTS) from https://nodejs.org/"
     exit 1
 fi
 
 NODE_VERSION=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
 if [ "$NODE_VERSION" -lt 18 ]; then
     print_error "Node.js version must be 18 or higher. Current version: $(node -v)"
+    print_error "Please install Node.js 18-22 (LTS recommended) from https://nodejs.org/"
+    exit 1
+fi
+if [ "$NODE_VERSION" -ge 25 ]; then
+    print_error "Node.js version $(node -v) is not supported. Please use Node.js 18-22 (LTS recommended)."
+    print_error "Node.js v25+ has breaking changes. Install a LTS version from https://nodejs.org/"
     exit 1
 fi
 print_success "Node.js $(node -v) found"
@@ -86,6 +92,21 @@ print_success "pip upgraded"
 print_info "Installing Python dependencies (this may take a few minutes)..."
 pip install -r requirements.txt > /dev/null 2>&1
 print_success "Python dependencies installed"
+
+# Install PyInstaller
+print_info "Installing PyInstaller..."
+pip install pyinstaller > /dev/null 2>&1
+print_success "PyInstaller installed"
+
+# Build backend executable
+print_info "Building backend executable (this may take a few minutes)..."
+pyinstaller --onefile run.py --distpath dist --workpath build --specpath . > /dev/null 2>&1
+if [ -f "dist/run" ]; then
+    print_success "Backend executable built successfully at backend/dist/run"
+else
+    print_error "Failed to build backend executable"
+    exit 1
+fi
 
 # Initialize database
 print_info "Initializing database..."

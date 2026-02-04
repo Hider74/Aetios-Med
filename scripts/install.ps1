@@ -30,11 +30,17 @@ try {
     $nodeMajor = [int]($nodeVersion -replace 'v(\d+)\..*', '$1')
     if ($nodeMajor -lt 18) {
         Print-Error "Node.js version must be 18 or higher. Current version: $nodeVersion"
+        Print-Error "Please install Node.js 18-22 (LTS recommended) from https://nodejs.org/"
+        exit 1
+    }
+    if ($nodeMajor -ge 25) {
+        Print-Error "Node.js version $nodeVersion is not supported. Please use Node.js 18-22 (LTS recommended)."
+        Print-Error "Node.js v25+ has breaking changes. Install a LTS version from https://nodejs.org/"
         exit 1
     }
     Print-Success "Node.js $nodeVersion found"
 } catch {
-    Print-Error "Node.js not found. Please install Node.js 18+ from https://nodejs.org/"
+    Print-Error "Node.js not found. Please install Node.js 18-22 (LTS) from https://nodejs.org/"
     exit 1
 }
 
@@ -85,6 +91,21 @@ Print-Success "pip upgraded"
 Print-Info "Installing Python dependencies (this may take a few minutes)..."
 pip install -r requirements.txt --quiet
 Print-Success "Python dependencies installed"
+
+# Install PyInstaller
+Print-Info "Installing PyInstaller..."
+pip install pyinstaller --quiet
+Print-Success "PyInstaller installed"
+
+# Build backend executable
+Print-Info "Building backend executable (this may take a few minutes)..."
+pyinstaller --onefile run.py --distpath dist --workpath build --specpath . --log-level ERROR
+if (Test-Path "dist\run.exe") {
+    Print-Success "Backend executable built successfully at backend\dist\run.exe"
+} else {
+    Print-Error "Failed to build backend executable"
+    exit 1
+}
 
 # Initialize database
 Print-Info "Initializing database..."
