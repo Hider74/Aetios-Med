@@ -166,6 +166,17 @@ Print-Info "Installing root dependencies..."
 npm install --silent
 Print-Success "Root dependencies installed"
 
+# Copy backend executable to Electron resources directory (for npm start)
+Print-Info "Copying backend to Electron resources..."
+
+# Determine Electron resources path (Windows uses the same path structure)
+$electronResources = "node_modules\electron\dist\resources\backend"
+
+# Create directory and copy executable
+New-Item -ItemType Directory -Force -Path $electronResources | Out-Null
+Copy-Item "backend\dist\run.exe" "$electronResources\run.exe"
+Print-Success "Backend copied to Electron resources"
+
 Write-Host ""
 Write-Host "======================================" -ForegroundColor Cyan
 Write-Host " Optional: Download AI Model" -ForegroundColor Cyan

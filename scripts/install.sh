@@ -173,6 +173,22 @@ print_info "Installing root dependencies..."
 npm install > /dev/null 2>&1
 print_success "Root dependencies installed"
 
+# Copy backend executable to Electron resources directory (for npm start)
+print_info "Copying backend to Electron resources..."
+
+# Determine Electron resources path based on OS
+if [ "$(uname)" = "Darwin" ]; then
+    ELECTRON_RESOURCES="node_modules/electron/dist/Electron.app/Contents/Resources/backend"
+else
+    ELECTRON_RESOURCES="node_modules/electron/dist/resources/backend"
+fi
+
+# Create directory and copy executable
+mkdir -p "$ELECTRON_RESOURCES"
+cp backend/dist/run "$ELECTRON_RESOURCES/"
+chmod +x "$ELECTRON_RESOURCES/run"
+print_success "Backend copied to Electron resources"
+
 echo ""
 echo "======================================"
 echo " Optional: Download AI Model"
