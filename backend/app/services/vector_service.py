@@ -1,12 +1,14 @@
 """
 Vector Service
-ChromaDB-based vector store for semantic search.
+LanceDB-based vector store for semantic search.
 """
 from pathlib import Path
 from typing import List, Dict, Optional, Any
-import chromadb
-from chromadb.config import Settings
+import lancedb
+import pyarrow as pa
+import pandas as pd
 from sentence_transformers import SentenceTransformer
+import numpy as np
 
 
 class VectorService:
@@ -14,38 +16,35 @@ class VectorService:
     
     def __init__(
         self, 
-        chroma_path: Path, 
+        db_path: Path, 
         embedding_model: str = "BAAI/bge-base-en-v1.5"
     ):
-        self.chroma_path = chroma_path
+        self.db_path = db_path
         self.embedding_model_name = embedding_model
-        self.client = None
-        self.collection = None
+        self.db = None
+        self.table = None
         self.embedder = None
         self.is_initialized = False
+        self.table_name = "aetios_knowledge"
     
     def initialize(self) -> None:
-        """Initialize ChromaDB and embedding model."""
+        """Initialize LanceDB and embedding model."""
         if self.is_initialized:
             return
         
-        # Create ChromaDB client
-        self.client = chromadb.PersistentClient(
-            path=str(self.chroma_path),
-            settings=Settings(
-                anonymized_telemetry=False,
-                allow_reset=True
-            )
-        )
-        
-        # Get or create collection
-        self.collection = self.client.get_or_create_collection(
-            name="aetios_knowledge",
-            metadata={"hnsw:space": "cosine"}
-        )
+        # Create LanceDB connection
+        self.db = lancedb.connect(str(self.db_path))
         
         # Load embedding model
         self.embedder = SentenceTransformer(self.embedding_model_name)
+        
+        # Check if table exists
+        table_names = self.db.table_names()
+        if self.table_name in table_names:
+            self.table = self.db.open_table(self.table_name)
+        else:
+            # Table will be created on first add_documents
+            self.table = None
         
         self.is_initialized = True
     
@@ -53,6 +52,45 @@ class VectorService:
         """Ensure service is initialized."""
         if not self.is_initialized:
             self.initialize()
+    
+    def _create_table_if_needed(self, sample_metadata: Dict[str, Any]) -> None:
+        """Create table with schema based on sample metadata."""
+        if self.table is not None:
+            return
+        
+        # Get embedding dimension
+        sample_embedding = self.embedder.encode(["sample"], convert_to_numpy=True)[0]
+        embedding_dim = len(sample_embedding)
+        
+        # Build schema fields dynamically based on metadata
+        fields = [
+            pa.field("id", pa.string()),
+            pa.field("document", pa.string()),
+            pa.field("vector", pa.list_(pa.float32(), embedding_dim)),
+        ]
+        
+        # Add metadata fields dynamically
+        for key, value in sample_metadata.items():
+            if isinstance(value, str):
+                fields.append(pa.field(key, pa.string()))
+            elif isinstance(value, int):
+                fields.append(pa.field(key, pa.int64()))
+            elif isinstance(value, float):
+                fields.append(pa.field(key, pa.float64()))
+            elif isinstance(value, bool):
+                fields.append(pa.field(key, pa.bool_()))
+        
+        schema = pa.schema(fields)
+        
+        # Create empty table with schema
+        empty_data = pa.Table.from_pydict({
+            "id": [],
+            "document": [],
+            "vector": [],
+            **{key: [] for key in sample_metadata.keys()}
+        }, schema=schema)
+        
+        self.table = self.db.create_table(self.table_name, empty_data, mode="overwrite")
     
     def add_documents(
         self,
@@ -69,20 +107,36 @@ class VectorService:
         if len(documents) != len(metadatas) or len(documents) != len(ids):
             raise ValueError("documents, metadatas, and ids must have same length")
         
+        # Create table if it doesn't exist
+        if self.table is None:
+            self._create_table_if_needed(metadatas[0] if metadatas else {})
+        
         # Generate embeddings
         embeddings = self.embedder.encode(
             documents,
             show_progress_bar=False,
             convert_to_numpy=True
-        ).tolist()
-        
-        # Add to collection
-        self.collection.add(
-            documents=documents,
-            embeddings=embeddings,
-            metadatas=metadatas,
-            ids=ids
         )
+        
+        # Prepare data for insertion
+        data = {
+            "id": ids,
+            "document": documents,
+            "vector": embeddings.tolist(),
+        }
+        
+        # Add all metadata fields
+        if metadatas:
+            metadata_keys = set()
+            for metadata in metadatas:
+                metadata_keys.update(metadata.keys())
+            
+            for key in metadata_keys:
+                data[key] = [metadata.get(key, None) for metadata in metadatas]
+        
+        # Convert to PyArrow table and add
+        pa_table = pa.Table.from_pydict(data)
+        self.table.add(pa_table)
     
     def update_documents(
         self,
@@ -96,20 +150,11 @@ class VectorService:
         if not documents:
             return
         
-        # Generate embeddings
-        embeddings = self.embedder.encode(
-            documents,
-            show_progress_bar=False,
-            convert_to_numpy=True
-        ).tolist()
+        # Delete existing documents with these IDs
+        self.delete_documents(ids)
         
-        # Update in collection
-        self.collection.update(
-            documents=documents,
-            embeddings=embeddings,
-            metadatas=metadatas,
-            ids=ids
-        )
+        # Add updated documents
+        self.add_documents(documents, metadatas, ids)
     
     def query_similar(
         self,
@@ -120,26 +165,99 @@ class VectorService:
         """Query for similar documents."""
         self._ensure_initialized()
         
+        if self.table is None:
+            return {
+                'ids': [],
+                'documents': [],
+                'metadatas': [],
+                'distances': []
+            }
+        
         # Generate query embedding
         query_embedding = self.embedder.encode(
             [query_text],
             show_progress_bar=False,
             convert_to_numpy=True
-        ).tolist()[0]
+        )[0]
         
-        # Query collection
-        results = self.collection.query(
-            query_embeddings=[query_embedding],
-            n_results=n_results,
-            where=where
-        )
+        # Build query
+        query = self.table.search(query_embedding).limit(n_results)
+        
+        # Apply filters if provided
+        if where:
+            filter_str = self._build_filter_string(where)
+            if filter_str:
+                query = query.where(filter_str)
+        
+        # Execute query
+        results = query.to_pandas()
+        
+        if results.empty:
+            return {
+                'ids': [],
+                'documents': [],
+                'metadatas': [],
+                'distances': []
+            }
+        
+        # Extract metadata columns (exclude id, document, vector, _distance)
+        metadata_cols = [col for col in results.columns 
+                        if col not in ['id', 'document', 'vector', '_distance']]
+        
+        metadatas = []
+        for _, row in results.iterrows():
+            metadata = {col: row[col] for col in metadata_cols if pd.notna(row[col])}
+            metadatas.append(metadata)
         
         return {
-            'ids': results['ids'][0] if results['ids'] else [],
-            'documents': results['documents'][0] if results['documents'] else [],
-            'metadatas': results['metadatas'][0] if results['metadatas'] else [],
-            'distances': results['distances'][0] if results['distances'] else []
+            'ids': results['id'].tolist(),
+            'documents': results['document'].tolist(),
+            'metadatas': metadatas,
+            'distances': results['_distance'].tolist()
         }
+    
+    def _escape_string(self, value: str) -> str:
+        """Escape string values to prevent SQL injection."""
+        # Replace single quotes with double single quotes for SQL escaping
+        return value.replace("'", "''")
+    
+    def _validate_column_name(self, name: str) -> None:
+        """Validate column name to prevent injection."""
+        import re
+        # Allow only valid Python identifiers (letters, digits, underscores, must start with letter or underscore)
+        if not re.match(r'^[a-zA-Z_][a-zA-Z0-9_]*$', name):
+            raise ValueError(f"Invalid column name: {name}. Must be a valid identifier.")
+    
+    def _build_filter_string(self, where: Dict[str, Any]) -> str:
+        """Build LanceDB filter string from where dict."""
+        conditions = []
+        for key, value in where.items():
+            self._validate_column_name(key)
+            
+            if isinstance(value, str):
+                escaped_value = self._escape_string(value)
+                conditions.append(f"{key} = '{escaped_value}'")
+            elif isinstance(value, (int, float)):
+                conditions.append(f"{key} = {value}")
+            elif isinstance(value, bool):
+                conditions.append(f"{key} = {str(value).lower()}")
+        return " AND ".join(conditions) if conditions else ""
+    
+    def _build_pandas_query(self, where: Dict[str, Any]) -> str:
+        """Build pandas query string from where dict."""
+        conditions = []
+        for key, value in where.items():
+            self._validate_column_name(key)
+            
+            if isinstance(value, str):
+                # Escape backslashes and double quotes for pandas query
+                escaped_value = value.replace('\\', '\\\\').replace('"', '\\"')
+                conditions.append(f'{key} == "{escaped_value}"')
+            elif isinstance(value, (int, float)):
+                conditions.append(f"{key} == {value}")
+            elif isinstance(value, bool):
+                conditions.append(f"{key} == {value}")
+        return " & ".join(conditions) if conditions else ""
     
     def get_documents_by_topic(
         self,
@@ -149,19 +267,32 @@ class VectorService:
         """Get all documents related to a topic."""
         self._ensure_initialized()
         
-        results = self.collection.get(
-            where={"topic_id": topic_id},
-            limit=n_results
-        )
+        if self.table is None:
+            return []
+        
+        # Query with filter using to_pandas with proper pandas query syntax
+        df = self.table.to_pandas()
+        if not df.empty:
+            # Build pandas query
+            query_str = f'topic_id == "{self._escape_string(topic_id).replace(chr(34), chr(92)+chr(34))}"'
+            results = df.query(query_str).head(n_results)
+        else:
+            results = df
+        
+        if results.empty:
+            return []
         
         documents = []
-        if results['ids']:
-            for i in range(len(results['ids'])):
-                documents.append({
-                    'id': results['ids'][i],
-                    'document': results['documents'][i] if results['documents'] else None,
-                    'metadata': results['metadatas'][i] if results['metadatas'] else {}
-                })
+        metadata_cols = [col for col in results.columns 
+                        if col not in ['id', 'document', 'vector']]
+        
+        for _, row in results.iterrows():
+            metadata = {col: row[col] for col in metadata_cols if pd.notna(row[col])}
+            documents.append({
+                'id': row['id'],
+                'document': row['document'],
+                'metadata': metadata
+            })
         
         return documents
     
@@ -169,41 +300,72 @@ class VectorService:
         """Get a specific document by ID."""
         self._ensure_initialized()
         
-        results = self.collection.get(ids=[doc_id])
-        
-        if not results['ids']:
+        if self.table is None:
             return None
         
+        # Use to_pandas() with proper pandas query syntax
+        df = self.table.to_pandas()
+        if not df.empty:
+            query_str = f'id == "{self._escape_string(doc_id).replace(chr(34), chr(92)+chr(34))}"'
+            results = df.query(query_str).head(1)
+        else:
+            results = df
+        
+        if results.empty:
+            return None
+        
+        row = results.iloc[0]
+        metadata_cols = [col for col in results.columns 
+                        if col not in ['id', 'document', 'vector']]
+        metadata = {col: row[col] for col in metadata_cols if pd.notna(row[col])}
+        
         return {
-            'id': results['ids'][0],
-            'document': results['documents'][0] if results['documents'] else None,
-            'metadata': results['metadatas'][0] if results['metadatas'] else {}
+            'id': row['id'],
+            'document': row['document'],
+            'metadata': metadata
         }
     
     def delete_documents(self, ids: List[str]) -> None:
         """Delete documents by IDs."""
         self._ensure_initialized()
         
-        if not ids:
+        if not ids or self.table is None:
             return
         
-        self.collection.delete(ids=ids)
+        # Build delete filter with proper escaping
+        escaped_ids = [self._escape_string(id_val) for id_val in ids]
+        ids_str = "', '".join(escaped_ids)
+        filter_str = f"id IN ('{ids_str}')"
+        self.table.delete(filter_str)
     
     def delete_by_topic(self, topic_id: str) -> None:
         """Delete all documents for a topic."""
         self._ensure_initialized()
         
-        self.collection.delete(where={"topic_id": topic_id})
+        if self.table is None:
+            return
+        
+        escaped_topic_id = self._escape_string(topic_id)
+        filter_str = f"topic_id = '{escaped_topic_id}'"
+        self.table.delete(filter_str)
     
     def count_documents(self, where: Optional[Dict[str, Any]] = None) -> int:
         """Count documents in collection."""
         self._ensure_initialized()
         
+        if self.table is None:
+            return 0
+        
         if where:
-            results = self.collection.get(where=where)
-            return len(results['ids'])
-        else:
-            return self.collection.count()
+            # Use to_pandas() with proper pandas query for counting
+            df = self.table.to_pandas()
+            if not df.empty:
+                pandas_query = self._build_pandas_query(where)
+                results = df.query(pandas_query)
+                return len(results)
+            return 0
+        
+        return self.table.count_rows()
     
     def find_best_topic_match(
         self,
@@ -265,27 +427,35 @@ class VectorService:
         """Clear all documents from collection."""
         self._ensure_initialized()
         
-        self.client.delete_collection("aetios_knowledge")
-        self.collection = self.client.create_collection(
-            name="aetios_knowledge",
-            metadata={"hnsw:space": "cosine"}
-        )
+        if self.table is None:
+            return
+        
+        # Drop and recreate empty table
+        self.db.drop_table(self.table_name)
+        self.table = None
     
     def get_collection_info(self) -> Dict[str, Any]:
         """Get information about the collection."""
         self._ensure_initialized()
         
+        if self.table is None:
+            return {
+                'name': self.table_name,
+                'count': 0,
+                'metadata': {}
+            }
+        
         return {
-            'name': self.collection.name,
-            'count': self.collection.count(),
-            'metadata': self.collection.metadata
+            'name': self.table_name,
+            'count': self.table.count_rows(),
+            'metadata': {}
         }
     
     async def close(self) -> None:
         """Close connections and cleanup resources."""
-        # ChromaDB doesn't require explicit cleanup
+        # LanceDB connections are automatically managed
         # Just mark as uninitialized
         self.is_initialized = False
-        self.client = None
-        self.collection = None
+        self.db = None
+        self.table = None
         self.embedder = None

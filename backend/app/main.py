@@ -54,7 +54,7 @@ async def lifespan(app: FastAPI):
     
     # Initialize vector store
     vector_service = VectorService(
-        chroma_path=settings.chroma_path,
+        db_path=settings.lancedb_path,
         embedding_model=settings.embedding_model
     )
     vector_service.initialize()

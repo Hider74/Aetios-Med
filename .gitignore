@@ -59,8 +59,9 @@ out/
 *.bin
 models/
 
-# ChromaDB
+# ChromaDB & LanceDB
 chroma/
+lancedb/
 
 # Temporary
 tmp/
@@ -82,6 +83,7 @@ backend/dist/
 frontend/dist/
 electron/dist/
 *.spec
+!backend/run.spec
 
 # Generated icons
 assets/icons/

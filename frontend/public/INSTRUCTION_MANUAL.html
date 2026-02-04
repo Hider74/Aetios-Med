@@ -2489,7 +2489,7 @@ npm run dev</code></pre>
                     <li>Common issues:
                         <ul>
                             <li>Missing database: The app will create it automatically on first run</li>
-                            <li>Missing ChromaDB: <code>pip install chromadb</code></li>
+                            <li>Missing LanceDB: <code>pip install lancedb pyarrow</code></li>
                             <li>CUDA errors: Set GPU layers to 0 in settings (CPU-only mode)</li>
                         </ul>
                     </li>
@@ -2745,7 +2745,7 @@ npm run dev</code></pre>
                         </tr>
                         <tr>
                             <td><strong>Vector Store</strong></td>
-                            <td>Database for semantic search using embeddings (ChromaDB)</td>
+                            <td>Database for semantic search using embeddings (LanceDB)</td>
                         </tr>
                         <tr>
                             <td><strong>VLE</strong></td>
@@ -2863,7 +2863,7 @@ npm run dev</code></pre>
                     <li><strong>App Data:</strong> <code>%APPDATA%\Aetios-Med\</code></li>
                     <li><strong>Database:</strong> <code>%APPDATA%\Aetios-Med\aetios.db</code></li>
                     <li><strong>Models:</strong> <code>%APPDATA%\Aetios-Med\models\</code></li>
-                    <li><strong>ChromaDB:</strong> <code>%APPDATA%\Aetios-Med\chroma\</code></li>
+                    <li><strong>LanceDB:</strong> <code>%APPDATA%\Aetios-Med\lancedb\</code></li>
                     <li><strong>Conversation History:</strong> <code>%APPDATA%\Aetios-Med\conversations\</code></li>
                 </ul>
                 
@@ -2872,7 +2872,7 @@ npm run dev</code></pre>
                     <li><strong>App Data:</strong> <code>~/Library/Application Support/Aetios-Med/</code></li>
                     <li><strong>Database:</strong> <code>~/Library/Application Support/Aetios-Med/aetios.db</code></li>
                     <li><strong>Models:</strong> <code>~/Library/Application Support/Aetios-Med/models/</code></li>
-                    <li><strong>ChromaDB:</strong> <code>~/Library/Application Support/Aetios-Med/chroma/</code></li>
+                    <li><strong>LanceDB:</strong> <code>~/Library/Application Support/Aetios-Med/lancedb/</code></li>
                     <li><strong>Conversation History:</strong> <code>~/Library/Application Support/Aetios-Med/conversations/</code></li>
                 </ul>
                 
@@ -2881,7 +2881,7 @@ npm run dev</code></pre>
                     <li><strong>App Data:</strong> <code>~/.local/share/Aetios-Med/</code></li>
                     <li><strong>Database:</strong> <code>~/.local/share/Aetios-Med/aetios.db</code></li>
                     <li><strong>Models:</strong> <code>~/.local/share/Aetios-Med/models/</code></li>
-                    <li><strong>ChromaDB:</strong> <code>~/.local/share/Aetios-Med/chroma/</code></li>
+                    <li><strong>LanceDB:</strong> <code>~/.local/share/Aetios-Med/lancedb/</code></li>
                     <li><strong>Conversation History:</strong> <code>~/.local/share/Aetios-Med/conversations/</code></li>
                 </ul>
                 
@@ -2946,7 +2946,7 @@ npm run dev</code></pre>
                     <li><strong>Backend:</strong> Python + FastAPI</li>
                     <li><strong>Desktop:</strong> Electron</li>
                     <li><strong>AI:</strong> llama.cpp + OpenBioLLM-8B</li>
-                    <li><strong>Database:</strong> SQLite + ChromaDB</li>
+                    <li><strong>Database:</strong> SQLite + LanceDB</li>
                     <li><strong>Graph:</strong> Cytoscape.js + NetworkX</li>
                 </ul>
                 

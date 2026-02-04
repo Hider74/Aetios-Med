@@ -2,7 +2,7 @@
  * Electron Main Process
  * Manages application window and spawns Python backend.
  */
-const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell, Menu } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
 const http = require('http');
@@ -192,7 +192,115 @@ function stopPythonBackend() {
   }
 }
 
+// Create native menu template
+function createApplicationMenu() {
+  const isMac = process.platform === 'darwin';
+  
+  const template = [
+    // App Menu (macOS only)
+    ...(isMac ? [{
+      label: app.name,
+      submenu: [
+        { role: 'about' },
+        { type: 'separator' },
+        { role: 'services' },
+        { type: 'separator' },
+        { role: 'hide' },
+        { role: 'hideOthers' },
+        { role: 'unhide' },
+        { type: 'separator' },
+        { role: 'quit' }
+      ]
+    }] : []),
+    // File Menu
+    {
+      label: 'File',
+      submenu: [
+        isMac ? { role: 'close' } : { role: 'quit' }
+      ]
+    },
+    // Edit Menu
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        ...(isMac ? [
+          { role: 'pasteAndMatchStyle' },
+          { role: 'delete' },
+          { role: 'selectAll' },
+          { type: 'separator' },
+          {
+            label: 'Speech',
+            submenu: [
+              { role: 'startSpeaking' },
+              { role: 'stopSpeaking' }
+            ]
+          }
+        ] : [
+          { role: 'delete' },
+          { type: 'separator' },
+          { role: 'selectAll' }
+        ])
+      ]
+    },
+    // View Menu
+    {
+      label: 'View',
+      submenu: [
+        { role: 'reload' },
+        { role: 'forceReload' },
+        { role: 'toggleDevTools' },
+        { type: 'separator' },
+        { role: 'resetZoom' },
+        { role: 'zoomIn' },
+        { role: 'zoomOut' },
+        { type: 'separator' },
+        { role: 'togglefullscreen' }
+      ]
+    },
+    // Window Menu
+    {
+      label: 'Window',
+      submenu: [
+        { role: 'minimize' },
+        { role: 'zoom' },
+        ...(isMac ? [
+          { type: 'separator' },
+          { role: 'front' },
+          { type: 'separator' },
+          { role: 'window' }
+        ] : [
+          { role: 'close' }
+        ])
+      ]
+    },
+    // Help Menu
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'Learn More',
+          click: async () => {
+            await shell.openExternal('https://github.com/Hider74/Aetios-Med');
+          }
+        }
+      ]
+    }
+  ];
+
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+}
+
 app.whenReady().then(async () => {
+  // Create native menu
+  createApplicationMenu();
+  
   try {
     await startPythonBackend();
     createWindow();
@@ -205,16 +313,47 @@ app.whenReady().then(async () => {
     );
     app.quit();
   }
+  
+  // macOS-specific: Re-open window when dock icon is clicked
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
 });
 
 app.on('window-all-closed', () => {
   stopPythonBackend();
-  if (process.platform !== 'darwin') app.quit();
+  // On macOS, applications stay active until explicitly quit
+  // On other platforms, quit when all windows are closed
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
 });
 
 app.on('will-quit', stopPythonBackend);
 
 // ===== IPC Handlers =====
+
+// Input validation helpers
+function validateFilePath(filePath) {
+  if (typeof filePath !== 'string' || filePath.trim() === '') {
+    throw new Error('Invalid file path');
+  }
+  // Prevent directory traversal attacks
+  const normalized = path.normalize(filePath);
+  if (normalized.includes('..')) {
+    throw new Error('Invalid file path: directory traversal not allowed');
+  }
+  return normalized;
+}
+
+function validateString(value, name = 'value') {
+  if (typeof value !== 'string') {
+    throw new Error(`${name} must be a string`);
+  }
+  return value;
+}
 
 // File System
 ipcMain.handle('select-directory', async () => {
@@ -228,7 +367,7 @@ ipcMain.handle('select-file', async (event, options) => {
   const dialogOptions = { 
     properties: ['openFile'],
   };
-  if (options?.filters) {
+  if (options?.filters && Array.isArray(options.filters)) {
     dialogOptions.filters = options.filters;
   }
   const result = await dialog.showOpenDialog(mainWindow, dialogOptions);
@@ -237,7 +376,8 @@ ipcMain.handle('select-file', async (event, options) => {
 
 ipcMain.handle('read-file', async (event, filePath) => {
   try {
-    const content = await fs.readFile(filePath, 'utf-8');
+    const validPath = validateFilePath(filePath);
+    const content = await fs.readFile(validPath, 'utf-8');
     return content;
   } catch (error) {
     throw new Error(`Failed to read file: ${error.message}`);
@@ -246,7 +386,9 @@ ipcMain.handle('read-file', async (event, filePath) => {
 
 ipcMain.handle('write-file', async (event, filePath, content) => {
   try {
-    await fs.writeFile(filePath, content, 'utf-8');
+    const validPath = validateFilePath(filePath);
+    const validContent = validateString(content, 'content');
+    await fs.writeFile(validPath, validContent, 'utf-8');
   } catch (error) {
     throw new Error(`Failed to write file: ${error.message}`);
   }
@@ -254,11 +396,26 @@ ipcMain.handle('write-file', async (event, filePath, content) => {
 
 // Resources
 ipcMain.handle('open-external', async (event, url) => {
-  await shell.openExternal(url);
+  try {
+    validateString(url, 'url');
+    // Validate URL format
+    const urlObj = new URL(url);
+    if (!['http:', 'https:'].includes(urlObj.protocol)) {
+      throw new Error('Only HTTP and HTTPS URLs are allowed');
+    }
+    await shell.openExternal(url);
+  } catch (error) {
+    throw new Error(`Failed to open URL: ${error.message}`);
+  }
 });
 
 ipcMain.handle('show-item-in-folder', async (event, filePath) => {
-  shell.showItemInFolder(filePath);
+  try {
+    const validPath = validateFilePath(filePath);
+    shell.showItemInFolder(validPath);
+  } catch (error) {
+    throw new Error(`Failed to show item: ${error.message}`);
+  }
 });
 
 // Settings
@@ -267,6 +424,11 @@ ipcMain.handle('get-settings', async () => {
 });
 
 ipcMain.handle('save-setting', async (event, key, value) => {
+  validateString(key, 'key');
+  // Sanitize key to prevent prototype pollution
+  if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+    throw new Error('Invalid setting key');
+  }
   appSettings[key] = value;
   // In production, persist to disk using electron-store or similar
   return true;
@@ -286,13 +448,15 @@ ipcMain.handle('export-database', async () => {
   
   // Copy database file to selected location
   const dbPath = path.join(app.getPath('userData'), 'aetios.db');
-  await fs.copyFile(dbPath, result.filePath);
-  return result.filePath;
+  const targetPath = validateFilePath(result.filePath);
+  await fs.copyFile(dbPath, targetPath);
+  return targetPath;
 });
 
 ipcMain.handle('import-database', async (event, filePath) => {
+  const sourcePath = validateFilePath(filePath);
   const dbPath = path.join(app.getPath('userData'), 'aetios.db');
-  await fs.copyFile(filePath, dbPath);
+  await fs.copyFile(sourcePath, dbPath);
   // Restart app to use new database
   app.relaunch();
   app.exit(0);
@@ -310,6 +474,9 @@ ipcMain.handle('get-system-info', async () => {
 
 // Model Management
 ipcMain.handle('download-model', async (event, modelName) => {
+  // Validate model name
+  validateString(modelName, 'modelName');
+  
   // Make request to backend to download model
   return new Promise((resolve, reject) => {
     const postData = JSON.stringify({ model_name: modelName });
@@ -321,7 +488,8 @@ ipcMain.handle('download-model', async (event, modelName) => {
       headers: {
         'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(postData)
-      }
+      },
+      timeout: 5000 // 5 second timeout
     };
 
     const req = http.request(options, (res) => {
@@ -340,6 +508,11 @@ ipcMain.handle('download-model', async (event, modelName) => {
 
     req.on('error', (error) => {
       resolve({ success: false, error: error.message });
+    });
+    
+    req.on('timeout', () => {
+      req.destroy();
+      resolve({ success: false, error: 'Request timed out' });
     });
 
     req.write(postData);
