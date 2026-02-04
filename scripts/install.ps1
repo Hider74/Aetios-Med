@@ -208,7 +208,8 @@ if ($ModelDownloaded) {
     Write-Host "     ✓ Database initialized"
 } else {
     Write-Host "  2. On first launch:"
-    Write-Host "     - Open Settings → Download AI Model (4.5GB)"
+    Write-Host "     - The app will automatically prompt to download the AI model (4.5GB)"
+    Write-Host "     - Or download later from Settings → Download AI Model"
     Write-Host "     - Configure your Anki export folder"
     Write-Host "     - Configure your Notability folder (optional)"
 }

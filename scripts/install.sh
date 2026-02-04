@@ -215,7 +215,8 @@ if [ "$MODEL_DOWNLOADED" = true ]; then
     echo "     ✓ Database initialized"
 else
     echo "  2. On first launch:"
-    echo "     - Open Settings → Download AI Model (4.5GB)"
+    echo "     - The app will automatically prompt to download the AI model (4.5GB)"
+    echo "     - Or download later from Settings → Download AI Model"
     echo "     - Configure your Anki export folder"
     echo "     - Configure your Notability folder (optional)"
 fi
