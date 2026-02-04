@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     # Paths
     app_data_dir: Path = get_app_data_dir()
     database_path: Path = None
-    chroma_path: Path = None
+    lancedb_path: Path = None
     model_path: Path = None
     curriculum_path: Path = None
     anki_watch_folder: Path = None
@@ -59,14 +59,14 @@ class Settings(BaseSettings):
         
         # Set derived paths
         self.database_path = self.app_data_dir / "aetios.db"
-        self.chroma_path = self.app_data_dir / "chroma"
+        self.lancedb_path = self.app_data_dir / "lancedb"
         self.model_path = self.app_data_dir / "models" / self.model_filename
         self.curriculum_path = self.app_data_dir / "curriculum" / "uk_curriculum.json"
         
         # Create directories
         (self.app_data_dir / "models").mkdir(parents=True, exist_ok=True)
         (self.app_data_dir / "curriculum").mkdir(parents=True, exist_ok=True)
-        self.chroma_path.mkdir(parents=True, exist_ok=True)
+        self.lancedb_path.mkdir(parents=True, exist_ok=True)
 
 
 settings = Settings()

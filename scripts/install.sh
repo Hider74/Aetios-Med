@@ -89,24 +89,31 @@ fi
 # Activate virtual environment
 source venv/bin/activate
 
+# Detect Apple Silicon
+if [ "$(uname)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then
+    print_info "Apple Silicon detected - configuring for Metal GPU acceleration..."
+    export CMAKE_ARGS="-DLLAMA_METAL=on"
+    export ARCHFLAGS="-arch arm64"
+fi
+
 # Upgrade pip
 print_info "Upgrading pip..."
-pip install --upgrade pip > /dev/null 2>&1
+pip install --upgrade pip
 print_success "pip upgraded"
 
 # Install Python dependencies
 print_info "Installing Python dependencies (this may take a few minutes)..."
-pip install -r requirements.txt > /dev/null 2>&1
+pip install -r requirements.txt
 print_success "Python dependencies installed"
 
 # Install PyInstaller
 print_info "Installing PyInstaller..."
-pip install pyinstaller > /dev/null 2>&1
+pip install pyinstaller
 print_success "PyInstaller installed"
 
 # Build backend executable
 print_info "Building backend executable (this may take a few minutes)..."
-pyinstaller --onefile run.py --distpath dist --workpath build --specpath . --log-level ERROR
+pyinstaller run.spec --distpath dist --workpath build --log-level INFO
 if [ -f "dist/run" ]; then
     print_success "Backend executable built successfully at backend/dist/run"
 else
@@ -159,7 +166,7 @@ echo ""
 
 cd frontend
 print_info "Installing frontend dependencies..."
-npm install > /dev/null 2>&1
+npm install
 print_success "Frontend dependencies installed"
 cd ..
 
@@ -170,7 +177,7 @@ echo "======================================"
 echo ""
 
 print_info "Installing root dependencies..."
-npm install > /dev/null 2>&1
+npm install
 print_success "Root dependencies installed"
 
 # Copy backend executable to Electron resources directory (for npm start)
