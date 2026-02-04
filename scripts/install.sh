@@ -176,6 +176,13 @@ print_success "Root dependencies installed"
 # Copy backend executable to Electron resources directory (for npm start)
 print_info "Copying backend to Electron resources..."
 
+# Verify backend executable exists
+if [ ! -f "backend/dist/run" ]; then
+    print_error "Backend executable not found at backend/dist/run"
+    print_error "The PyInstaller build may have failed. Check the output above."
+    exit 1
+fi
+
 # Determine Electron resources path based on OS
 if [ "$(uname)" = "Darwin" ]; then
     ELECTRON_RESOURCES="node_modules/electron/dist/Electron.app/Contents/Resources/backend"
