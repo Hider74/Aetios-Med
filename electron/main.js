@@ -13,9 +13,34 @@ let mainWindow = null;
 let pythonProcess = null;
 const BACKEND_PORT = 8741;
 const isDev = process.env.NODE_ENV === 'development';
+let hasCheckedModel = false;
 
 // Settings storage (in production, consider using electron-store)
 let appSettings = {};
+
+function getModelPath() {
+  const homeDir = os.homedir();
+  let modelDir;
+  
+  if (process.platform === 'darwin') {
+    modelDir = path.join(homeDir, 'Library', 'Application Support', 'Aetios-Med', 'models');
+  } else if (process.platform === 'win32') {
+    modelDir = path.join(process.env.APPDATA || path.join(homeDir, 'AppData', 'Roaming'), 'Aetios-Med', 'models');
+  } else {
+    modelDir = path.join(homeDir, '.local', 'share', 'Aetios-Med', 'models');
+  }
+  
+  return path.join(modelDir, 'llama3-openbio-8b.Q4_K_M.gguf');
+}
+
+async function checkModelExists() {
+  try {
+    await fs.access(getModelPath());
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -41,6 +66,30 @@ function createWindow() {
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
+    
+    // Check for model on first run (only once per session)
+    if (!hasCheckedModel) {
+      hasCheckedModel = true;
+      setTimeout(async () => {
+        const modelExists = await checkModelExists();
+        if (!modelExists) {
+          const result = await dialog.showMessageBox(mainWindow, {
+            type: 'info',
+            title: 'AI Model Not Found',
+            message: 'AI model not downloaded',
+            detail: 'The AI model is required for full functionality. Would you like to download it now? (~4.5GB, may take 10-15 minutes)',
+            buttons: ['Download Now', 'Download Later'],
+            defaultId: 0,
+            cancelId: 1
+          });
+          
+          if (result.response === 0) {
+            // User chose to download
+            mainWindow.webContents.send('start-model-download');
+          }
+        }
+      }, 2000); // Wait 2 seconds after window shows
+    }
   });
 
   mainWindow.on('closed', () => {

@@ -593,30 +593,77 @@
             <section id="installation">
                 <h2>🚀 3. Installation Guide</h2>
                 
-                <h3>Installation Methods</h3>
-                <p>There are two ways to install Aetios-Med:</p>
-                <ol>
-                    <li><strong>Pre-built Application</strong> - Download and install (easier, recommended for most users)</li>
-                    <li><strong>Build from Source</strong> - Clone and build yourself (for developers or customization)</li>
-                </ol>
+                <h3>Quick Start (Recommended)</h3>
+                <p>Aetios-Med now features a fully automated one-command installation! Choose your preferred method below.</p>
                 
-                <h3>Method 1: Pre-built Application (Coming Soon)</h3>
+                <h4>Complete Installation with AI Model</h4>
+                <p>This option installs everything including the 4.5GB AI model in one go (recommended):</p>
+                
+                <p><strong>macOS/Linux:</strong></p>
+                <pre><code>git clone https://github.com/Hider74/Aetios-Med.git
+cd Aetios-Med
+./scripts/install.sh --with-model
+npm start</code></pre>
+                
+                <p><strong>Windows:</strong></p>
+                <pre><code>git clone https://github.com/Hider74/Aetios-Med.git
+cd Aetios-Med
+.\scripts\install.ps1 -WithModel
+npm start</code></pre>
+                
+                <h4>Quick Installation (Download Model Later)</h4>
+                <p>Install dependencies first, download the AI model later from within the app:</p>
+                
+                <p><strong>macOS/Linux:</strong></p>
+                <pre><code>git clone https://github.com/Hider74/Aetios-Med.git
+cd Aetios-Med
+./scripts/install.sh
+npm start</code></pre>
+                
+                <p><strong>Windows:</strong></p>
+                <pre><code>git clone https://github.com/Hider74/Aetios-Med.git
+cd Aetios-Med
+.\scripts\install.ps1
+npm start</code></pre>
+                
                 <div class="info-box">
-                    <p>Pre-built installers for Windows (.exe), macOS (.dmg), and Linux (.AppImage) will be available on the GitHub releases page. This manual focuses on building from source, which gives you the most up-to-date version.</p>
+                    <h4>💡 What the Automated Installer Does</h4>
+                    <p>The installation script automatically handles:</p>
+                    <ul>
+                        <li>✓ Checks Node.js and Python versions</li>
+                        <li>✓ Creates Python virtual environment</li>
+                        <li>✓ Installs all Python dependencies</li>
+                        <li>✓ Builds backend executable with PyInstaller</li>
+                        <li>✓ Installs frontend dependencies</li>
+                        <li>✓ Initializes database</li>
+                        <li>✓ Optionally downloads AI model (4.5GB)</li>
+                    </ul>
                 </div>
                 
-                <h3>Method 2: Build from Source</h3>
+                <h3>Building Production Distributables</h3>
+                <p>Create installable packages for distribution:</p>
                 
-                <h4>Step 1: Clone the Repository</h4>
-                <p>Open your terminal (macOS/Linux) or Command Prompt/PowerShell (Windows) and run:</p>
+                <p><strong>macOS/Linux (creates .dmg, .zip, .AppImage, .deb):</strong></p>
+                <pre><code>./scripts/build-production.sh --with-model</code></pre>
                 
-                <pre><code># Clone the repository
-git clone https://github.com/Hider74/Aetios-Med.git
-
-# Navigate into the directory
+                <p><strong>Windows (creates .exe installer and portable version):</strong></p>
+                <pre><code>.\scripts\build-production.ps1 -WithModel</code></pre>
+                
+                <p>Distributables will be created in the <code>dist/</code> folder.</p>
+                
+                <div class="success-box">
+                    <h4>✅ Installation Complete!</h4>
+                    <p>After installation completes, start the app with <code>npm start</code>. If you didn't download the AI model during installation, the app will prompt you on first launch to download it (4.5GB, takes 10-15 minutes).</p>
+                </div>
+                
+                <h3>Manual Installation (Advanced)</h3>
+                <p>If you prefer to install components manually or need to troubleshoot:</p>
+                
+                <h4>Step 1: Clone Repository</h4>
+                <pre><code>git clone https://github.com/Hider74/Aetios-Med.git
 cd Aetios-Med</code></pre>
                 
-                <h4>Step 2: Install Backend Dependencies</h4>
+                <h4>Step 2: Backend Setup</h4>
                 
                 <p><strong>For Windows:</strong></p>
                 <pre><code># Navigate to backend folder
@@ -653,7 +700,7 @@ source venv/bin/activate
 pip install -r requirements.txt</code></pre>
                 </div>
                 
-                <h4>Step 3: Install Frontend Dependencies</h4>
+                <h4>Step 3: Frontend Setup</h4>
                 <pre><code># Navigate to frontend folder
 cd frontend
 
@@ -663,24 +710,26 @@ npm install
 # Return to root
 cd ..</code></pre>
                 
-                <h4>Step 4: Install Root Dependencies</h4>
+                <h4>Step 4: Root Dependencies</h4>
                 <pre><code># In the root Aetios-Med directory
 npm install</code></pre>
                 
-                <h4>Step 5: Build for Production (Optional)</h4>
+                <h4>Step 5: Build Backend Executable</h4>
+                <pre><code>node scripts/build-backend.js</code></pre>
                 
-                <p><strong>For macOS:</strong></p>
-                <pre><code>./scripts/build-mac.sh</code></pre>
+                <h4>Step 6: Build for Production (Optional)</h4>
+                
+                <p><strong>For macOS/Linux:</strong></p>
+                <pre><code>./scripts/build-production.sh</code></pre>
                 
                 <p><strong>For Windows:</strong></p>
-                <pre><code>powershell -ExecutionPolicy Bypass -File scripts/build-win.ps1</code></pre>
-                
-                <div class="success-box">
-                    <h4>✅ Installation Complete!</h4>
-                    <p>You're ready to start Aetios-Med. The first time you run it, you'll be guided through the setup wizard to download the AI model and configure your folders.</p>
-                </div>
+                <pre><code>.\scripts\build-production.ps1</code></pre>
                 
                 <h3>Running Aetios-Med</h3>
+                
+                <h4>Simple Start</h4>
+                <p>After installation:</p>
+                <pre><code>npm start</code></pre>
                 
                 <h4>Development Mode (3 Terminal Windows)</h4>
                 <p>For development or testing, run these commands in separate terminal windows:</p>
@@ -706,8 +755,25 @@ npm run dev</code></pre>
                         <li><strong>Python not found:</strong> Try <code>python3</code> instead of <code>python</code></li>
                         <li><strong>npm install fails:</strong> Clear cache with <code>npm cache clean --force</code> and try again</li>
                         <li><strong>Port 8741 in use:</strong> Close other applications using this port or change it in <code>backend/app/config.py</code></li>
+                        <li><strong>Model download fails:</strong> Check your internet connection and retry. You can also download manually from HuggingFace and place in the models folder</li>
                     </ul>
                 </div>
+                
+                <h3>Model Download Troubleshooting</h3>
+                <p>If the automatic model download fails:</p>
+                <ol>
+                    <li>Check your internet connection</li>
+                    <li>Retry download from Settings → Download AI Model</li>
+                    <li>Manual download: Visit <a href="https://huggingface.co/aaditya/Llama3-OpenBioLLM-8B-GGUF">HuggingFace model page</a></li>
+                    <li>Download <code>llama3-openbio-8b.Q4_K_M.gguf</code> (4.5GB)</li>
+                    <li>Place in:
+                        <ul>
+                            <li>macOS: <code>~/Library/Application Support/Aetios-Med/models/</code></li>
+                            <li>Windows: <code>%APPDATA%\Aetios-Med\models\</code></li>
+                            <li>Linux: <code>~/.local/share/Aetios-Med/models/</code></li>
+                        </ul>
+                    </li>
+                </ol>
             </section>
             
             <section id="setup">
