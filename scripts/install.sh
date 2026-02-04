@@ -100,11 +100,12 @@ print_success "PyInstaller installed"
 
 # Build backend executable
 print_info "Building backend executable (this may take a few minutes)..."
-pyinstaller --onefile run.py --distpath dist --workpath build --specpath . > /dev/null 2>&1
+pyinstaller --onefile run.py --distpath dist --workpath build --specpath . --log-level ERROR
 if [ -f "dist/run" ]; then
     print_success "Backend executable built successfully at backend/dist/run"
 else
     print_error "Failed to build backend executable"
+    print_error "Check the PyInstaller output above for errors"
     exit 1
 fi
 

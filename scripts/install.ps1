@@ -104,6 +104,7 @@ if (Test-Path "dist\run.exe") {
     Print-Success "Backend executable built successfully at backend\dist\run.exe"
 } else {
     Print-Error "Failed to build backend executable"
+    Print-Error "Check the PyInstaller output above for errors"
     exit 1
 }
 
