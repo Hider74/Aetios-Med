@@ -1,14 +1,41 @@
 // Electron IPC wrapper for main process communication
-// Check if running in Electron environment
+// Type-safe wrapper around Electron IPC with proper TypeScript types
+
+interface ModelStatus {
+  loaded: boolean;
+  model?: string;
+  progress?: number;
+}
+
+interface DownloadResult {
+  success: boolean;
+  error?: string;
+}
+
+interface SystemInfo {
+  platform: string;
+  arch: string;
+  memory: number;
+  cpus: number;
+}
+
+interface FileFilters {
+  name: string;
+  extensions: string[];
+}
+
+interface SelectFileOptions {
+  filters?: FileFilters[];
+}
 
 interface ElectronAPI {
   // Model Management
-  downloadModel: (modelName: string) => Promise<{ success: boolean; error?: string }>;
-  getModelStatus: () => Promise<{ loaded: boolean; model?: string; progress?: number }>;
+  downloadModel: (modelName: string) => Promise<DownloadResult>;
+  getModelStatus: () => Promise<ModelStatus>;
   
   // File System
   selectDirectory: () => Promise<string | null>;
-  selectFile: (filters?: any[]) => Promise<string | null>;
+  selectFile: (options?: SelectFileOptions) => Promise<string | null>;
   readFile: (path: string) => Promise<string>;
   writeFile: (path: string, content: string) => Promise<void>;
   
@@ -17,34 +44,25 @@ interface ElectronAPI {
   showItemInFolder: (path: string) => Promise<void>;
   
   // Settings
-  getSettings: () => Promise<Record<string, any>>;
-  saveSetting: (key: string, value: any) => Promise<void>;
+  getSettings: () => Promise<Record<string, unknown>>;
+  saveSetting: (key: string, value: unknown) => Promise<boolean>;
   
   // Database
   exportDatabase: () => Promise<string>;
   importDatabase: (path: string) => Promise<void>;
   
-  // Updates
-  checkForUpdates: () => Promise<{ available: boolean; version?: string }>;
-  downloadUpdate: () => Promise<void>;
-  
   // System
-  getSystemInfo: () => Promise<{
-    platform: string;
-    arch: string;
-    memory: number;
-    cpus: number;
-  }>;
+  getSystemInfo: () => Promise<SystemInfo>;
   
   // Events
   onModelProgress: (callback: (progress: number) => void) => () => void;
   onModelLoaded: (callback: () => void) => () => void;
-  onGraphUpdate: (callback: (data: any) => void) => () => void;
+  onGraphUpdate: (callback: (data: unknown) => void) => () => void;
 }
 
 // Check if we're running in Electron
 const isElectron = (): boolean => {
-  return !!(window as any).electron;
+  return typeof window !== 'undefined' && !!window.electron;
 };
 
 // Safe IPC wrapper that falls back gracefully if not in Electron
@@ -53,12 +71,12 @@ class IpcService {
 
   constructor() {
     if (isElectron()) {
-      this.electron = (window as any).electron;
+      this.electron = window.electron;
     }
   }
 
   // Model Management
-  async downloadModel(modelName: string): Promise<{ success: boolean; error?: string }> {
+  async downloadModel(modelName: string): Promise<DownloadResult> {
     if (!this.electron) {
       console.warn('IPC not available - running in browser mode');
       return { success: false, error: 'Not running in Electron' };
@@ -66,7 +84,7 @@ class IpcService {
     return this.electron.downloadModel(modelName);
   }
 
-  async getModelStatus() {
+  async getModelStatus(): Promise<ModelStatus> {
     if (!this.electron) {
       return { loaded: false };
     }
@@ -82,12 +100,12 @@ class IpcService {
     return this.electron.selectDirectory();
   }
 
-  async selectFile(filters?: any[]): Promise<string | null> {
+  async selectFile(filters?: FileFilters[]): Promise<string | null> {
     if (!this.electron) {
       console.warn('File selection not available in browser mode');
       return null;
     }
-    return this.electron.selectFile(filters);
+    return this.electron.selectFile({ filters });
   }
 
   async readFile(path: string): Promise<string> {
@@ -122,7 +140,7 @@ class IpcService {
   }
 
   // Settings
-  async getSettings(): Promise<Record<string, any>> {
+  async getSettings(): Promise<Record<string, unknown>> {
     if (!this.electron) {
       // Fallback to localStorage
       const settings = localStorage.getItem('appSettings');
@@ -131,7 +149,7 @@ class IpcService {
     return this.electron.getSettings();
   }
 
-  async saveSetting(key: string, value: any): Promise<void> {
+  async saveSetting(key: string, value: unknown): Promise<void> {
     if (!this.electron) {
       // Fallback to localStorage
       const settings = await this.getSettings();
@@ -139,7 +157,7 @@ class IpcService {
       localStorage.setItem('appSettings', JSON.stringify(settings));
       return;
     }
-    return this.electron.saveSetting(key, value);
+    await this.electron.saveSetting(key, value);
   }
 
   // Database
@@ -158,7 +176,7 @@ class IpcService {
   }
 
   // System Info
-  async getSystemInfo() {
+  async getSystemInfo(): Promise<SystemInfo> {
     if (!this.electron) {
       return {
         platform: 'browser',
@@ -185,7 +203,7 @@ class IpcService {
     return this.electron.onModelLoaded(callback);
   }
 
-  onGraphUpdate(callback: (data: any) => void): () => void {
+  onGraphUpdate(callback: (data: unknown) => void): () => void {
     if (!this.electron) {
       return () => {};
     }
