@@ -227,7 +227,7 @@ class VectorService:
         for key, value in where.items():
             # Sanitize key to prevent injection (allow only alphanumeric and underscore)
             if not key.replace('_', '').isalnum():
-                continue
+                raise ValueError(f"Invalid column name: {key}. Only alphanumeric characters and underscores are allowed.")
             
             if isinstance(value, str):
                 escaped_value = self._escape_string(value)
@@ -249,17 +249,20 @@ class VectorService:
         if self.table is None:
             return []
         
-        # Query with filter
+        # Query with filter using to_pandas with filter
         escaped_topic_id = self._escape_string(topic_id)
         filter_str = f"topic_id = '{escaped_topic_id}'"
-        results = self.table.search().where(filter_str).limit(n_results).to_pandas()
+        
+        # Use to_pandas() with filter for non-vector queries
+        df = self.table.to_pandas()
+        results = df.query(filter_str.replace("'", '"')).head(n_results) if not df.empty else df
         
         if results.empty:
             return []
         
         documents = []
         metadata_cols = [col for col in results.columns 
-                        if col not in ['id', 'document', 'vector', '_distance']]
+                        if col not in ['id', 'document', 'vector']]
         
         for _, row in results.iterrows():
             metadata = {col: row[col] for col in metadata_cols if pd.notna(row[col])}
@@ -280,14 +283,17 @@ class VectorService:
         
         escaped_doc_id = self._escape_string(doc_id)
         filter_str = f"id = '{escaped_doc_id}'"
-        results = self.table.search().where(filter_str).limit(1).to_pandas()
+        
+        # Use to_pandas() with filter for non-vector queries
+        df = self.table.to_pandas()
+        results = df.query(filter_str.replace("'", '"')).head(1) if not df.empty else df
         
         if results.empty:
             return None
         
         row = results.iloc[0]
         metadata_cols = [col for col in results.columns 
-                        if col not in ['id', 'document', 'vector', '_distance']]
+                        if col not in ['id', 'document', 'vector']]
         metadata = {col: row[col] for col in metadata_cols if pd.notna(row[col])}
         
         return {
@@ -330,7 +336,11 @@ class VectorService:
         if where:
             filter_str = self._build_filter_string(where)
             if filter_str:
-                results = self.table.search().where(filter_str).to_pandas()
+                # Use to_pandas() with filter for counting
+                df = self.table.to_pandas()
+                # Convert filter from SQL-like to pandas query syntax
+                pandas_filter = filter_str.replace(" = '", ' == "').replace("'", '"')
+                results = df.query(pandas_filter) if not df.empty else df
                 return len(results)
         
         return self.table.count_rows()
