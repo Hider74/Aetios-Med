@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import type { KnowledgeGraph, TopicNode } from '../types/curriculum';
-import type { ChatMessage, ChatResponse } from '../types/chat';
-import type { Exam, StudyPlan, QuizQuestion, StudySession } from '../types/study';
+import type { ChatMessage, ChatResponse, ChatContext } from '../types/chat';
+import type { Exam, StudyPlan, QuizQuestion, StudySession, StudyPlanPreferences, Resource } from '../types/study';
 
 const BASE_URL = 'http://localhost:8741/api';
 
@@ -63,7 +63,7 @@ class ApiClient {
   }
 
   // Chat
-  async sendMessage(message: string, context?: any): Promise<ChatResponse> {
+  async sendMessage(message: string, context?: ChatContext): Promise<ChatResponse> {
     const response = await this.client.post<ChatResponse>('/chat/message', {
       messages: [
         {
@@ -74,7 +74,15 @@ class ApiClient {
       temperature: 0.7,
       max_tokens: 2048,
       session_id: 'default',
+    }, {
+      timeout: 300_000, // 5 minutes for LLM inference
     });
+    
+    // Basic runtime validation
+    if (!response.data || typeof response.data.message !== 'string') {
+      throw new Error('Invalid response from chat API');
+    }
+    
     return response.data;
   }
 
@@ -86,10 +94,12 @@ class ApiClient {
   }
 
   // Study Plans
-  async generateStudyPlan(examId: string, preferences: any): Promise<StudyPlan> {
+  async generateStudyPlan(examId: string, preferences: StudyPlanPreferences): Promise<StudyPlan> {
     const response = await this.client.post<StudyPlan>('/study/plan/generate', {
       examId,
       preferences,
+    }, {
+      timeout: 300_000, // 5 minutes for LLM-based plan generation
     });
     return response.data;
   }
@@ -105,15 +115,15 @@ class ApiClient {
 
   // Exams
   async getExams(): Promise<Exam[]> {
-    const response = await this.client.get<any[]>('/study/exams');
-    return response.data.map((exam: any) => ({
+    const response = await this.client.get<Exam[]>('/study/exams');
+    return response.data.map((exam: Exam) => ({
       ...exam,
       date: new Date(exam.date),
     }));
   }
 
   async createExam(exam: Partial<Exam>): Promise<Exam> {
-    const response = await this.client.post<any>('/study/exam', exam);
+    const response = await this.client.post<Exam>('/study/exam', exam);
     return {
       ...response.data,
       date: new Date(response.data.date),
@@ -121,7 +131,7 @@ class ApiClient {
   }
 
   async updateExam(examId: string, updates: Partial<Exam>): Promise<Exam> {
-    const response = await this.client.patch<any>(`/study/exam/${examId}`, updates);
+    const response = await this.client.patch<Exam>(`/study/exam/${examId}`, updates);
     return {
       ...response.data,
       date: new Date(response.data.date),
@@ -134,10 +144,12 @@ class ApiClient {
 
   // Quizzes
   async generateQuiz(topicIds: string[], count: number = 5): Promise<QuizQuestion[]> {
-    const response = await this.client.post<any>('/quiz/generate', {
+    const response = await this.client.post<{ questions: QuizQuestion[] }>('/quiz/generate', {
       topic_ids: topicIds,
       num_questions: count,
       difficulty: 'medium',
+    }, {
+      timeout: 300_000, // 5 minutes for LLM-based quiz generation
     });
     return response.data.questions || [];
   }
@@ -178,15 +190,15 @@ class ApiClient {
   }
 
   // Resources
-  async searchResources(query: string): Promise<any[]> {
-    const response = await this.client.get('/resources/search', {
+  async searchResources(query: string): Promise<Resource[]> {
+    const response = await this.client.get<Resource[]>('/resources/search', {
       params: { query },
     });
     return response.data;
   }
 
-  async getResourceContent(resourceId: string): Promise<any> {
-    const response = await this.client.get(`/resources/${resourceId}`);
+  async getResourceContent(resourceId: string): Promise<Resource> {
+    const response = await this.client.get<Resource>(`/resources/${resourceId}`);
     return response.data;
   }
 }

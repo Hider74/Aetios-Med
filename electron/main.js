@@ -187,7 +187,14 @@ function startPythonBackend() {
 
 function stopPythonBackend() {
   if (pythonProcess) {
-    pythonProcess.kill('SIGTERM');
+    if (process.platform === 'win32') {
+      // On Windows, use taskkill to properly terminate process tree
+      const { spawn: spawnProcess } = require('child_process');
+      spawnProcess('taskkill', ['/PID', pythonProcess.pid.toString(), '/T', '/F']);
+    } else {
+      // On Unix-like systems, SIGTERM works correctly
+      pythonProcess.kill('SIGTERM');
+    }
     pythonProcess = null;
   }
 }
