@@ -70,6 +70,26 @@ export interface QuizSession {
   score?: number;
 }
 
+export interface StudyPlanPreferences {
+  dailyGoalMinutes?: number;
+  studyStyle?: 'spaced' | 'intensive' | 'balanced';
+  priorityTopics?: string[];
+  avoidWeekends?: boolean;
+  preferredTimes?: string[];
+}
+
+export interface Resource {
+  id: string;
+  type: 'pdf' | 'video' | 'article' | 'website' | 'anki' | 'note';
+  title: string;
+  content?: string;
+  url?: string;
+  filePath?: string;
+  metadata?: Record<string, unknown>; // Changed from any to unknown for better type safety
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export interface DecayingTopic {
   topicId: string;
   topicName: string;

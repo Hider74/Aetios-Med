@@ -81,50 +81,86 @@ export const useChatStore = create<ChatState>()(
           error: null 
         });
 
-        try {
-          const response = await api.sendMessage(content, state.context);
-          
-          const assistantMessage: ChatMessage = {
-            id: `msg-${Date.now()}-assistant`,
-            role: 'assistant',
-            content: response.message,
-            timestamp: new Date(),
-            relatedTopics: response.suggestedTopics,
-            quiz: response.quiz,
-            resources: response.sources,
-          };
-
-          const messages = [...state.messages, userMessage, assistantMessage];
-          
-          // Update session
-          const sessions = state.sessions.map(session => {
-            if (session.id === state.currentSessionId) {
-              return {
-                ...session,
-                messages,
-                lastActivity: new Date(),
-                topicsCovered: [...new Set([
-                  ...session.topicsCovered,
-                  ...(response.suggestedTopics || [])
-                ])],
-              };
+        // Retry configuration constants
+        const MAX_RETRIES = 1;
+        const INITIAL_RETRY_DELAY_MS = 1000;
+        const BACKOFF_MULTIPLIER = 2;
+        const MAX_RETRY_DELAY_MS = 5000;
+        
+        let lastError: Error | null = null;
+        
+        for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+          try {
+            // Exponential backoff delay for retries
+            if (attempt > 0) {
+              const delay = Math.min(
+                INITIAL_RETRY_DELAY_MS * Math.pow(BACKOFF_MULTIPLIER, attempt - 1),
+                MAX_RETRY_DELAY_MS
+              );
+              await new Promise(resolve => setTimeout(resolve, delay));
             }
-            return session;
-          });
+            
+            const response = await api.sendMessage(content, state.context);
+            
+            const assistantMessage: ChatMessage = {
+              id: `msg-${Date.now()}-assistant`,
+              role: 'assistant',
+              content: response.message,
+              timestamp: new Date(),
+              relatedTopics: response.suggestedTopics,
+              quiz: response.quiz,
+              resources: response.sources,
+            };
 
-          set({ 
-            messages,
-            sessions,
-            loading: false,
-            isTyping: false 
-          });
-        } catch (error) {
-          set({ 
-            error: error instanceof Error ? error.message : 'Failed to send message',
-            loading: false,
-            isTyping: false 
-          });
+            const messages = [...state.messages, userMessage, assistantMessage];
+            
+            // Update session
+            const sessions = state.sessions.map(session => {
+              if (session.id === state.currentSessionId) {
+                return {
+                  ...session,
+                  messages,
+                  lastActivity: new Date(),
+                  topicsCovered: [...new Set([
+                    ...session.topicsCovered,
+                    ...(response.suggestedTopics || [])
+                  ])],
+                };
+              }
+              return session;
+            });
+
+            set({ 
+              messages,
+              sessions,
+              loading: false,
+              isTyping: false 
+            });
+            return; // Success - exit retry loop
+          } catch (error) {
+            lastError = error instanceof Error ? error : new Error('Failed to send message');
+            
+            // Check if error is retryable (timeout, network errors)
+            const isRetryable = error instanceof Error && (
+              error.message.includes('timeout') || 
+              error.message.includes('network') ||
+              error.message.includes('ECONNREFUSED') ||
+              error.message.includes('ETIMEDOUT')
+            );
+            
+            // If not retryable or last attempt, throw
+            if (!isRetryable || attempt === MAX_RETRIES) {
+              break;
+            }
+          }
         }
+        
+        // All retries failed
+        set({ 
+          error: lastError ? lastError.message : 'Failed to send message',
+          loading: false,
+          isTyping: false 
+        });
       },
 
       loadHistory: async (sessionId) => {
