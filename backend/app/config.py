@@ -4,8 +4,11 @@ Handles cross-platform paths and settings.
 """
 import os
 import sys
+import logging
 from pathlib import Path
 from pydantic_settings import BaseSettings
+
+logger = logging.getLogger(__name__)
 
 
 def get_app_data_dir() -> Path:
@@ -67,6 +70,46 @@ class Settings(BaseSettings):
         (self.app_data_dir / "models").mkdir(parents=True, exist_ok=True)
         (self.app_data_dir / "curriculum").mkdir(parents=True, exist_ok=True)
         self.lancedb_path.mkdir(parents=True, exist_ok=True)
+        
+        # GPU detection logging
+        if self.gpu_layers != 0:
+            self._log_gpu_availability()
+    
+    def _log_gpu_availability(self):
+        """Log GPU availability and potential issues."""
+        try:
+            # Try to import llama-cpp-python to check for GPU support
+            import llama_cpp
+            
+            # Check platform-specific GPU availability
+            if sys.platform == "darwin":
+                # macOS: Check for Metal support
+                logger.info(f"GPU offloading requested (gpu_layers={self.gpu_layers}). "
+                           "Metal GPU acceleration should be available on Apple Silicon.")
+            elif sys.platform == "win32" or sys.platform == "linux":
+                # Windows/Linux: Check for CUDA
+                try:
+                    import subprocess
+                    result = subprocess.run(['nvidia-smi'], 
+                                          capture_output=True, 
+                                          text=True, 
+                                          timeout=5)
+                    if result.returncode == 0:
+                        logger.info(f"GPU offloading requested (gpu_layers={self.gpu_layers}). "
+                                   "NVIDIA GPU detected.")
+                    else:
+                        logger.warning(f"GPU offloading requested (gpu_layers={self.gpu_layers}) "
+                                     "but nvidia-smi failed. Model will fall back to CPU, "
+                                     "which may be significantly slower.")
+                except (FileNotFoundError, subprocess.TimeoutExpired):
+                    logger.warning(f"GPU offloading requested (gpu_layers={self.gpu_layers}) "
+                                 "but CUDA/NVIDIA GPU not detected. Model will fall back to CPU, "
+                                 "which may be significantly slower.")
+            else:
+                logger.info(f"GPU offloading requested (gpu_layers={self.gpu_layers}) "
+                           f"on platform {sys.platform}.")
+        except ImportError:
+            logger.warning("llama-cpp-python not installed. GPU detection skipped.")
 
 
 settings = Settings()
