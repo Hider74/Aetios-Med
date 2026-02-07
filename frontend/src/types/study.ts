@@ -85,7 +85,7 @@ export interface Resource {
   content?: string;
   url?: string;
   filePath?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>; // Changed from any to unknown for better type safety
   createdAt?: Date;
   updatedAt?: Date;
 }

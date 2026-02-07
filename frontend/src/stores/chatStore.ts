@@ -81,15 +81,22 @@ export const useChatStore = create<ChatState>()(
           error: null 
         });
 
-        // Retry logic: attempt once, then retry on transient errors
-        const maxRetries = 1;
+        // Retry configuration constants
+        const MAX_RETRIES = 1;
+        const INITIAL_RETRY_DELAY_MS = 1000;
+        const BACKOFF_MULTIPLIER = 2;
+        const MAX_RETRY_DELAY_MS = 5000;
+        
         let lastError: Error | null = null;
         
-        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
           try {
             // Exponential backoff delay for retries
             if (attempt > 0) {
-              const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000); // Max 5s
+              const delay = Math.min(
+                INITIAL_RETRY_DELAY_MS * Math.pow(BACKOFF_MULTIPLIER, attempt - 1),
+                MAX_RETRY_DELAY_MS
+              );
               await new Promise(resolve => setTimeout(resolve, delay));
             }
             
@@ -142,7 +149,7 @@ export const useChatStore = create<ChatState>()(
             );
             
             // If not retryable or last attempt, throw
-            if (!isRetryable || attempt === maxRetries) {
+            if (!isRetryable || attempt === MAX_RETRIES) {
               break;
             }
           }
