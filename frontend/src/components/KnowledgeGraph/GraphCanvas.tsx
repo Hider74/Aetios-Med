@@ -140,7 +140,15 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({ onNodeSelect, onNaviga
         menuOptions.forEach(option => {
           const button = document.createElement('button');
           button.className = 'w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded flex items-center gap-2 text-sm text-gray-900 dark:text-white';
-          button.innerHTML = `<span>${option.icon}</span> <span>${option.label}</span>`;
+          
+          // Create icon and label spans using textContent to prevent XSS
+          const iconSpan = document.createElement('span');
+          iconSpan.textContent = option.icon;
+          const labelSpan = document.createElement('span');
+          labelSpan.textContent = option.label;
+          button.appendChild(iconSpan);
+          button.appendChild(labelSpan);
+          
           button.onclick = () => {
             onNavigateToChat(option.message);
             menu.remove();

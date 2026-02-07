@@ -11,6 +11,15 @@ from concurrent.futures import ThreadPoolExecutor
 class LLMService:
     """Service for LLM inference using llama-cpp-python."""
     
+    # Llama 3 special tokens that must be sanitized from user input
+    SPECIAL_TOKENS = [
+        "<|begin_of_text|>",
+        "<|end_of_text|>",
+        "<|eot_id|>",
+        "<|start_header_id|>",
+        "<|end_header_id|>",
+    ]
+    
     def __init__(self, model_path: Path, n_ctx: int = 8192, n_gpu_layers: int = -1):
         self.model_path = model_path
         self.n_ctx = n_ctx
@@ -104,6 +113,13 @@ class LLMService:
             if text:
                 yield text
     
+    def _sanitize_content(self, content: str) -> str:
+        """Remove special tokens from content to prevent prompt injection."""
+        sanitized = content
+        for token in self.SPECIAL_TOKENS:
+            sanitized = sanitized.replace(token, "")
+        return sanitized
+    
     def _format_messages(self, messages: List[Dict[str, str]]) -> str:
         """Convert messages to Llama 3 prompt format."""
         prompt = "<|begin_of_text|>"
@@ -111,6 +127,10 @@ class LLMService:
         for msg in messages:
             role = msg["role"]
             content = msg["content"]
+            
+            # Sanitize content for user and assistant roles to prevent prompt injection
+            if role in ("user", "assistant"):
+                content = self._sanitize_content(content)
             
             if role == "system":
                 prompt += f"<|start_header_id|>system<|end_header_id|>\n\n{content}<|eot_id|>"
