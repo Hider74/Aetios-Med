@@ -12,7 +12,12 @@ from tqdm import tqdm
 
 
 class ModelDownloader:
-    """Service for downloading models from HuggingFace."""
+    """
+    Service for downloading models from HuggingFace.
+    
+    Note: If using hf_token from settings, call settings.hf_token.get_secret_value()
+    since it's a SecretStr to prevent accidental exposure.
+    """
     
     def __init__(self, hf_token: Optional[str] = None):
         self.hf_token = hf_token

@@ -87,3 +87,7 @@ electron/dist/
 
 # Generated icons
 assets/icons/
+
+# Generated OpenAPI schema and types
+backend/openapi.json
+frontend/src/types/generated-api.ts
