@@ -126,6 +126,11 @@ async def get_chat_history(request: Request, limit: int = 50, session_id: str = 
 async def clear_chat_history(request: Request, session_id: str = "default"):
     """Clear chat history."""
     try:
+        # Reset the agent orchestrator's in-memory conversation
+        agent = getattr(request.app.state, 'agent', None)
+        if agent:
+            agent.reset()
+        
         async with get_session() as db:
             await db.execute(
                 delete(DBChatMessage).where(DBChatMessage.session_id == session_id)

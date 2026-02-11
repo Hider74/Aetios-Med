@@ -94,24 +94,45 @@ class LLMService:
         temperature: float = 0.7,
         max_tokens: int = 2048
     ) -> AsyncIterable[str]:
-        """Stream a completion."""
+        """Stream a completion without blocking the event loop."""
         if not self.is_loaded:
             raise RuntimeError("Model not loaded")
         
         prompt = self._format_messages(messages)
         
-        # Stream in thread pool
-        loop = asyncio.get_event_loop()
+        # Use bounded queue to prevent unbounded memory growth
+        chunk_queue: asyncio.Queue = asyncio.Queue(maxsize=100)
+        sentinel = object()
         
-        for chunk in self.model(
-            prompt,
-            max_tokens=max_tokens,
-            temperature=temperature,
-            stream=True
-        ):
-            text = chunk["choices"][0]["text"]
-            if text:
-                yield text
+        # Get the running event loop
+        loop = asyncio.get_running_loop()
+        
+        def _generate():
+            try:
+                for chunk in self.model(
+                    prompt,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    stream=True
+                ):
+                    text = chunk["choices"][0]["text"]
+                    if text:
+                        # Use run_coroutine_threadsafe to properly block on full queue (backpressure)
+                        asyncio.run_coroutine_threadsafe(chunk_queue.put(text), loop).result()
+                asyncio.run_coroutine_threadsafe(chunk_queue.put(sentinel), loop).result()
+            except Exception as e:
+                asyncio.run_coroutine_threadsafe(chunk_queue.put(e), loop).result()
+        
+        loop.run_in_executor(self.executor, _generate)
+        
+        # Errors in _generate are caught and propagated via the queue mechanism
+        while True:
+            item = await chunk_queue.get()
+            if item is sentinel:
+                break
+            if isinstance(item, Exception):
+                raise item
+            yield item
     
     def _sanitize_content(self, content: str) -> str:
         """Remove special tokens from content to prevent prompt injection."""

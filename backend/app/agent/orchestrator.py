@@ -45,10 +45,11 @@ class AgentOrchestrator:
         self._initialize_system_prompt()
     
     def _initialize_system_prompt(self):
-        """Initialize the system prompt."""
+        """Initialize the system prompt with tool definitions baked in."""
         system_prompt = get_system_prompt()
+        tools_prompt = self._format_tools_for_prompt()
         self.messages = [
-            {"role": "system", "content": system_prompt}
+            {"role": "system", "content": f"{system_prompt}\n\n{tools_prompt}"}
         ]
     
     def add_user_message(self, content: str):
@@ -107,25 +108,10 @@ class AgentOrchestrator:
         if not self.llm_service.is_loaded:
             raise RuntimeError("LLM model not loaded. Call await llm_service.load_model() first.")
         
-        # Format tools as part of system prompt
-        tools_prompt = self._format_tools_for_prompt()
-        
-        # Create messages with tool instructions
-        messages_with_tools = self.messages.copy()
-        
-        # Add tool instructions to the last system message or create new one
-        if messages_with_tools and messages_with_tools[0]["role"] == "system":
-            messages_with_tools[0]["content"] += f"\n\n{tools_prompt}"
-        else:
-            messages_with_tools.insert(0, {
-                "role": "system",
-                "content": tools_prompt
-            })
-        
-        # Call the local LLM
+        # Call the local LLM with messages as-is (tools already baked into system prompt)
         try:
             response_text = await self.llm_service.complete(
-                messages=messages_with_tools,
+                messages=self.messages,
                 temperature=self.temperature,
                 max_tokens=2048,
                 stop=["<|eot_id|>"]
@@ -363,6 +349,13 @@ class AgentOrchestrator:
         """
         Process a user message with streaming response.
         
+        This is a simplified streaming wrapper that delegates to process_message.
+        The user message is added to conversation history by process_message.
+        
+        TODO: Implement true chunk-by-chunk streaming by directly calling
+        llm_service.stream_complete() instead of delegating to process_message.
+        This would require handling tool calls in a streaming context.
+        
         Args:
             user_message: User's input message
             db: Database session for tool execution
@@ -370,17 +363,8 @@ class AgentOrchestrator:
         Yields:
             Response chunks as they're generated
         """
-        self.add_user_message(user_message)
-        
-        iteration = 0
-        while iteration < self.max_iterations:
-            iteration += 1
-            
-            # In a real implementation, this would stream from OpenAI
-            # For now, yielding the full response
-            response = await self.process_message(user_message, db=db)
-            yield response
-            break
+        response = await self.process_message(user_message, db=db)
+        yield response
     
     def reset(self):
         """Reset the conversation, keeping only the system prompt."""

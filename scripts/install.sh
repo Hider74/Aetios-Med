@@ -124,7 +124,9 @@ fi
 
 # Initialize database
 print_info "Initializing database..."
-python3 -c "
+if python3 -c "
+import sys
+sys.path.insert(0, '.')
 import asyncio
 from app.models.database import init_database
 from app.config import settings
@@ -134,8 +136,11 @@ async def init():
     print('Database initialized at', settings.database_path)
 
 asyncio.run(init())
-" 2>&1
-print_success "Database initialized"
+" 2>&1; then
+    print_success "Database initialized"
+else
+    print_info "Database will be initialized on first run (skipping)"
+fi
 
 # Copy default curriculum if not present
 print_info "Setting up curriculum data..."
