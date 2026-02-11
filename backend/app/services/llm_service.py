@@ -94,24 +94,43 @@ class LLMService:
         temperature: float = 0.7,
         max_tokens: int = 2048
     ) -> AsyncIterable[str]:
-        """Stream a completion."""
+        """Stream a completion without blocking the event loop."""
         if not self.is_loaded:
             raise RuntimeError("Model not loaded")
         
         prompt = self._format_messages(messages)
         
-        # Stream in thread pool
-        loop = asyncio.get_event_loop()
+        import queue
+        chunk_queue: queue.Queue = queue.Queue()
+        sentinel = object()
         
-        for chunk in self.model(
-            prompt,
-            max_tokens=max_tokens,
-            temperature=temperature,
-            stream=True
-        ):
-            text = chunk["choices"][0]["text"]
-            if text:
-                yield text
+        def _generate():
+            try:
+                for chunk in self.model(
+                    prompt,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    stream=True
+                ):
+                    text = chunk["choices"][0]["text"]
+                    if text:
+                        chunk_queue.put(text)
+                chunk_queue.put(sentinel)
+            except Exception as e:
+                chunk_queue.put(e)
+        
+        loop = asyncio.get_event_loop()
+        loop.run_in_executor(self.executor, _generate)
+        
+        while True:
+            while chunk_queue.empty():
+                await asyncio.sleep(0.01)
+            item = chunk_queue.get()
+            if item is sentinel:
+                break
+            if isinstance(item, Exception):
+                raise item
+            yield item
     
     def _sanitize_content(self, content: str) -> str:
         """Remove special tokens from content to prevent prompt injection."""

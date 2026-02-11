@@ -114,7 +114,10 @@ if (Test-Path "dist\run.exe") {
 
 # Initialize database
 Print-Info "Initializing database..."
-python -c @"
+try {
+    python -c @"
+import sys
+sys.path.insert(0, '.')
 import asyncio
 from app.models.database import init_database
 from app.config import settings
@@ -125,7 +128,10 @@ async def init():
 
 asyncio.run(init())
 "@
-Print-Success "Database initialized"
+    Print-Success "Database initialized"
+} catch {
+    Print-Info "Database will be initialized on first run (skipping)"
+}
 
 # Copy default curriculum if not present
 Print-Info "Setting up curriculum data..."
