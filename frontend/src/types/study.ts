@@ -59,6 +59,33 @@ export interface QuizQuestion {
   source?: string;
 }
 
+export interface SAQQuestion {
+  question: string;
+  marks: number;
+  key_points: string[];
+  model_answer: string;
+  explanation: string;
+  topic_id: string;
+  difficulty: string;
+  question_type: 'saq';
+}
+
+export interface KeyPointAssessment {
+  key_point: string;
+  awarded: boolean;
+  student_evidence: string;
+}
+
+export interface SAQResult {
+  score: number;
+  max_score: number;
+  percentage: number;
+  key_points_assessment: KeyPointAssessment[];
+  feedback: string;
+  areas_to_review: string[];
+  model_answer: string;
+}
+
 export interface QuizSession {
   id: string;
   topicId: string;
