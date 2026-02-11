@@ -100,8 +100,7 @@ class LLMService:
         
         prompt = self._format_messages(messages)
         
-        import queue
-        chunk_queue: queue.Queue = queue.Queue()
+        chunk_queue: asyncio.Queue = asyncio.Queue()
         sentinel = object()
         
         def _generate():
@@ -114,18 +113,17 @@ class LLMService:
                 ):
                     text = chunk["choices"][0]["text"]
                     if text:
-                        chunk_queue.put(text)
-                chunk_queue.put(sentinel)
+                        # Use call_soon_threadsafe to safely add to queue from thread
+                        asyncio.get_event_loop().call_soon_threadsafe(chunk_queue.put_nowait, text)
+                asyncio.get_event_loop().call_soon_threadsafe(chunk_queue.put_nowait, sentinel)
             except Exception as e:
-                chunk_queue.put(e)
+                asyncio.get_event_loop().call_soon_threadsafe(chunk_queue.put_nowait, e)
         
         loop = asyncio.get_event_loop()
         loop.run_in_executor(self.executor, _generate)
         
         while True:
-            while chunk_queue.empty():
-                await asyncio.sleep(0.01)
-            item = chunk_queue.get()
+            item = await chunk_queue.get()
             if item is sentinel:
                 break
             if isinstance(item, Exception):

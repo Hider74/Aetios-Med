@@ -349,6 +349,9 @@ class AgentOrchestrator:
         """
         Process a user message with streaming response.
         
+        This is a simplified streaming wrapper that delegates to process_message.
+        The user message is added to conversation history by process_message.
+        
         Args:
             user_message: User's input message
             db: Database session for tool execution
@@ -356,7 +359,6 @@ class AgentOrchestrator:
         Yields:
             Response chunks as they're generated
         """
-        # Don't add user message here — process_message already does it
         response = await self.process_message(user_message, db=db)
         yield response
     
