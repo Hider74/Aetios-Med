@@ -5,7 +5,7 @@ Manages semester curriculum scopes for focused study planning.
 import json
 from typing import List, Dict, Optional
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import select, update, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 import numpy as np
@@ -174,7 +174,7 @@ class SemesterService:
         scope = result.scalar_one_or_none()
         if scope:
             scope.topic_ids = json.dumps(topic_ids)
-            scope.updated_at = datetime.utcnow()
+            scope.updated_at = datetime.now(timezone.utc)
             await db.commit()
     
     async def delete_scope(self, scope_id: int, db: AsyncSession):

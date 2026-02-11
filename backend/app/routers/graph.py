@@ -16,18 +16,18 @@ async def get_graph(request: Request):
     """Get the complete knowledge graph with user progress."""
     graph_service = request.app.state.graph
     
-    # Check for active semester scope
+    # Check for active semester scope and pass scoped topics to graph service
     semester_service = request.app.state.semester if hasattr(request.app.state, 'semester') else None
     scoped_topic_ids = None
     
-    if semester_service:
-        async with get_session() as db:
+    async with get_session() as db:
+        # Check for active semester scope if semester service is available
+        if semester_service:
             active_scope = await semester_service.get_active_scope(db)
             if active_scope:
                 scoped_topic_ids = set(json.loads(active_scope.topic_ids))
-    
-    # Pass scoped topics to graph service
-    async with get_session() as db:
+        
+        # Get graph data with scoped topics in the same session
         graph_data = await graph_service.get_graph_with_progress(db, scoped_topic_ids=scoped_topic_ids)
     
     # Convert to response format

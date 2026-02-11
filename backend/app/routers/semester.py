@@ -66,7 +66,7 @@ async def upload_semester_pdf(
         raise HTTPException(status_code=500, detail=f"Failed to process PDF: {str(e)}")
     finally:
         # Clean up temporary file
-        if temp_file and os.path.exists(temp_path):
+        if temp_path and os.path.exists(temp_path):
             os.unlink(temp_path)
 
 
@@ -165,7 +165,7 @@ async def upload_and_create_scope(
         raise HTTPException(status_code=500, detail=f"Failed to create scope: {str(e)}")
     finally:
         # Clean up temporary file
-        if temp_file and os.path.exists(temp_path):
+        if temp_path and os.path.exists(temp_path):
             os.unlink(temp_path)
 
 
