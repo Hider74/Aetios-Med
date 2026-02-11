@@ -19,19 +19,42 @@ ALLOWED_NOTES_EXTENSIONS = {'.txt', '.md'}
 
 
 def validate_file_path(file_path: str, allowed_extensions: set) -> Path:
-    """Validate and sanitize a file path to prevent directory traversal attacks."""
+    """Validate and sanitize a file path to prevent directory traversal attacks.
+    
+    Args:
+        file_path: The file path to validate
+        allowed_extensions: Set of allowed file extensions (e.g., {'.apkg'})
+    
+    Returns:
+        Resolved Path object if validation passes
+        
+    Raises:
+        HTTPException: If validation fails (400 status code)
+    """
     if not file_path or not isinstance(file_path, str):
         raise HTTPException(status_code=400, detail="File path is required")
     
-    # Check for directory traversal (.. in the original input) before normalization
+    # Check for directory traversal patterns (.. in the original input) before normalization
+    # This catches both literal .. and URL-encoded variants after decoding
     if '..' in file_path:
         raise HTTPException(
             status_code=400, 
             detail="Invalid file path: directory traversal is not allowed"
         )
     
-    # Resolve to absolute path
+    # Resolve to absolute path and normalize
     path = Path(file_path).resolve()
+    
+    # Additional security: ensure we're not accessing system-critical directories
+    # This prevents absolute paths to sensitive locations like /etc, /sys, etc.
+    path_str = str(path)
+    sensitive_dirs = ['/etc/', '/sys/', '/proc/', '/dev/', '/root/']
+    for sensitive_dir in sensitive_dirs:
+        if path_str.startswith(sensitive_dir):
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid file path: access to system directories is not allowed"
+            )
     
     # Validate file extension
     if path.suffix.lower() not in allowed_extensions:
