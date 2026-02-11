@@ -5,6 +5,8 @@ Knowledge graph and curriculum endpoints.
 from fastapi import APIRouter, Request, HTTPException
 from app.models.api_models import TopicNode, GraphResponse, ConfidenceUpdate
 from app.models.graph_models import TopicDetails, GraphStatistics
+from app.models.database import get_session
+import json
 
 router = APIRouter()
 
@@ -14,12 +16,41 @@ async def get_graph(request: Request):
     """Get the complete knowledge graph with user progress."""
     graph_service = request.app.state.graph
     
-    graph_data = await graph_service.get_graph_with_progress()
+    # Check for active semester scope
+    semester_service = request.app.state.semester if hasattr(request.app.state, 'semester') else None
+    scoped_topic_ids = None
+    
+    if semester_service:
+        async with get_session() as db:
+            active_scope = await semester_service.get_active_scope(db)
+            if active_scope:
+                scoped_topic_ids = set(json.loads(active_scope.topic_ids))
+    
+    # Pass scoped topics to graph service
+    async with get_session() as db:
+        graph_data = await graph_service.get_graph_with_progress(db, scoped_topic_ids=scoped_topic_ids)
+    
+    # Convert to response format
+    nodes = [
+        TopicNode(
+            id=node.id,
+            label=node.label,
+            type=node.type,
+            confidence=node.confidence,
+            in_scope=node.in_scope
+        )
+        for node in graph_data.nodes
+    ]
+    
+    edges = [
+        {"source": edge.source, "target": edge.target, "type": edge.type}
+        for edge in graph_data.edges
+    ]
     
     return GraphResponse(
-        nodes=graph_data["nodes"],
-        edges=graph_data["edges"],
-        statistics=graph_data["statistics"]
+        nodes=nodes,
+        edges=edges,
+        statistics=graph_data.metadata
     )
 
 

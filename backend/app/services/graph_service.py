@@ -62,7 +62,8 @@ class GraphService:
     
     async def get_graph_with_progress(
         self, 
-        db: AsyncSession
+        db: AsyncSession,
+        scoped_topic_ids: Optional[set] = None  # NEW
     ) -> KnowledgeGraph:
         """Get complete graph with user progress merged."""
         if not self.is_loaded:
@@ -82,6 +83,12 @@ class GraphService:
                 topic_copy.confidence = progress.confidence
                 topic_copy.last_studied = progress.last_studied
                 topic_copy.study_count = progress.study_count
+            
+            # Set in_scope flag based on semester scope
+            if scoped_topic_ids is not None:
+                topic_copy.in_scope = topic.id in scoped_topic_ids
+            else:
+                topic_copy.in_scope = True  # All topics in scope if no filter
             
             nodes.append(topic_copy)
         

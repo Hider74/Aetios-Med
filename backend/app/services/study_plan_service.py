@@ -32,7 +32,8 @@ class StudyPlanService:
         end_date: datetime,
         hours_per_day: float,
         db: AsyncSession,
-        focus_weak_areas: bool = True
+        focus_weak_areas: bool = True,
+        semester_scope_id: Optional[int] = None  # NEW
     ) -> int:
         """
         Generate a personalized study plan.
@@ -44,6 +45,7 @@ class StudyPlanService:
             hours_per_day: Available study hours per day
             db: Database session
             focus_weak_areas: Prioritize weak topics
+            semester_scope_id: Optional semester scope ID to focus the plan on scoped topics
         
         Returns:
             Study plan ID
@@ -63,6 +65,20 @@ class StudyPlanService:
             if exam:
                 exam_name = exam.name
                 exam_topics = set(json.loads(exam.topics))
+        
+        # Get semester scope topics if specified
+        if semester_scope_id:
+            from ..models.database import SemesterScope
+            result = await db.execute(
+                select(SemesterScope).where(SemesterScope.id == semester_scope_id)
+            )
+            scope = result.scalar_one_or_none()
+            if scope:
+                scope_topics = set(json.loads(scope.topic_ids))
+                # Merge with exam topics (union of both sets)
+                exam_topics = exam_topics.union(scope_topics)
+                if exam_name == "General Study Plan":
+                    exam_name = f"Study Plan for {scope.name}"
         
         # Get all topic progress
         result = await db.execute(select(TopicProgress))
