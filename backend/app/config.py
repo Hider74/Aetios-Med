@@ -6,6 +6,7 @@ import os
 import sys
 import logging
 from pathlib import Path
+from typing import Optional
 from pydantic_settings import BaseSettings
 from pydantic import SecretStr
 
@@ -52,7 +53,7 @@ class Settings(BaseSettings):
     embedding_model: str = "BAAI/bge-base-en-v1.5"
     
     # HuggingFace - uses SecretStr to prevent accidental exposure in logs/serialization
-    hf_token: SecretStr = None
+    hf_token: Optional[SecretStr] = None
     
     class Config:
         env_file = ".env"

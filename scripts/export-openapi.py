@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Export FastAPI OpenAPI schema to a static JSON file."""
+"""
+Export FastAPI OpenAPI schema to a static JSON file.
+
+This script requires the backend dependencies to be installed.
+Run: pip install -r backend/requirements.txt
+"""
 import json
 import sys
 sys.path.insert(0, 'backend')
