@@ -13,6 +13,63 @@ import os
 
 router = APIRouter()
 
+# Allowed file extensions for validation
+ALLOWED_ANKI_EXTENSIONS = {'.apkg'}
+ALLOWED_NOTES_EXTENSIONS = {'.txt', '.md'}
+
+# Sensitive system directories that should not be accessible
+SENSITIVE_SYSTEM_DIRS = ['/etc/', '/sys/', '/proc/', '/dev/', '/root/']
+
+
+def validate_file_path(file_path: str, allowed_extensions: set) -> Path:
+    """Validate and sanitize a file path to prevent directory traversal attacks.
+    
+    Args:
+        file_path: The file path to validate
+        allowed_extensions: Set of allowed file extensions (e.g., {'.apkg'})
+    
+    Returns:
+        Resolved Path object if validation passes
+        
+    Raises:
+        HTTPException: If validation fails (400 status code)
+    """
+    if not isinstance(file_path, str):
+        raise HTTPException(status_code=400, detail="File path must be a string")
+    
+    if not file_path:
+        raise HTTPException(status_code=400, detail="File path cannot be empty")
+    
+    # Check for directory traversal patterns (.. in the original input) before normalization
+    # This catches both literal .. and URL-encoded variants after decoding
+    if '..' in file_path:
+        raise HTTPException(
+            status_code=400, 
+            detail="Invalid file path: directory traversal is not allowed"
+        )
+    
+    # Resolve to absolute path and normalize
+    path = Path(file_path).resolve()
+    
+    # Additional security: ensure we're not accessing system-critical directories
+    # This prevents absolute paths to sensitive locations like /etc, /sys, etc.
+    path_str = str(path)
+    for sensitive_dir in SENSITIVE_SYSTEM_DIRS:
+        if path_str.startswith(sensitive_dir):
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid file path: access to system directories is not allowed"
+            )
+    
+    # Validate file extension
+    if path.suffix.lower() not in allowed_extensions:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid file type. Allowed: {', '.join(allowed_extensions)}"
+        )
+    
+    return path
+
 
 @router.post("/anki", response_model=IngestResponse)
 async def ingest_anki(request: Request, file_path: str, auto_map: bool = True):
@@ -22,7 +79,7 @@ async def ingest_anki(request: Request, file_path: str, auto_map: bool = True):
     if not ingest_service:
         raise HTTPException(status_code=503, detail="Ingest service not available")
     
-    path = Path(file_path)
+    path = validate_file_path(file_path, ALLOWED_ANKI_EXTENSIONS)
     if not path.exists():
         raise HTTPException(status_code=404, detail="File not found")
     
@@ -98,13 +155,9 @@ async def ingest_notes(request: Request, file_path: str, auto_map: bool = True):
     if not ingest_service:
         raise HTTPException(status_code=503, detail="Ingest service not available")
     
-    path = Path(file_path)
+    path = validate_file_path(file_path, ALLOWED_NOTES_EXTENSIONS)
     if not path.exists():
         raise HTTPException(status_code=404, detail="File not found")
-    
-    # Check file extension
-    if path.suffix not in ['.txt', '.md']:
-        raise HTTPException(status_code=400, detail="File must be .txt or .md")
     
     try:
         # Read file content
