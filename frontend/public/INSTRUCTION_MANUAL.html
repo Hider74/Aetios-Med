@@ -304,13 +304,14 @@
                 <li><a href="#requirements">Requirements</a></li>
                 <li><a href="#installation">Installation</a></li>
                 <li><a href="#setup">Setup</a></li>
-                <li><a href="#anki">Anki</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
                 <li><a href="#graph">Knowledge Graph</a></li>
                 <li><a href="#chat">AI Tutor</a></li>
                 <li><a href="#quiz">Quizzes</a></li>
-                <li><a href="#study">Study Plans</a></li>
-                <li><a href="#resources">Resources</a></li>
                 <li><a href="#semester">Semester Scoping</a></li>
+                <li><a href="#study">Study Plans</a></li>
+                <li><a href="#anki">Anki</a></li>
+                <li><a href="#resources">Resources</a></li>
                 <li><a href="#troubleshooting">Troubleshooting</a></li>
                 <li><a href="#appendix">Appendix</a></li>
             </ul>
@@ -318,7 +319,7 @@
         
         <main>
             <section id="introduction">
-                <h2>📖 1. Introduction</h2>
+                <h2>1. Introduction</h2>
                 
                 <h3>Welcome to Aetios-Med!</h3>
                 <p>Aetios-Med is an <strong>offline-first medical study assistant</strong> designed specifically for UK medical students. It combines the power of artificial intelligence with a living knowledge graph to help you master the medical curriculum efficiently and effectively.</p>
@@ -493,9 +494,8 @@
                     </ul>
                 </div>
             </section>
-            
             <section id="requirements">
-                <h2>💻 2. System Requirements</h2>
+                <h2>2. System Requirements</h2>
                 
                 <h3>Operating Systems</h3>
                 <table>
@@ -592,9 +592,8 @@
                     </ul>
                 </div>
             </section>
-            
             <section id="installation">
-                <h2>🚀 3. Installation Guide</h2>
+                <h2>3. Installation</h2>
                 
                 <h3>Quick Start (Recommended)</h3>
                 <p>Aetios-Med now features a fully automated one-command installation! Choose your preferred method below.</p>
@@ -778,9 +777,8 @@ npm run dev</code></pre>
                     </li>
                 </ol>
             </section>
-            
             <section id="setup">
-                <h2>⚙️ 4. First-Time Setup Wizard</h2>
+                <h2>4. Getting Started/Setup</h2>
                 
                 <p>When you first launch Aetios-Med, you'll be guided through a setup wizard to configure the application.</p>
                 
@@ -880,160 +878,215 @@ npm run dev</code></pre>
                     <p>You'll now see the main dashboard. Take a moment to explore the interface before diving into study!</p>
                 </div>
             </section>
-            
-            <section id="anki">
-                <h2>🎴 5. Anki Integration</h2>
+                        <section id="dashboard">
+                <h2>5. Dashboard</h2>
                 
-                <h3>What is Anki?</h3>
-                <p>Anki is a popular flashcard application that uses spaced repetition. Many medical students use Anki for memorization. Aetios-Med integrates with Anki to:</p>
-                <ul>
-                    <li>Import your existing Anki decks</li>
-                    <li>Map cards to curriculum topics automatically</li>
-                    <li>Track which cards are related to weak topics</li>
-                    <li>Predict when you'll forget information (memory decay)</li>
-                    <li>Generate targeted study recommendations</li>
-                </ul>
+                <p>The Dashboard is your command center for tracking learning progress, monitoring study habits, and staying motivated. It provides at-a-glance insights into your overall learning health and daily progress.</p>
                 
-                <h3>Exporting Decks from Anki</h3>
+                <h3>Study Health Indicator</h3>
                 
-                <h4>Step 1: Open Anki</h4>
-                <p>Launch Anki on your computer (download from <a href="https://apps.ankiweb.net/">apps.ankiweb.net</a> if you don't have it).</p>
-                
-                <h4>Step 2: Select a Deck</h4>
-                <p>Click on the deck you want to export (e.g., "Medicine Year 2" or "Cardiology").</p>
-                
-                <h4>Step 3: Export</h4>
-                <ol>
-                    <li>Go to <strong>File → Export</strong></li>
-                    <li>Choose <strong>"Anki Deck Package (*.apkg)"</strong> as the export format</li>
-                    <li>Check <strong>"Include scheduling information"</strong> (important for retention tracking)</li>
-                    <li>Check <strong>"Include media"</strong> if your cards have images</li>
-                    <li>Click <strong>Export</strong> and save the .apkg file</li>
-                </ol>
-                
-                <div class="info-box">
-                    <h4>💡 Export Tips</h4>
-                    <ul>
-                        <li>Export individual decks rather than "All Decks" for better organization</li>
-                        <li>The scheduling information is crucial for Aetios-Med to understand which cards you struggle with</li>
-                        <li>.apkg files are just zip files containing a SQLite database</li>
-                    </ul>
-                </div>
-                
-                <h3>Importing into Aetios-Med</h3>
-                
-                <h4>Method 1: Automatic Import (Recommended)</h4>
-                <ol>
-                    <li>Save your .apkg files to the Anki folder you configured during setup</li>
-                    <li>Aetios-Med will automatically detect and import new files</li>
-                    <li>You'll see a notification when import is complete</li>
-                </ol>
-                
-                <h4>Method 2: Manual Import</h4>
-                <ol>
-                    <li>Go to <strong>Dashboard → Import</strong></li>
-                    <li>Click <strong>"Import Anki Deck"</strong></li>
-                    <li>Browse to your .apkg file</li>
-                    <li>Choose whether to enable <strong>automatic topic mapping</strong> (recommended)</li>
-                    <li>Click <strong>Import</strong></li>
-                </ol>
+                <p>The Study Health Indicator is a comprehensive metric that shows your overall learning status. It analyzes multiple factors to give you a clear picture of your academic wellbeing.</p>
                 
                 <div class="screenshot-placeholder">
-                    📸 Anki Import Screen
-                    <p>File selection dialog with import options</p>
+                    📸 Study Health Widget
+                    <p>Color-coded health score with breakdown of contributing factors</p>
                 </div>
                 
-                <h3>Automatic Topic Mapping</h3>
-                <p>Aetios-Med uses AI to map your Anki cards to curriculum topics automatically:</p>
+                <h4>What It Monitors:</h4>
+                <ul>
+                    <li><strong>Recent Activity</strong> - How regularly you've been studying over the past week</li>
+                    <li><strong>Weak Topics</strong> - Number of topics with low confidence (red nodes in the graph)</li>
+                    <li><strong>Decaying Knowledge</strong> - Topics you haven't reviewed recently and are at risk of forgetting</li>
+                    <li><strong>Exam Pressure</strong> - Time until your next scheduled exam and your readiness level</li>
+                </ul>
                 
-                <ol>
-                    <li><span class="step-number">1</span> The system reads the front and back of each card</li>
-                    <li><span class="step-number">2</span> It analyzes the content using the embedding model</li>
-                    <li><span class="step-number">3</span> Cards are matched to the most relevant curriculum topic(s)</li>
-                    <li><span class="step-number">4</span> You can review and adjust mappings manually</li>
-                </ol>
-                
-                <h4>Example Mappings:</h4>
+                <h4>Health Levels:</h4>
                 <table>
                     <thead>
                         <tr>
-                            <th>Card Front</th>
-                            <th>Mapped Topic</th>
-                            <th>Confidence</th>
+                            <th>Status</th>
+                            <th>Color</th>
+                            <th>Meaning</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>"What are the 4 chambers of the heart?"</td>
-                            <td>Cardiovascular Anatomy</td>
-                            <td><span class="badge badge-green">95%</span></td>
+                            <td><strong>Excellent</strong></td>
+                            <td><span class="badge badge-green">🟢 Green</span></td>
+                            <td>Regular study, few weak areas, staying on top of reviews</td>
+                            <td>Maintain your routine, continue spaced repetition</td>
                         </tr>
                         <tr>
-                            <td>"First-line treatment for hypertension?"</td>
-                            <td>Cardiovascular Pharmacology</td>
-                            <td><span class="badge badge-green">88%</span></td>
+                            <td><strong>Good</strong></td>
+                            <td><span class="badge badge-amber">🟡 Amber</span></td>
+                            <td>Some gaps in coverage, minor review backlog</td>
+                            <td>Address weak topics, catch up on overdue reviews</td>
                         </tr>
                         <tr>
-                            <td>"Symptoms of diabetic ketoacidosis"</td>
-                            <td>Endocrine Disorders</td>
-                            <td><span class="badge badge-green">92%</span></td>
+                            <td><strong>Needs Attention</strong></td>
+                            <td><span class="badge badge-red">🔴 Red</span></td>
+                            <td>Significant weak areas or extended study absence</td>
+                            <td>Urgent review needed, consider revising study plan</td>
                         </tr>
                     </tbody>
                 </table>
                 
-                <h3>Viewing Anki Statistics</h3>
-                <p>Once imported, you can view detailed statistics about your Anki cards:</p>
-                
-                <ul>
-                    <li><strong>Total cards</strong> in each deck</li>
-                    <li><strong>Cards reviewed</strong> vs. new cards</li>
-                    <li><strong>Average ease factor</strong> (how difficult cards are for you)</li>
-                    <li><strong>Total lapses</strong> (times you forgot cards)</li>
-                    <li><strong>Weak cards</strong> (ease factor < 2.0 or multiple lapses)</li>
-                    <li><strong>Memory stability</strong> predictions</li>
-                </ul>
-                
-                <div class="screenshot-placeholder">
-                    📸 Anki Statistics Dashboard
-                    <p>Graphs and charts showing card performance by topic</p>
-                </div>
-                
-                <h3>Understanding Retention Tracking</h3>
-                <p>Aetios-Med tracks your Anki card retention using the card's scheduling information:</p>
-                
-                <ul>
-                    <li><strong>Interval</strong> - Days until next review</li>
-                    <li><strong>Ease factor</strong> - How easy/hard the card is (2.5 is normal)</li>
-                    <li><strong>Reviews</strong> - Number of times you've seen the card</li>
-                    <li><strong>Lapses</strong> - Number of times you've forgotten it</li>
-                    <li><strong>Last review</strong> - When you last studied this card</li>
-                </ul>
-                
-                <p>This data helps the AI tutor identify which topics need more attention.</p>
-                
-                <h3>Managing Multiple Decks</h3>
-                <p>You can import multiple Anki decks:</p>
-                
-                <ol>
-                    <li>Each deck is tracked separately</li>
-                    <li>View per-deck statistics in the Anki panel</li>
-                    <li>Filter the knowledge graph by deck to see only relevant topics</li>
-                    <li>Delete imported decks if you no longer need them</li>
-                </ol>
-                
-                <div class="warning-box">
-                    <h4>⚠️ Important Notes</h4>
+                <div class="info-box">
+                    <h4>💡 Using Study Health</h4>
+                    <p>Check your Study Health daily to:</p>
                     <ul>
-                        <li>Importing a deck doesn't modify your original Anki database</li>
-                        <li>Changes in Aetios-Med don't sync back to Anki (it's one-way import)</li>
-                        <li>Re-import a deck to update statistics after studying in Anki</li>
-                        <li>Large decks (1000+ cards) may take a few minutes to process</li>
+                        <li>Identify when you need to increase study intensity</li>
+                        <li>Catch knowledge decay before it becomes severe</li>
+                        <li>Balance workload across topics effectively</li>
+                        <li>Stay motivated by seeing improvement over time</li>
                     </ul>
                 </div>
+                
+                <h3>Study Streak Tracker</h3>
+                
+                <p>The Study Streak Tracker gamifies your study routine by tracking consecutive days of learning activity. Building a streak helps develop consistent study habits.</p>
+                
+                <div class="screenshot-placeholder">
+                    📸 Study Streak Widget
+                    <p>Current streak count with calendar heatmap showing daily activity</p>
+                </div>
+                
+                <h4>What Counts as Study Activity:</h4>
+                <ul>
+                    <li><strong>Completing a quiz</strong> - Any quiz, regardless of score</li>
+                    <li><strong>Reviewing Anki cards</strong> - Must review at least 5 cards</li>
+                    <li><strong>Study sessions</strong> - At least 10 minutes of active study</li>
+                    <li><strong>Updating topic confidence</strong> - Manual confidence updates after self-study</li>
+                    <li><strong>Chat with AI tutor</strong> - At least 3 meaningful exchanges</li>
+                </ul>
+                
+                <h4>Streak Milestones:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Milestone</th>
+                            <th>Achievement</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>🔥 7 Days</td>
+                            <td>One Week Warrior - Establishing routine</td>
+                        </tr>
+                        <tr>
+                            <td>⚡ 14 Days</td>
+                            <td>Fortnight Focus - Building momentum</td>
+                        </tr>
+                        <tr>
+                            <td>💪 30 Days</td>
+                            <td>Monthly Master - Habit formed</td>
+                        </tr>
+                        <tr>
+                            <td>🏆 100 Days</td>
+                            <td>Century Scholar - Elite consistency</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="success-box">
+                    <h4>✅ Streak Tips</h4>
+                    <ul>
+                        <li><strong>Start small:</strong> Even 10 minutes counts - don't break the chain</li>
+                        <li><strong>Study before bed:</strong> End your day with a quick review</li>
+                        <li><strong>Use reminders:</strong> Set a daily alarm for consistent study time</li>
+                        <li><strong>Recovery grace:</strong> If you miss a day, get back immediately - don't let one miss become two</li>
+                    </ul>
+                </div>
+                
+                <h3>Daily Goals</h3>
+                
+                <p>Set personalized daily targets to structure your study sessions and track tangible progress. Daily Goals help you break down large curriculum requirements into manageable daily tasks.</p>
+                
+                <div class="screenshot-placeholder">
+                    📸 Daily Goals Widget
+                    <p>Progress bars showing completion status for each goal type</p>
+                </div>
+                
+                <h4>Goal Types:</h4>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Goal</th>
+                            <th>Description</th>
+                            <th>Recommended Target</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Study Time</strong></td>
+                            <td>Total minutes of active study</td>
+                            <td>60-120 minutes/day</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quiz Questions</strong></td>
+                            <td>Number of quiz questions answered</td>
+                            <td>20-50 questions/day</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Topics Reviewed</strong></td>
+                            <td>Different curriculum topics studied</td>
+                            <td>3-5 topics/day</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cards Reviewed</strong></td>
+                            <td>Anki flashcards reviewed</td>
+                            <td>30-100 cards/day</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4>Setting Your Goals:</h4>
+                <ol>
+                    <li><span class="step-number">1</span> Click <strong>"Edit Goals"</strong> in the Daily Goals widget</li>
+                    <li><span class="step-number">2</span> Adjust each target based on your schedule and exam timeline</li>
+                    <li><span class="step-number">3</span> Save changes</li>
+                    <li><span class="step-number">4</span> Track progress throughout the day</li>
+                </ol>
+                
+                <div class="info-box">
+                    <h4>💡 Goal Setting Strategy</h4>
+                    <ul>
+                        <li><strong>Be realistic:</strong> Set achievable goals based on your schedule</li>
+                        <li><strong>Adjust seasonally:</strong> Increase targets during revision periods, reduce during clinical placements</li>
+                        <li><strong>Focus on consistency:</strong> Better to hit 80% daily than 100% sporadically</li>
+                        <li><strong>Track completion rate:</strong> If you consistently miss goals, reduce targets</li>
+                        <li><strong>Increase gradually:</strong> As study habits strengthen, slowly increase targets</li>
+                    </ul>
+                </div>
+                
+                <h3>Dashboard Overview</h3>
+                
+                <p>Beyond the widgets, the Dashboard also displays:</p>
+                
+                <ul>
+                    <li><strong>Upcoming Reviews</strong> - Topics due for spaced repetition review</li>
+                    <li><strong>Recent Activity</strong> - Your last study sessions and quizzes</li>
+                    <li><strong>Exam Countdown</strong> - Days until scheduled exams</li>
+                    <li><strong>Weak Topic Alerts</strong> - Priority topics requiring urgent attention</li>
+                    <li><strong>Recommended Quizzes</strong> - AI-suggested quizzes based on weak areas</li>
+                </ul>
+                
+                <div class="feature-box">
+                    <h4>🎯 Making the Most of Your Dashboard</h4>
+                    <p>Your Dashboard should be your first stop each study session:</p>
+                    <ol>
+                        <li><strong>Check Study Health</strong> - Understand your current learning status</li>
+                        <li><strong>Review Daily Goals</strong> - Know what you need to accomplish today</li>
+                        <li><strong>Address Weak Topics</strong> - Prioritize red topics from recommendations</li>
+                        <li><strong>Complete Reviews</strong> - Clear any overdue spaced repetition items</li>
+                        <li><strong>Maintain Streak</strong> - Don't let your study chain break!</li>
+                    </ol>
+                </div>
             </section>
-            
             <section id="graph">
-                <h2>🕸️ 6. Knowledge Graph</h2>
+                <h2>6. Knowledge Graph</h2>
                 
                 <p>The Knowledge Graph is the heart of Aetios-Med. It visualizes 75+ topics from the UK medical curriculum and shows how they relate to each other.</p>
                 
@@ -1288,10 +1341,131 @@ npm run dev</code></pre>
                         <li><strong>Exam focus:</strong> Prioritize topics directly tested in upcoming exams</li>
                     </ul>
                 </div>
+                
+                <h3>Context Menu (Right-Click Actions)</h3>
+                
+                <p>Right-click on any topic node to access a powerful context menu with instant actions. This menu provides quick access to the most common operations without opening the detail panel.</p>
+                
+                <div class="screenshot-placeholder">
+                    📸 Context Menu on Topic Node
+                    <p>Right-click menu showing available actions for the selected topic</p>
+                </div>
+                
+                <h4>Available Actions:</h4>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>What It Does</th>
+                            <th>When to Use</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Start Quiz</strong></td>
+                            <td>Immediately generates a quiz for this topic</td>
+                            <td>Quick practice session, testing your knowledge</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ask AI About This Topic</strong></td>
+                            <td>Opens chat interface with topic pre-loaded as context</td>
+                            <td>Getting explanations, asking questions about the topic</td>
+                        </tr>
+                        <tr>
+                            <td><strong>View Related Cards</strong></td>
+                            <td>Shows all Anki flashcards mapped to this topic</td>
+                            <td>Reviewing flashcards, checking card performance</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quick Confidence Update</strong></td>
+                            <td>One-click confidence adjustment (see below)</td>
+                            <td>After self-study, manual confidence assessment</td>
+                        </tr>
+                        <tr>
+                            <td><strong>View Study History</strong></td>
+                            <td>Timeline of all study sessions for this topic</td>
+                            <td>Tracking progress, identifying study gaps</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Show Prerequisites</strong></td>
+                            <td>Highlights prerequisite topics in the graph</td>
+                            <td>Planning study order, checking foundational knowledge</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="info-box">
+                    <h4>💡 Right-Click Workflow Tips</h4>
+                    <ul>
+                        <li><strong>Quick assessment:</strong> Right-click → Quick Confidence Update after self-study</li>
+                        <li><strong>Deep dive:</strong> Right-click → Ask AI to explore difficult concepts</li>
+                        <li><strong>Prerequisite check:</strong> Right-click → Show Prerequisites before starting a new topic</li>
+                        <li><strong>Anki review:</strong> Right-click → View Related Cards to integrate flashcard practice</li>
+                    </ul>
+                </div>
+                
+                <h3>Quick Confidence Update Buttons</h3>
+                
+                <p>The Quick Confidence Update feature allows you to instantly update your mastery level for any topic with a single click. This is perfect for quick self-assessments after independent study.</p>
+                
+                <h4>Three Quick Options:</h4>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Button</th>
+                            <th>Confidence Level</th>
+                            <th>Effect</th>
+                            <th>When to Click</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>✅ Confident</strong></td>
+                            <td>Sets confidence to 70-85%</td>
+                            <td>Topic becomes green in the graph</td>
+                            <td>After successful study session, feeling solid on the material</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🤔 Reviewing</strong></td>
+                            <td>Sets confidence to 40-55%</td>
+                            <td>Topic becomes amber in the graph</td>
+                            <td>Partially understand but need more practice</td>
+                        </tr>
+                        <tr>
+                            <td><strong>❌ Struggling</strong></td>
+                            <td>Sets confidence to 15-30%</td>
+                            <td>Topic becomes red in the graph</td>
+                            <td>Finding the topic difficult, need to review fundamentals</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4>How to Use:</h4>
+                <ol>
+                    <li><span class="step-number">1</span> Right-click on a topic node</li>
+                    <li><span class="step-number">2</span> Hover over <strong>"Quick Confidence Update"</strong></li>
+                    <li><span class="step-number">3</span> Click your current feeling: ✅ Confident, 🤔 Reviewing, or ❌ Struggling</li>
+                    <li><span class="step-number">4</span> The node color updates immediately</li>
+                </ol>
+                
+                <div class="success-box">
+                    <h4>✅ Honest Self-Assessment</h4>
+                    <p>For Quick Confidence Updates to be effective:</p>
+                    <ul>
+                        <li><strong>Be honest:</strong> Don't inflate your confidence - it affects study recommendations</li>
+                        <li><strong>Test yourself:</strong> Try recalling key facts before updating</li>
+                        <li><strong>Use the "Struggling" option:</strong> It's okay to mark topics as difficult - Aetios will help you focus on them</li>
+                        <li><strong>Update after study:</strong> Make it a habit to update confidence after each study session</li>
+                        <li><strong>Regular reassessment:</strong> Update periodically as your knowledge evolves</li>
+                    </ul>
+                </div>
+                
+                <p><strong>Note:</strong> While Quick Confidence Update is fast and convenient, taking quizzes provides more objective confidence measurements based on actual performance.</p>
             </section>
-            
             <section id="chat">
-                <h2>💬 7. AI Medical Tutor (Chat Interface)</h2>
+                <h2>7. AI Medical Tutor / Chat Interface</h2>
                 
                 <p>The AI tutor is your personal medical educator, powered by OpenBioLLM-8B running entirely on your computer. It can answer questions, explain concepts, and guide your learning.</p>
                 
@@ -1609,6 +1783,16 @@ npm run dev</code></pre>
                     <li><strong>Send shortcuts:</strong> Use <code>Ctrl/Cmd + Enter</code> to send your message, or click the Send button</li>
                 </ul>
                 
+                <h4>Session Isolation & Privacy:</h4>
+                <p>Each chat session is completely isolated to protect your privacy and give you a fresh start when needed.</p>
+                
+                <ul>
+                    <li><strong>Isolated contexts:</strong> Starting a new session gives the AI a fresh context—it won't remember previous conversations</li>
+                    <li><strong>Clear chat history:</strong> Clearing chat history fully resets the agent's memory for that session</li>
+                    <li><strong>Multiple sessions:</strong> The system supports up to 20 concurrent chat sessions</li>
+                    <li><strong>Security:</strong> Sessions cannot access each other's data, preventing cross-session data leakage</li>
+                </ul>
+                
                 <h3>Best Practices for Using the AI Tutor</h3>
                 
                 <div class="success-box">
@@ -1706,9 +1890,8 @@ npm run dev</code></pre>
                     </ul>
                 </div>
             </section>
-            
             <section id="quiz">
-                <h2>🎯 8. Quiz Generation & Spaced Repetition</h2>
+                <h2>8. Quiz Generation</h2>
                 
                 <p>Aetios-Med generates personalized quizzes using AI, targeting your weak areas and scheduling reviews using the FSRS-4 (Free Spaced Repetition Scheduler) algorithm.</p>
                 
@@ -2054,9 +2237,223 @@ npm run dev</code></pre>
                     <li>Performance feeds back into the knowledge graph</li>
                 </ul>
             </section>
-            
+            <section id="semester">
+                <h2>9. Semester Curriculum Scoping</h2>
+                
+                <p>Semester Curriculum Scoping allows you to upload your medical school's semester-specific curriculum PDFs and focus your study on the topics you'll actually be examined on. This helps you prioritize effectively and reduces cognitive overload.</p>
+                
+                <h3>What is Semester Scoping?</h3>
+                
+                <div class="feature-box">
+                    <h4>🎯 Purpose</h4>
+                    <p>Medical school curricula are vast, but each semester only covers a subset of topics. Semester Scoping:</p>
+                    <ul>
+                        <li>Identifies which topics from the knowledge graph match your current curriculum</li>
+                        <li>Prioritizes these topics in study plans and quiz generation</li>
+                        <li>Dims out-of-scope topics in the knowledge graph (30% opacity) so you can focus</li>
+                        <li>Helps you prepare specifically for upcoming semester exams</li>
+                        <li>Allows switching between different semester scopes as you progress through medical school</li>
+                    </ul>
+                </div>
+                
+                <h3>How to Upload a Semester Curriculum PDF</h3>
+                
+                <h4>Step 1: Prepare Your Curriculum Document</h4>
+                <ul>
+                    <li>Get your semester curriculum document from your medical school (usually available on VLE/Blackboard)</li>
+                    <li>Must be in PDF format</li>
+                    <li>Can include module handbooks, course guides, or learning outcomes documents</li>
+                    <li>The more detailed, the better (topic names, learning objectives, module descriptions)</li>
+                </ul>
+                
+                <h4>Step 2: Upload to Aetios</h4>
+                <ol>
+                    <li><span class="step-number">1</span> Navigate to the <strong>Semester Management</strong> section in Settings or the sidebar</li>
+                    <li><span class="step-number">2</span> Click <strong>"Upload Semester Curriculum"</strong></li>
+                    <li><span class="step-number">3</span> Select your PDF file</li>
+                    <li><span class="step-number">4</span> Enter semester details:
+                        <ul>
+                            <li><strong>Name:</strong> e.g., "Year 3 Semester 1" or "Cardiovascular & Respiratory Module"</li>
+                            <li><strong>Year:</strong> Your academic year (optional)</li>
+                            <li><strong>Semester Number:</strong> 1 or 2 (optional)</li>
+                            <li><strong>Exam Date:</strong> When the semester exam takes place (optional, helps with study plan prioritization)</li>
+                        </ul>
+                    </li>
+                    <li><span class="step-number">5</span> Click <strong>Upload & Analyze</strong></li>
+                </ol>
+                
+                <div class="screenshot-placeholder">
+                    📸 Semester Upload Dialog
+                    <p>Form showing file picker, name field, year/semester inputs, and exam date picker</p>
+                </div>
+                
+                <h3>The Matching Process</h3>
+                
+                <p>Aetios uses <strong>vector similarity matching</strong> to automatically identify which topics in the knowledge graph correspond to your curriculum:</p>
+                
+                <div class="info-box">
+                    <h4>🔍 How Matching Works</h4>
+                    <ol>
+                        <li><strong>Text Extraction:</strong> PDF content is parsed to extract all text</li>
+                        <li><strong>Semantic Analysis:</strong> Text is embedded using the same model that powers note search</li>
+                        <li><strong>Topic Comparison:</strong> Each topic in the knowledge graph is compared against the PDF content</li>
+                        <li><strong>Similarity Scoring:</strong> Topics with high semantic similarity (typically >0.3 cosine similarity) are matched</li>
+                        <li><strong>Review Results:</strong> You'll see a list of matched topics with confidence scores</li>
+                    </ol>
+                </div>
+                
+                <h4>Review Matched Topics</h4>
+                <p>After upload, you'll see a list of topics that were matched to your curriculum:</p>
+                
+                <ul>
+                    <li><strong>Topic Name:</strong> e.g., "Heart Failure", "Respiratory Physiology"</li>
+                    <li><strong>Match Score:</strong> How confident the system is about the match (0.0 to 1.0)</li>
+                    <li><strong>Topic Label:</strong> The full topic name from the knowledge graph</li>
+                </ul>
+                
+                <div class="screenshot-placeholder">
+                    📸 Matched Topics Review Screen
+                    <p>Table showing matched topics, match scores, checkboxes to include/exclude topics</p>
+                </div>
+                
+                <p><strong>You can:</strong></p>
+                <ul>
+                    <li>✅ Accept all matched topics (recommended for most users)</li>
+                    <li>📝 Manually deselect topics that don't belong</li>
+                    <li>➕ Manually add topics that were missed (click "Add Topic")</li>
+                </ul>
+                
+                <h3>Activating a Semester Scope</h3>
+                
+                <p>Once you've created a semester scope, you need to <strong>activate</strong> it to affect the app:</p>
+                
+                <ol>
+                    <li><span class="step-number">1</span> Go to <strong>Semester Management</strong></li>
+                    <li><span class="step-number">2</span> View your list of saved scopes</li>
+                    <li><span class="step-number">3</span> Click <strong>"Activate"</strong> next to the semester you want to focus on</li>
+                </ol>
+                
+                <div class="info-box">
+                    <h4>💡 Single Active Scope</h4>
+                    <p>Only <strong>one semester scope can be active at a time</strong>. When you activate a new scope, the previous one is automatically deactivated. This ensures you stay focused on your current semester's content.</p>
+                </div>
+                
+                <h3>How Scoping Affects the App</h3>
+                
+                <h4>1. Knowledge Graph Visualization</h4>
+                <ul>
+                    <li><strong>In-scope topics:</strong> Normal appearance (full opacity, full color)</li>
+                    <li><strong>Out-of-scope topics:</strong> Dimmed to 30% opacity, muted colors</li>
+                    <li><strong>Purpose:</strong> Visually highlights what you should be focusing on</li>
+                </ul>
+                
+                <div class="screenshot-placeholder">
+                    📸 Knowledge Graph with Active Semester Scope
+                    <p>Graph with bright focused topics and dimmed out-of-scope topics</p>
+                </div>
+                
+                <h4>2. Study Plan Generation</h4>
+                <ul>
+                    <li>Scoped topics receive <strong>+50 priority boost</strong></li>
+                    <li>Out-of-scope topics can still appear in plans but are deprioritized</li>
+                    <li>Weak scoped topics are prioritized over strong out-of-scope topics</li>
+                    <li>Ask the AI: <em>"Focus my study plan on my semester topics"</em></li>
+                </ul>
+                
+                <h4>3. Quiz Generation</h4>
+                <ul>
+                    <li>Quiz recommendations favor scoped topics</li>
+                    <li>When generating quizzes, the AI considers your active scope</li>
+                    <li>You can still quiz on any topic manually, but automated suggestions focus on your semester</li>
+                </ul>
+                
+                <h4>4. Dashboard & Analytics</h4>
+                <ul>
+                    <li>Weak topics widget prioritizes scoped topics</li>
+                    <li>Exam readiness calculations focus on scoped content</li>
+                    <li>Progress metrics emphasize semester-relevant learning</li>
+                </ul>
+                
+                <h3>Managing Semester Scopes</h3>
+                
+                <h4>View All Scopes</h4>
+                <p>In Semester Management, you can see all your saved scopes:</p>
+                <ul>
+                    <li><strong>Name</strong> - e.g., "Year 3 Semester 1"</li>
+                    <li><strong>Topic Count</strong> - How many topics are included</li>
+                    <li><strong>Active Status</strong> - Whether this scope is currently active</li>
+                    <li><strong>Exam Date</strong> - Upcoming exam (if set)</li>
+                    <li><strong>Created Date</strong> - When you uploaded this scope</li>
+                </ul>
+                
+                <h4>Deactivate All Scopes</h4>
+                <p>Want to see the full curriculum without scoping?</p>
+                <ul>
+                    <li>Click <strong>"Deactivate All"</strong> or <strong>"Show Full Curriculum"</strong></li>
+                    <li>All topics return to normal visibility</li>
+                    <li>Study plans and quizzes consider the entire knowledge graph</li>
+                    <li>Useful during revision or when exploring topics beyond your current semester</li>
+                </ul>
+                
+                <h4>Edit Scope Topics</h4>
+                <ul>
+                    <li>Click the <strong>edit icon</strong> next to a scope</li>
+                    <li>Add or remove topics from the scope</li>
+                    <li>Useful if the auto-matching missed relevant topics or included irrelevant ones</li>
+                </ul>
+                
+                <h4>Delete a Scope</h4>
+                <ul>
+                    <li>Click the <strong>delete icon</strong> next to a scope</li>
+                    <li>Confirm deletion</li>
+                    <li>Useful for removing old semester scopes you no longer need</li>
+                </ul>
+                
+                <h3>AI Integration: Semester-Aware Tutoring</h3>
+                
+                <p>The AI tutor can work with your semester scopes. Try asking:</p>
+                
+                <div class="success-box">
+                    <h4>📝 Semester-Related Prompts</h4>
+                    <ul>
+                        <li><em>"What semester scopes do I have?"</em> - Lists your saved scopes and which is active</li>
+                        <li><em>"Focus my study plan on my current semester"</em> - Generates a plan prioritizing scoped topics</li>
+                        <li><em>"What topics are in my active semester scope?"</em> - Shows which topics are included</li>
+                        <li><em>"Quiz me on topics from my current semester"</em> - Generates quiz from scoped topics only</li>
+                        <li><em>"Show me my weak areas in this semester's curriculum"</em> - Filters weak topics by scope</li>
+                    </ul>
+                </div>
+                
+                <p>The AI uses the <code>get_semester_scopes()</code> tool to retrieve your scope information and can factor it into study recommendations.</p>
+                
+                <h3>Best Practices</h3>
+                
+                <div class="feature-box">
+                    <h4>💡 Tips for Effective Semester Scoping</h4>
+                    <ul>
+                        <li><strong>Upload early:</strong> Set up your semester scope at the start of term for maximum benefit</li>
+                        <li><strong>Include exam dates:</strong> Helps Aetios prioritize revision timing</li>
+                        <li><strong>Review matches:</strong> Spend a minute checking auto-matched topics are correct</li>
+                        <li><strong>One scope per semester:</strong> Create a new scope each semester/module block</li>
+                        <li><strong>Deactivate between terms:</strong> Broaden your view during holidays or electives</li>
+                        <li><strong>Keep PDFs:</strong> Save your curriculum PDFs for reference (not stored in the app)</li>
+                        <li><strong>Re-upload if needed:</strong> If the curriculum changes mid-semester, upload an updated PDF</li>
+                    </ul>
+                </div>
+                
+                <div class="warning-box">
+                    <h4>⚠️ Important Notes</h4>
+                    <ul>
+                        <li>Semester scoping is <strong>advisory</strong> - you can still access and study any topic</li>
+                        <li>Topics not in your scope aren't hidden, just deprioritized</li>
+                        <li>The matching algorithm isn't perfect - always review matched topics</li>
+                        <li>PDF content is processed locally and never sent to external servers</li>
+                        <li>Requires the PDF processing libraries (installed automatically during setup)</li>
+                    </ul>
+                </div>
+            </section>
             <section id="study">
-                <h2>📅 9. Study Planning & Calendar</h2>
+                <h2>10. Study Planning</h2>
                 
                 <p>Aetios-Med generates personalized AI-powered study plans based on your exams, weak areas, and available time.</p>
                 
@@ -2301,9 +2698,158 @@ npm run dev</code></pre>
                     </ul>
                 </div>
             </section>
-            
+            <section id="anki">
+                <h2>11. Anki Integration</h2>
+                
+                <h3>What is Anki?</h3>
+                <p>Anki is a popular flashcard application that uses spaced repetition. Many medical students use Anki for memorization. Aetios-Med integrates with Anki to:</p>
+                <ul>
+                    <li>Import your existing Anki decks</li>
+                    <li>Map cards to curriculum topics automatically</li>
+                    <li>Track which cards are related to weak topics</li>
+                    <li>Predict when you'll forget information (memory decay)</li>
+                    <li>Generate targeted study recommendations</li>
+                </ul>
+                
+                <h3>Exporting Decks from Anki</h3>
+                
+                <h4>Step 1: Open Anki</h4>
+                <p>Launch Anki on your computer (download from <a href="https://apps.ankiweb.net/">apps.ankiweb.net</a> if you don't have it).</p>
+                
+                <h4>Step 2: Select a Deck</h4>
+                <p>Click on the deck you want to export (e.g., "Medicine Year 2" or "Cardiology").</p>
+                
+                <h4>Step 3: Export</h4>
+                <ol>
+                    <li>Go to <strong>File → Export</strong></li>
+                    <li>Choose <strong>"Anki Deck Package (*.apkg)"</strong> as the export format</li>
+                    <li>Check <strong>"Include scheduling information"</strong> (important for retention tracking)</li>
+                    <li>Check <strong>"Include media"</strong> if your cards have images</li>
+                    <li>Click <strong>Export</strong> and save the .apkg file</li>
+                </ol>
+                
+                <div class="info-box">
+                    <h4>💡 Export Tips</h4>
+                    <ul>
+                        <li>Export individual decks rather than "All Decks" for better organization</li>
+                        <li>The scheduling information is crucial for Aetios-Med to understand which cards you struggle with</li>
+                        <li>.apkg files are just zip files containing a SQLite database</li>
+                    </ul>
+                </div>
+                
+                <h3>Importing into Aetios-Med</h3>
+                
+                <h4>Method 1: Automatic Import (Recommended)</h4>
+                <ol>
+                    <li>Save your .apkg files to the Anki folder you configured during setup</li>
+                    <li>Aetios-Med will automatically detect and import new files</li>
+                    <li>You'll see a notification when import is complete</li>
+                </ol>
+                
+                <h4>Method 2: Manual Import</h4>
+                <ol>
+                    <li>Go to <strong>Dashboard → Import</strong></li>
+                    <li>Click <strong>"Import Anki Deck"</strong></li>
+                    <li>Browse to your .apkg file</li>
+                    <li>Choose whether to enable <strong>automatic topic mapping</strong> (recommended)</li>
+                    <li>Click <strong>Import</strong></li>
+                </ol>
+                
+                <div class="screenshot-placeholder">
+                    📸 Anki Import Screen
+                    <p>File selection dialog with import options</p>
+                </div>
+                
+                <h3>Automatic Topic Mapping</h3>
+                <p>Aetios-Med uses AI to map your Anki cards to curriculum topics automatically:</p>
+                
+                <ol>
+                    <li><span class="step-number">1</span> The system reads the front and back of each card</li>
+                    <li><span class="step-number">2</span> It analyzes the content using the embedding model</li>
+                    <li><span class="step-number">3</span> Cards are matched to the most relevant curriculum topic(s)</li>
+                    <li><span class="step-number">4</span> You can review and adjust mappings manually</li>
+                </ol>
+                
+                <h4>Example Mappings:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Card Front</th>
+                            <th>Mapped Topic</th>
+                            <th>Confidence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>"What are the 4 chambers of the heart?"</td>
+                            <td>Cardiovascular Anatomy</td>
+                            <td><span class="badge badge-green">95%</span></td>
+                        </tr>
+                        <tr>
+                            <td>"First-line treatment for hypertension?"</td>
+                            <td>Cardiovascular Pharmacology</td>
+                            <td><span class="badge badge-green">88%</span></td>
+                        </tr>
+                        <tr>
+                            <td>"Symptoms of diabetic ketoacidosis"</td>
+                            <td>Endocrine Disorders</td>
+                            <td><span class="badge badge-green">92%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Viewing Anki Statistics</h3>
+                <p>Once imported, you can view detailed statistics about your Anki cards:</p>
+                
+                <ul>
+                    <li><strong>Total cards</strong> in each deck</li>
+                    <li><strong>Cards reviewed</strong> vs. new cards</li>
+                    <li><strong>Average ease factor</strong> (how difficult cards are for you)</li>
+                    <li><strong>Total lapses</strong> (times you forgot cards)</li>
+                    <li><strong>Weak cards</strong> (ease factor < 2.0 or multiple lapses)</li>
+                    <li><strong>Memory stability</strong> predictions</li>
+                </ul>
+                
+                <div class="screenshot-placeholder">
+                    📸 Anki Statistics Dashboard
+                    <p>Graphs and charts showing card performance by topic</p>
+                </div>
+                
+                <h3>Understanding Retention Tracking</h3>
+                <p>Aetios-Med tracks your Anki card retention using the card's scheduling information:</p>
+                
+                <ul>
+                    <li><strong>Interval</strong> - Days until next review</li>
+                    <li><strong>Ease factor</strong> - How easy/hard the card is (2.5 is normal)</li>
+                    <li><strong>Reviews</strong> - Number of times you've seen the card</li>
+                    <li><strong>Lapses</strong> - Number of times you've forgotten it</li>
+                    <li><strong>Last review</strong> - When you last studied this card</li>
+                </ul>
+                
+                <p>This data helps the AI tutor identify which topics need more attention.</p>
+                
+                <h3>Managing Multiple Decks</h3>
+                <p>You can import multiple Anki decks:</p>
+                
+                <ol>
+                    <li>Each deck is tracked separately</li>
+                    <li>View per-deck statistics in the Anki panel</li>
+                    <li>Filter the knowledge graph by deck to see only relevant topics</li>
+                    <li>Delete imported decks if you no longer need them</li>
+                </ol>
+                
+                <div class="warning-box">
+                    <h4>⚠️ Important Notes</h4>
+                    <ul>
+                        <li>Importing a deck doesn't modify your original Anki database</li>
+                        <li>Changes in Aetios-Med don't sync back to Anki (it's one-way import)</li>
+                        <li>Re-import a deck to update statistics after studying in Anki</li>
+                        <li>Large decks (1000+ cards) may take a few minutes to process</li>
+                    </ul>
+                </div>
+            </section>
             <section id="resources">
-                <h2>🌐 10. Resource Viewer & External Integrations</h2>
+                <h2>12. Resource Viewer</h2>
                 
                 <p>Aetios-Med includes an in-app browser for accessing medical resources and integrating with external tools like Blackboard, Notability, and more.</p>
                 
@@ -2534,235 +3080,22 @@ npm run dev</code></pre>
                 </ul>
                 
                 <div class="warning-box">
-                    <h4>⚠️ Privacy & Data</h4>
+                    <h4>⚠️ Privacy & Data Security</h4>
                     <ul>
-                        <li>All resources are stored locally on your computer</li>
-                        <li>Web browsing in the resource viewer doesn't share data with external servers</li>
-                        <li>VLE credentials are never stored by Aetios-Med</li>
-                        <li>PDF content is indexed locally, never sent to external services</li>
-                        <li>You can clear browser data anytime in Settings</li>
+                        <li><strong>Local data storage:</strong> All resources are stored locally on your computer</li>
+                        <li><strong>Privacy-first browsing:</strong> Web browsing in the resource viewer doesn't share data with external servers</li>
+                        <li><strong>Credential protection:</strong> VLE credentials are never stored by Aetios-Med</li>
+                        <li><strong>Local indexing:</strong> PDF content is indexed locally, never sent to external services</li>
+                        <li><strong>Secure token handling:</strong> HuggingFace tokens are stored using SecretStr (never exposed in logs or API responses)</li>
+                        <li><strong>Prompt injection protection:</strong> Special LLM tokens are sanitized from user input</li>
+                        <li><strong>Session isolation:</strong> Per-session agent isolation prevents cross-session data leakage</li>
+                        <li><strong>Production security:</strong> OpenAPI docs are disabled in production builds</li>
+                        <li><strong>Data control:</strong> You can clear browser data anytime in Settings</li>
                     </ul>
                 </div>
             </section>
-            
-            <section id="semester">
-                <h2>📚 11. Semester Curriculum Scoping</h2>
-                
-                <p>Semester Curriculum Scoping allows you to upload your medical school's semester-specific curriculum PDFs and focus your study on the topics you'll actually be examined on. This helps you prioritize effectively and reduces cognitive overload.</p>
-                
-                <h3>What is Semester Scoping?</h3>
-                
-                <div class="feature-box">
-                    <h4>🎯 Purpose</h4>
-                    <p>Medical school curricula are vast, but each semester only covers a subset of topics. Semester Scoping:</p>
-                    <ul>
-                        <li>Identifies which topics from the knowledge graph match your current curriculum</li>
-                        <li>Prioritizes these topics in study plans and quiz generation</li>
-                        <li>Dims out-of-scope topics in the knowledge graph (30% opacity) so you can focus</li>
-                        <li>Helps you prepare specifically for upcoming semester exams</li>
-                        <li>Allows switching between different semester scopes as you progress through medical school</li>
-                    </ul>
-                </div>
-                
-                <h3>How to Upload a Semester Curriculum PDF</h3>
-                
-                <h4>Step 1: Prepare Your Curriculum Document</h4>
-                <ul>
-                    <li>Get your semester curriculum document from your medical school (usually available on VLE/Blackboard)</li>
-                    <li>Must be in PDF format</li>
-                    <li>Can include module handbooks, course guides, or learning outcomes documents</li>
-                    <li>The more detailed, the better (topic names, learning objectives, module descriptions)</li>
-                </ul>
-                
-                <h4>Step 2: Upload to Aetios</h4>
-                <ol>
-                    <li><span class="step-number">1</span> Navigate to the <strong>Semester Management</strong> section in Settings or the sidebar</li>
-                    <li><span class="step-number">2</span> Click <strong>"Upload Semester Curriculum"</strong></li>
-                    <li><span class="step-number">3</span> Select your PDF file</li>
-                    <li><span class="step-number">4</span> Enter semester details:
-                        <ul>
-                            <li><strong>Name:</strong> e.g., "Year 3 Semester 1" or "Cardiovascular & Respiratory Module"</li>
-                            <li><strong>Year:</strong> Your academic year (optional)</li>
-                            <li><strong>Semester Number:</strong> 1 or 2 (optional)</li>
-                            <li><strong>Exam Date:</strong> When the semester exam takes place (optional, helps with study plan prioritization)</li>
-                        </ul>
-                    </li>
-                    <li><span class="step-number">5</span> Click <strong>Upload & Analyze</strong></li>
-                </ol>
-                
-                <div class="screenshot-placeholder">
-                    📸 Semester Upload Dialog
-                    <p>Form showing file picker, name field, year/semester inputs, and exam date picker</p>
-                </div>
-                
-                <h3>The Matching Process</h3>
-                
-                <p>Aetios uses <strong>vector similarity matching</strong> to automatically identify which topics in the knowledge graph correspond to your curriculum:</p>
-                
-                <div class="info-box">
-                    <h4>🔍 How Matching Works</h4>
-                    <ol>
-                        <li><strong>Text Extraction:</strong> PDF content is parsed to extract all text</li>
-                        <li><strong>Semantic Analysis:</strong> Text is embedded using the same model that powers note search</li>
-                        <li><strong>Topic Comparison:</strong> Each topic in the knowledge graph is compared against the PDF content</li>
-                        <li><strong>Similarity Scoring:</strong> Topics with high semantic similarity (typically >0.3 cosine similarity) are matched</li>
-                        <li><strong>Review Results:</strong> You'll see a list of matched topics with confidence scores</li>
-                    </ol>
-                </div>
-                
-                <h4>Review Matched Topics</h4>
-                <p>After upload, you'll see a list of topics that were matched to your curriculum:</p>
-                
-                <ul>
-                    <li><strong>Topic Name:</strong> e.g., "Heart Failure", "Respiratory Physiology"</li>
-                    <li><strong>Match Score:</strong> How confident the system is about the match (0.0 to 1.0)</li>
-                    <li><strong>Topic Label:</strong> The full topic name from the knowledge graph</li>
-                </ul>
-                
-                <div class="screenshot-placeholder">
-                    📸 Matched Topics Review Screen
-                    <p>Table showing matched topics, match scores, checkboxes to include/exclude topics</p>
-                </div>
-                
-                <p><strong>You can:</strong></p>
-                <ul>
-                    <li>✅ Accept all matched topics (recommended for most users)</li>
-                    <li>📝 Manually deselect topics that don't belong</li>
-                    <li>➕ Manually add topics that were missed (click "Add Topic")</li>
-                </ul>
-                
-                <h3>Activating a Semester Scope</h3>
-                
-                <p>Once you've created a semester scope, you need to <strong>activate</strong> it to affect the app:</p>
-                
-                <ol>
-                    <li><span class="step-number">1</span> Go to <strong>Semester Management</strong></li>
-                    <li><span class="step-number">2</span> View your list of saved scopes</li>
-                    <li><span class="step-number">3</span> Click <strong>"Activate"</strong> next to the semester you want to focus on</li>
-                </ol>
-                
-                <div class="info-box">
-                    <h4>💡 Single Active Scope</h4>
-                    <p>Only <strong>one semester scope can be active at a time</strong>. When you activate a new scope, the previous one is automatically deactivated. This ensures you stay focused on your current semester's content.</p>
-                </div>
-                
-                <h3>How Scoping Affects the App</h3>
-                
-                <h4>1. Knowledge Graph Visualization</h4>
-                <ul>
-                    <li><strong>In-scope topics:</strong> Normal appearance (full opacity, full color)</li>
-                    <li><strong>Out-of-scope topics:</strong> Dimmed to 30% opacity, muted colors</li>
-                    <li><strong>Purpose:</strong> Visually highlights what you should be focusing on</li>
-                </ul>
-                
-                <div class="screenshot-placeholder">
-                    📸 Knowledge Graph with Active Semester Scope
-                    <p>Graph with bright focused topics and dimmed out-of-scope topics</p>
-                </div>
-                
-                <h4>2. Study Plan Generation</h4>
-                <ul>
-                    <li>Scoped topics receive <strong>+50 priority boost</strong></li>
-                    <li>Out-of-scope topics can still appear in plans but are deprioritized</li>
-                    <li>Weak scoped topics are prioritized over strong out-of-scope topics</li>
-                    <li>Ask the AI: <em>"Focus my study plan on my semester topics"</em></li>
-                </ul>
-                
-                <h4>3. Quiz Generation</h4>
-                <ul>
-                    <li>Quiz recommendations favor scoped topics</li>
-                    <li>When generating quizzes, the AI considers your active scope</li>
-                    <li>You can still quiz on any topic manually, but automated suggestions focus on your semester</li>
-                </ul>
-                
-                <h4>4. Dashboard & Analytics</h4>
-                <ul>
-                    <li>Weak topics widget prioritizes scoped topics</li>
-                    <li>Exam readiness calculations focus on scoped content</li>
-                    <li>Progress metrics emphasize semester-relevant learning</li>
-                </ul>
-                
-                <h3>Managing Semester Scopes</h3>
-                
-                <h4>View All Scopes</h4>
-                <p>In Semester Management, you can see all your saved scopes:</p>
-                <ul>
-                    <li><strong>Name</strong> - e.g., "Year 3 Semester 1"</li>
-                    <li><strong>Topic Count</strong> - How many topics are included</li>
-                    <li><strong>Active Status</strong> - Whether this scope is currently active</li>
-                    <li><strong>Exam Date</strong> - Upcoming exam (if set)</li>
-                    <li><strong>Created Date</strong> - When you uploaded this scope</li>
-                </ul>
-                
-                <h4>Deactivate All Scopes</h4>
-                <p>Want to see the full curriculum without scoping?</p>
-                <ul>
-                    <li>Click <strong>"Deactivate All"</strong> or <strong>"Show Full Curriculum"</strong></li>
-                    <li>All topics return to normal visibility</li>
-                    <li>Study plans and quizzes consider the entire knowledge graph</li>
-                    <li>Useful during revision or when exploring topics beyond your current semester</li>
-                </ul>
-                
-                <h4>Edit Scope Topics</h4>
-                <ul>
-                    <li>Click the <strong>edit icon</strong> next to a scope</li>
-                    <li>Add or remove topics from the scope</li>
-                    <li>Useful if the auto-matching missed relevant topics or included irrelevant ones</li>
-                </ul>
-                
-                <h4>Delete a Scope</h4>
-                <ul>
-                    <li>Click the <strong>delete icon</strong> next to a scope</li>
-                    <li>Confirm deletion</li>
-                    <li>Useful for removing old semester scopes you no longer need</li>
-                </ul>
-                
-                <h3>AI Integration: Semester-Aware Tutoring</h3>
-                
-                <p>The AI tutor can work with your semester scopes. Try asking:</p>
-                
-                <div class="success-box">
-                    <h4>📝 Semester-Related Prompts</h4>
-                    <ul>
-                        <li><em>"What semester scopes do I have?"</em> - Lists your saved scopes and which is active</li>
-                        <li><em>"Focus my study plan on my current semester"</em> - Generates a plan prioritizing scoped topics</li>
-                        <li><em>"What topics are in my active semester scope?"</em> - Shows which topics are included</li>
-                        <li><em>"Quiz me on topics from my current semester"</em> - Generates quiz from scoped topics only</li>
-                        <li><em>"Show me my weak areas in this semester's curriculum"</em> - Filters weak topics by scope</li>
-                    </ul>
-                </div>
-                
-                <p>The AI uses the <code>get_semester_scopes()</code> tool to retrieve your scope information and can factor it into study recommendations.</p>
-                
-                <h3>Best Practices</h3>
-                
-                <div class="feature-box">
-                    <h4>💡 Tips for Effective Semester Scoping</h4>
-                    <ul>
-                        <li><strong>Upload early:</strong> Set up your semester scope at the start of term for maximum benefit</li>
-                        <li><strong>Include exam dates:</strong> Helps Aetios prioritize revision timing</li>
-                        <li><strong>Review matches:</strong> Spend a minute checking auto-matched topics are correct</li>
-                        <li><strong>One scope per semester:</strong> Create a new scope each semester/module block</li>
-                        <li><strong>Deactivate between terms:</strong> Broaden your view during holidays or electives</li>
-                        <li><strong>Keep PDFs:</strong> Save your curriculum PDFs for reference (not stored in the app)</li>
-                        <li><strong>Re-upload if needed:</strong> If the curriculum changes mid-semester, upload an updated PDF</li>
-                    </ul>
-                </div>
-                
-                <div class="warning-box">
-                    <h4>⚠️ Important Notes</h4>
-                    <ul>
-                        <li>Semester scoping is <strong>advisory</strong> - you can still access and study any topic</li>
-                        <li>Topics not in your scope aren't hidden, just deprioritized</li>
-                        <li>The matching algorithm isn't perfect - always review matched topics</li>
-                        <li>PDF content is processed locally and never sent to external servers</li>
-                        <li>Requires the PDF processing libraries (installed automatically during setup)</li>
-                    </ul>
-                </div>
-            </section>
-            
             <section id="troubleshooting">
-                <h2>🔧 12. Troubleshooting & FAQ</h2>
+                <h2>13. Troubleshooting</h2>
                 
                 <h3>Common Installation Issues</h3>
                 
@@ -3001,9 +3334,8 @@ npm run dev</code></pre>
                     <li><strong>Error Messages:</strong> Full error text from console/logs</li>
                 </ol>
             </section>
-            
             <section id="appendix">
-                <h2>📚 13. Appendix</h2>
+                <h2>Appendix</h2>
                 
                 <h3>Glossary of Terms</h3>
                 
