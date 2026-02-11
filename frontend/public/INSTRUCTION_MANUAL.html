@@ -304,13 +304,14 @@
                 <li><a href="#requirements">Requirements</a></li>
                 <li><a href="#installation">Installation</a></li>
                 <li><a href="#setup">Setup</a></li>
-                <li><a href="#anki">Anki</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
                 <li><a href="#graph">Knowledge Graph</a></li>
                 <li><a href="#chat">AI Tutor</a></li>
                 <li><a href="#quiz">Quizzes</a></li>
-                <li><a href="#study">Study Plans</a></li>
-                <li><a href="#resources">Resources</a></li>
                 <li><a href="#semester">Semester Scoping</a></li>
+                <li><a href="#study">Study Plans</a></li>
+                <li><a href="#anki">Anki</a></li>
+                <li><a href="#resources">Resources</a></li>
                 <li><a href="#troubleshooting">Troubleshooting</a></li>
                 <li><a href="#appendix">Appendix</a></li>
             </ul>
@@ -881,8 +882,217 @@ npm run dev</code></pre>
                 </div>
             </section>
             
+                        <section id="dashboard">
+                <h2>📊 5. Dashboard & Study Widgets</h2>
+                
+                <p>The Dashboard is your command center for tracking learning progress, monitoring study habits, and staying motivated. It provides at-a-glance insights into your overall learning health and daily progress.</p>
+                
+                <h3>Study Health Indicator</h3>
+                
+                <p>The Study Health Indicator is a comprehensive metric that shows your overall learning status. It analyzes multiple factors to give you a clear picture of your academic wellbeing.</p>
+                
+                <div class="screenshot-placeholder">
+                    📸 Study Health Widget
+                    <p>Color-coded health score with breakdown of contributing factors</p>
+                </div>
+                
+                <h4>What It Monitors:</h4>
+                <ul>
+                    <li><strong>Recent Activity</strong> - How regularly you've been studying over the past week</li>
+                    <li><strong>Weak Topics</strong> - Number of topics with low confidence (red nodes in the graph)</li>
+                    <li><strong>Decaying Knowledge</strong> - Topics you haven't reviewed recently and are at risk of forgetting</li>
+                    <li><strong>Exam Pressure</strong> - Time until your next scheduled exam and your readiness level</li>
+                </ul>
+                
+                <h4>Health Levels:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Color</th>
+                            <th>Meaning</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Excellent</strong></td>
+                            <td><span class="badge badge-green">🟢 Green</span></td>
+                            <td>Regular study, few weak areas, staying on top of reviews</td>
+                            <td>Maintain your routine, continue spaced repetition</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Good</strong></td>
+                            <td><span class="badge badge-amber">🟡 Amber</span></td>
+                            <td>Some gaps in coverage, minor review backlog</td>
+                            <td>Address weak topics, catch up on overdue reviews</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Needs Attention</strong></td>
+                            <td><span class="badge badge-red">🔴 Red</span></td>
+                            <td>Significant weak areas or extended study absence</td>
+                            <td>Urgent review needed, consider revising study plan</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="info-box">
+                    <h4>💡 Using Study Health</h4>
+                    <p>Check your Study Health daily to:</p>
+                    <ul>
+                        <li>Identify when you need to increase study intensity</li>
+                        <li>Catch knowledge decay before it becomes severe</li>
+                        <li>Balance workload across topics effectively</li>
+                        <li>Stay motivated by seeing improvement over time</li>
+                    </ul>
+                </div>
+                
+                <h3>Study Streak Tracker</h3>
+                
+                <p>The Study Streak Tracker gamifies your study routine by tracking consecutive days of learning activity. Building a streak helps develop consistent study habits.</p>
+                
+                <div class="screenshot-placeholder">
+                    📸 Study Streak Widget
+                    <p>Current streak count with calendar heatmap showing daily activity</p>
+                </div>
+                
+                <h4>What Counts as Study Activity:</h4>
+                <ul>
+                    <li><strong>Completing a quiz</strong> - Any quiz, regardless of score</li>
+                    <li><strong>Reviewing Anki cards</strong> - Must review at least 5 cards</li>
+                    <li><strong>Study sessions</strong> - At least 10 minutes of active study</li>
+                    <li><strong>Updating topic confidence</strong> - Manual confidence updates after self-study</li>
+                    <li><strong>Chat with AI tutor</strong> - At least 3 meaningful exchanges</li>
+                </ul>
+                
+                <h4>Streak Milestones:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Milestone</th>
+                            <th>Achievement</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>🔥 7 Days</td>
+                            <td>One Week Warrior - Establishing routine</td>
+                        </tr>
+                        <tr>
+                            <td>⚡ 14 Days</td>
+                            <td>Fortnight Focus - Building momentum</td>
+                        </tr>
+                        <tr>
+                            <td>💪 30 Days</td>
+                            <td>Monthly Master - Habit formed</td>
+                        </tr>
+                        <tr>
+                            <td>🏆 100 Days</td>
+                            <td>Century Scholar - Elite consistency</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="success-box">
+                    <h4>✅ Streak Tips</h4>
+                    <ul>
+                        <li><strong>Start small:</strong> Even 10 minutes counts - don't break the chain</li>
+                        <li><strong>Study before bed:</strong> End your day with a quick review</li>
+                        <li><strong>Use reminders:</strong> Set a daily alarm for consistent study time</li>
+                        <li><strong>Recovery grace:</strong> If you miss a day, get back immediately - don't let one miss become two</li>
+                    </ul>
+                </div>
+                
+                <h3>Daily Goals</h3>
+                
+                <p>Set personalized daily targets to structure your study sessions and track tangible progress. Daily Goals help you break down large curriculum requirements into manageable daily tasks.</p>
+                
+                <div class="screenshot-placeholder">
+                    📸 Daily Goals Widget
+                    <p>Progress bars showing completion status for each goal type</p>
+                </div>
+                
+                <h4>Goal Types:</h4>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Goal</th>
+                            <th>Description</th>
+                            <th>Recommended Target</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Study Time</strong></td>
+                            <td>Total minutes of active study</td>
+                            <td>60-120 minutes/day</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quiz Questions</strong></td>
+                            <td>Number of quiz questions answered</td>
+                            <td>20-50 questions/day</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Topics Reviewed</strong></td>
+                            <td>Different curriculum topics studied</td>
+                            <td>3-5 topics/day</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cards Reviewed</strong></td>
+                            <td>Anki flashcards reviewed</td>
+                            <td>30-100 cards/day</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4>Setting Your Goals:</h4>
+                <ol>
+                    <li><span class="step-number">1</span> Click <strong>"Edit Goals"</strong> in the Daily Goals widget</li>
+                    <li><span class="step-number">2</span> Adjust each target based on your schedule and exam timeline</li>
+                    <li><span class="step-number">3</span> Save changes</li>
+                    <li><span class="step-number">4</span> Track progress throughout the day</li>
+                </ol>
+                
+                <div class="info-box">
+                    <h4>💡 Goal Setting Strategy</h4>
+                    <ul>
+                        <li><strong>Be realistic:</strong> Set achievable goals based on your schedule</li>
+                        <li><strong>Adjust seasonally:</strong> Increase targets during revision periods, reduce during clinical placements</li>
+                        <li><strong>Focus on consistency:</strong> Better to hit 80% daily than 100% sporadically</li>
+                        <li><strong>Track completion rate:</strong> If you consistently miss goals, reduce targets</li>
+                        <li><strong>Increase gradually:</strong> As study habits strengthen, slowly increase targets</li>
+                    </ul>
+                </div>
+                
+                <h3>Dashboard Overview</h3>
+                
+                <p>Beyond the widgets, the Dashboard also displays:</p>
+                
+                <ul>
+                    <li><strong>Upcoming Reviews</strong> - Topics due for spaced repetition review</li>
+                    <li><strong>Recent Activity</strong> - Your last study sessions and quizzes</li>
+                    <li><strong>Exam Countdown</strong> - Days until scheduled exams</li>
+                    <li><strong>Weak Topic Alerts</strong> - Priority topics requiring urgent attention</li>
+                    <li><strong>Recommended Quizzes</strong> - AI-suggested quizzes based on weak areas</li>
+                </ul>
+                
+                <div class="feature-box">
+                    <h4>🎯 Making the Most of Your Dashboard</h4>
+                    <p>Your Dashboard should be your first stop each study session:</p>
+                    <ol>
+                        <li><strong>Check Study Health</strong> - Understand your current learning status</li>
+                        <li><strong>Review Daily Goals</strong> - Know what you need to accomplish today</li>
+                        <li><strong>Address Weak Topics</strong> - Prioritize red topics from recommendations</li>
+                        <li><strong>Complete Reviews</strong> - Clear any overdue spaced repetition items</li>
+                        <li><strong>Maintain Streak</strong> - Don't let your study chain break!</li>
+                    </ol>
+                </div>
+            </section>
+
+            
             <section id="anki">
-                <h2>🎴 5. Anki Integration</h2>
+                <h2>🎴 12. Anki Integration</h2>
                 
                 <h3>What is Anki?</h3>
                 <p>Anki is a popular flashcard application that uses spaced repetition. Many medical students use Anki for memorization. Aetios-Med integrates with Anki to:</p>
@@ -1288,10 +1498,133 @@ npm run dev</code></pre>
                         <li><strong>Exam focus:</strong> Prioritize topics directly tested in upcoming exams</li>
                     </ul>
                 </div>
+                
+                <h3>Context Menu (Right-Click Actions)</h3>
+                
+                <p>Right-click on any topic node to access a powerful context menu with instant actions. This menu provides quick access to the most common operations without opening the detail panel.</p>
+                
+                <div class="screenshot-placeholder">
+                    📸 Context Menu on Topic Node
+                    <p>Right-click menu showing available actions for the selected topic</p>
+                </div>
+                
+                <h4>Available Actions:</h4>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>What It Does</th>
+                            <th>When to Use</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Start Quiz</strong></td>
+                            <td>Immediately generates a quiz for this topic</td>
+                            <td>Quick practice session, testing your knowledge</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ask AI About This Topic</strong></td>
+                            <td>Opens chat interface with topic pre-loaded as context</td>
+                            <td>Getting explanations, asking questions about the topic</td>
+                        </tr>
+                        <tr>
+                            <td><strong>View Related Cards</strong></td>
+                            <td>Shows all Anki flashcards mapped to this topic</td>
+                            <td>Reviewing flashcards, checking card performance</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quick Confidence Update</strong></td>
+                            <td>One-click confidence adjustment (see below)</td>
+                            <td>After self-study, manual confidence assessment</td>
+                        </tr>
+                        <tr>
+                            <td><strong>View Study History</strong></td>
+                            <td>Timeline of all study sessions for this topic</td>
+                            <td>Tracking progress, identifying study gaps</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Show Prerequisites</strong></td>
+                            <td>Highlights prerequisite topics in the graph</td>
+                            <td>Planning study order, checking foundational knowledge</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="info-box">
+                    <h4>💡 Right-Click Workflow Tips</h4>
+                    <ul>
+                        <li><strong>Quick assessment:</strong> Right-click → Quick Confidence Update after self-study</li>
+                        <li><strong>Deep dive:</strong> Right-click → Ask AI to explore difficult concepts</li>
+                        <li><strong>Prerequisite check:</strong> Right-click → Show Prerequisites before starting a new topic</li>
+                        <li><strong>Anki review:</strong> Right-click → View Related Cards to integrate flashcard practice</li>
+                    </ul>
+                </div>
+                
+                <h3>Quick Confidence Update Buttons</h3>
+                
+                <p>The Quick Confidence Update feature allows you to instantly update your mastery level for any topic with a single click. This is perfect for quick self-assessments after independent study.</p>
+                
+                <h4>Three Quick Options:</h4>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Button</th>
+                            <th>Confidence Level</th>
+                            <th>Effect</th>
+                            <th>When to Click</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>✅ Confident</strong></td>
+                            <td>Sets confidence to 70-85%</td>
+                            <td>Topic becomes green in the graph</td>
+                            <td>After successful study session, feeling solid on the material</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🤔 Reviewing</strong></td>
+                            <td>Sets confidence to 40-55%</td>
+                            <td>Topic becomes amber in the graph</td>
+                            <td>Partially understand but need more practice</td>
+                        </tr>
+                        <tr>
+                            <td><strong>❌ Struggling</strong></td>
+                            <td>Sets confidence to 15-30%</td>
+                            <td>Topic becomes red in the graph</td>
+                            <td>Finding the topic difficult, need to review fundamentals</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4>How to Use:</h4>
+                <ol>
+                    <li><span class="step-number">1</span> Right-click on a topic node</li>
+                    <li><span class="step-number">2</span> Hover over <strong>"Quick Confidence Update"</strong></li>
+                    <li><span class="step-number">3</span> Click your current feeling: ✅ Confident, 🤔 Reviewing, or ❌ Struggling</li>
+                    <li><span class="step-number">4</span> The node color updates immediately</li>
+                </ol>
+                
+                <div class="success-box">
+                    <h4>✅ Honest Self-Assessment</h4>
+                    <p>For Quick Confidence Updates to be effective:</p>
+                    <ul>
+                        <li><strong>Be honest:</strong> Don't inflate your confidence - it affects study recommendations</li>
+                        <li><strong>Test yourself:</strong> Try recalling key facts before updating</li>
+                        <li><strong>Use the "Struggling" option:</strong> It's okay to mark topics as difficult - Aetios will help you focus on them</li>
+                        <li><strong>Update after study:</strong> Make it a habit to update confidence after each study session</li>
+                        <li><strong>Regular reassessment:</strong> Update periodically as your knowledge evolves</li>
+                    </ul>
+                </div>
+                
+                <p><strong>Note:</strong> While Quick Confidence Update is fast and convenient, taking quizzes provides more objective confidence measurements based on actual performance.</p>
+
             </section>
             
             <section id="chat">
-                <h2>💬 7. AI Medical Tutor (Chat Interface)</h2>
+                <h2>💬 7. AI Medical Tutor</h2>
                 
                 <p>The AI tutor is your personal medical educator, powered by OpenBioLLM-8B running entirely on your computer. It can answer questions, explain concepts, and guide your learning.</p>
                 
@@ -1609,6 +1942,16 @@ npm run dev</code></pre>
                     <li><strong>Send shortcuts:</strong> Use <code>Ctrl/Cmd + Enter</code> to send your message, or click the Send button</li>
                 </ul>
                 
+                <h4>Session Isolation & Privacy:</h4>
+                <p>Each chat session is completely isolated to protect your privacy and give you a fresh start when needed.</p>
+                
+                <ul>
+                    <li><strong>Isolated contexts:</strong> Starting a new session gives the AI a fresh context—it won't remember previous conversations</li>
+                    <li><strong>Clear chat history:</strong> Clearing chat history fully resets the agent's memory for that session</li>
+                    <li><strong>Multiple sessions:</strong> The system supports up to 20 concurrent chat sessions</li>
+                    <li><strong>Security:</strong> Sessions cannot access each other's data, preventing cross-session data leakage</li>
+                </ul>
+                
                 <h3>Best Practices for Using the AI Tutor</h3>
                 
                 <div class="success-box">
@@ -1708,7 +2051,7 @@ npm run dev</code></pre>
             </section>
             
             <section id="quiz">
-                <h2>🎯 8. Quiz Generation & Spaced Repetition</h2>
+                <h2>🎯 9. Quiz Generation & Spaced Repetition</h2>
                 
                 <p>Aetios-Med generates personalized quizzes using AI, targeting your weak areas and scheduling reviews using the FSRS-4 (Free Spaced Repetition Scheduler) algorithm.</p>
                 
@@ -2056,7 +2399,7 @@ npm run dev</code></pre>
             </section>
             
             <section id="study">
-                <h2>📅 9. Study Planning & Calendar</h2>
+                <h2>📅 11. Study Planning & Calendar</h2>
                 
                 <p>Aetios-Med generates personalized AI-powered study plans based on your exams, weak areas, and available time.</p>
                 
@@ -2303,7 +2646,7 @@ npm run dev</code></pre>
             </section>
             
             <section id="resources">
-                <h2>🌐 10. Resource Viewer & External Integrations</h2>
+                <h2>🌐 13. Resource Viewer & External Integrations</h2>
                 
                 <p>Aetios-Med includes an in-app browser for accessing medical resources and integrating with external tools like Blackboard, Notability, and more.</p>
                 
@@ -2534,19 +2877,23 @@ npm run dev</code></pre>
                 </ul>
                 
                 <div class="warning-box">
-                    <h4>⚠️ Privacy & Data</h4>
+                    <h4>⚠️ Privacy & Data Security</h4>
                     <ul>
-                        <li>All resources are stored locally on your computer</li>
-                        <li>Web browsing in the resource viewer doesn't share data with external servers</li>
-                        <li>VLE credentials are never stored by Aetios-Med</li>
-                        <li>PDF content is indexed locally, never sent to external services</li>
-                        <li>You can clear browser data anytime in Settings</li>
+                        <li><strong>Local data storage:</strong> All resources are stored locally on your computer</li>
+                        <li><strong>Privacy-first browsing:</strong> Web browsing in the resource viewer doesn't share data with external servers</li>
+                        <li><strong>Credential protection:</strong> VLE credentials are never stored by Aetios-Med</li>
+                        <li><strong>Local indexing:</strong> PDF content is indexed locally, never sent to external services</li>
+                        <li><strong>Secure token handling:</strong> HuggingFace tokens are stored using SecretStr (never exposed in logs or API responses)</li>
+                        <li><strong>Prompt injection protection:</strong> Special LLM tokens are sanitized from user input</li>
+                        <li><strong>Session isolation:</strong> Per-session agent isolation prevents cross-session data leakage</li>
+                        <li><strong>Production security:</strong> OpenAPI docs are disabled in production builds</li>
+                        <li><strong>Data control:</strong> You can clear browser data anytime in Settings</li>
                     </ul>
                 </div>
             </section>
             
             <section id="semester">
-                <h2>📚 11. Semester Curriculum Scoping</h2>
+                <h2>📚 10. Semester Curriculum Scoping</h2>
                 
                 <p>Semester Curriculum Scoping allows you to upload your medical school's semester-specific curriculum PDFs and focus your study on the topics you'll actually be examined on. This helps you prioritize effectively and reduces cognitive overload.</p>
                 
@@ -2762,7 +3109,7 @@ npm run dev</code></pre>
             </section>
             
             <section id="troubleshooting">
-                <h2>🔧 12. Troubleshooting & FAQ</h2>
+                <h2>🔧 14. Troubleshooting & FAQ</h2>
                 
                 <h3>Common Installation Issues</h3>
                 
@@ -3003,7 +3350,7 @@ npm run dev</code></pre>
             </section>
             
             <section id="appendix">
-                <h2>📚 13. Appendix</h2>
+                <h2>📚 Appendix</h2>
                 
                 <h3>Glossary of Terms</h3>
                 
