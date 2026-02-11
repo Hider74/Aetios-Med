@@ -102,11 +102,11 @@ class SemesterService:
         self, 
         name: str, 
         topic_ids: List[str],
+        db: AsyncSession,
         year: int = None,
         semester_number: int = None,
         exam_date: datetime = None,
-        source_filename: str = None,
-        db: AsyncSession
+        source_filename: str = None
     ) -> int:
         """Create a new semester scope."""
         scope = SemesterScope(
