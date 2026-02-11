@@ -104,8 +104,8 @@ class LLMService:
         chunk_queue: asyncio.Queue = asyncio.Queue(maxsize=100)
         sentinel = object()
         
-        # Capture event loop before starting thread
-        loop = asyncio.get_event_loop()
+        # Get the running event loop
+        loop = asyncio.get_running_loop()
         
         def _generate():
             try:

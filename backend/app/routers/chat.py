@@ -127,7 +127,7 @@ async def clear_chat_history(request: Request, session_id: str = "default"):
     """Clear chat history."""
     try:
         # Reset the agent orchestrator's in-memory conversation
-        agent = request.app.state.agent if hasattr(request.app.state, 'agent') else None
+        agent = getattr(request.app.state, 'agent', None)
         if agent:
             agent.reset()
         
