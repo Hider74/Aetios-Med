@@ -5,6 +5,7 @@ export interface TopicNode {
   lastReviewed: Date | null;
   timesReviewed: number;
   mastered: boolean;
+  in_scope?: boolean; // NEW: for semester scoping
   resources: string[] | {
     teachmeanatomy?: string;
     teachmesurgery?: string;
@@ -60,4 +61,30 @@ export interface GraphStats {
   masteredCount: number;
   lowConfidenceCount: number;
   unreviewedCount: number;
+}
+
+// Semester Scope Types
+export interface SemesterScope {
+  id: number;
+  name: string;
+  year?: number;
+  semester_number?: number;
+  exam_date?: string;
+  topic_ids: string[];
+  source_filename?: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface SemesterTopicMatch {
+  topic_id: string;
+  topic_label: string;
+  match_score: number;
+}
+
+export interface SemesterUploadResponse {
+  matched_topics: SemesterTopicMatch[];
+  scope_id?: number;
+  source_filename: string;
 }
