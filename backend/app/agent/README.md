@@ -8,7 +8,7 @@ The agent system consists of three main components:
 
 ### 1. Tools (`tools.py`)
 
-Defines 17 specialized tools for accessing student data and performing actions:
+Defines 19 specialized tools for accessing student data and performing actions:
 
 **Knowledge Graph & Progress Tracking:**
 - `get_weak_topics(threshold)` - Find topics with low confidence
@@ -24,14 +24,17 @@ Defines 17 specialized tools for accessing student data and performing actions:
 - `open_resource(url)` - Open learning resources
 
 **Assessment:**
-- `generate_quiz(topic_id, num_questions, difficulty)` - Generate quizzes
+- `generate_quiz(topic_id, num_questions, difficulty, question_type)` - Generate quizzes (SBA or SAQ)
 - `log_quiz_result(topic_id, correct, question)` - Track quiz performance
 
 **Study Planning:**
 - `log_study_session(topic_id, duration, notes)` - Log study time
 - `get_study_history(topic_id, days)` - View study history
-- `generate_study_plan(exam_id, weeks)` - Create study plans
+- `generate_study_plan(exam_id, weeks, semester_scope_id)` - Create study plans
 - `get_exam_readiness(exam_id)` - Assess exam readiness
+
+**Semester Management:**
+- `get_semester_scopes()` - Get all semester curriculum scopes and which is active
 
 **Exam Management:**
 - `add_exam(name, date, topics)` - Add new exam
@@ -40,7 +43,7 @@ Defines 17 specialized tools for accessing student data and performing actions:
 **Progress Updates:**
 - `update_confidence(topic_id, confidence, notes)` - Update topic confidence
 
-All tools are defined in OpenAI function-calling format for seamless integration with GPT-4.
+All tools are defined in a structured format compatible with the local LLM's tool-calling capabilities using `TOOL_CALL:` format.
 
 ### 2. Prompts (`prompts.py`)
 
@@ -57,11 +60,12 @@ The `PromptManager` class handles loading and accessing prompts with caching.
 The `AgentOrchestrator` class manages the agent conversation loop:
 
 - Maintains conversation history
-- Calls OpenAI API with tools
+- Calls local LLM service with tools
 - Executes tool calls
 - Handles multi-turn interactions
 - Supports streaming responses
 - Conversation export/import
+- Per-session agent instances (no singleton)
 
 ## Usage
 
@@ -70,15 +74,13 @@ The `AgentOrchestrator` class manages the agent conversation loop:
 ```python
 from app.agent import create_agent
 
-# Create agent instance
-agent = create_agent(
-    api_key="your-openai-key",
-    model="gpt-4-turbo-preview"
-)
+# Create agent instance with local LLM service
+agent = create_agent(llm_service=llm_service)
 
 # Process user message
 response = await agent.process_message(
-    "I need help understanding the cardiovascular system"
+    "I need help understanding the cardiovascular system",
+    db=db
 )
 
 print(response)
@@ -225,7 +227,7 @@ Test individual components:
 ```python
 # Test tools
 from app.agent import TOOL_DEFINITIONS
-assert len(TOOL_DEFINITIONS) == 18  # All 18 tools as specified
+assert len(TOOL_DEFINITIONS) == 19  # All 19 tools as specified
 
 # Test prompts
 from app.agent import get_system_prompt
@@ -234,8 +236,8 @@ assert "Aetios" in prompt
 
 # Test orchestrator
 from app.agent import create_agent
-agent = create_agent()
-assert agent.model == "gpt-4-turbo-preview"
+agent = create_agent(llm_service=llm_service)
+assert agent is not None
 ```
 
 ## Future Enhancements
@@ -250,7 +252,7 @@ assert agent.model == "gpt-4-turbo-preview"
 
 ## References
 
-- OpenAI Function Calling: https://platform.openai.com/docs/guides/function-calling
+- Local LLM Integration: OpenBioLLM-8B with llama.cpp
 - UK Medical Education: GMC Outcomes for Graduates
 - Spaced Repetition: Ebbinghaus forgetting curve
 - Active Learning: Retrieval practice research
