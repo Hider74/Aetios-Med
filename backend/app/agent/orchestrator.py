@@ -352,6 +352,9 @@ class AgentOrchestrator:
         This is a simplified streaming wrapper that delegates to process_message.
         The user message is added to conversation history by process_message.
         
+        TODO: Implement true chunk-by-chunk streaming by directly calling
+        llm_service.stream_complete() instead of delegating to process_message.
+        
         Args:
             user_message: User's input message
             db: Database session for tool execution

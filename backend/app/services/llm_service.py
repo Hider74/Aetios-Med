@@ -117,11 +117,11 @@ class LLMService:
                 ):
                     text = chunk["choices"][0]["text"]
                     if text:
-                        # Use call_soon_threadsafe to safely add to queue from thread
-                        loop.call_soon_threadsafe(chunk_queue.put_nowait, text)
-                loop.call_soon_threadsafe(chunk_queue.put_nowait, sentinel)
+                        # Use run_coroutine_threadsafe to properly block on full queue (backpressure)
+                        asyncio.run_coroutine_threadsafe(chunk_queue.put(text), loop).result()
+                asyncio.run_coroutine_threadsafe(chunk_queue.put(sentinel), loop).result()
             except Exception as e:
-                loop.call_soon_threadsafe(chunk_queue.put_nowait, e)
+                asyncio.run_coroutine_threadsafe(chunk_queue.put(e), loop).result()
         
         loop.run_in_executor(self.executor, _generate)
         
