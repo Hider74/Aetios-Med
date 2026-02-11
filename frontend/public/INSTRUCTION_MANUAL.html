@@ -310,7 +310,9 @@
                 <li><a href="#quiz">Quizzes</a></li>
                 <li><a href="#study">Study Plans</a></li>
                 <li><a href="#resources">Resources</a></li>
+                <li><a href="#semester">Semester Scoping</a></li>
                 <li><a href="#troubleshooting">Troubleshooting</a></li>
+                <li><a href="#appendix">Appendix</a></li>
             </ul>
         </nav>
         
@@ -328,7 +330,8 @@
                         <li><strong>📊 Knowledge Graph</strong> - 75+ UK medical curriculum topics with visual dependencies</li>
                         <li><strong>🎴 Anki Integration</strong> - Auto-parse .apkg files with intelligent topic mapping</li>
                         <li><strong>📈 Spaced Repetition</strong> - FSRS-4 algorithm for optimal review scheduling</li>
-                        <li><strong>🎯 Quiz Generation</strong> - AI-powered quizzes targeted at your weak areas</li>
+                        <li><strong>🎯 Quiz Generation</strong> - AI-powered SBA (multiple choice) and SAQ (short answer) quizzes with LLM-based marking</li>
+                        <li><strong>📚 Semester Scoping</strong> - Upload curriculum PDFs to focus study on current semester topics</li>
                         <li><strong>📅 Study Planning</strong> - Personalized study plans with calendar export (.ics)</li>
                         <li><strong>🔒 Privacy-First</strong> - All data stays on your computer, encrypted with AES-256</li>
                         <li><strong>🌐 Resource Viewer</strong> - In-app browser for medical resources and VLE access</li>
@@ -1335,6 +1338,16 @@ npm run dev</code></pre>
                     <li>"Give me some practice OSCE scenarios for cardiovascular examination"</li>
                     <li>"What are common UKMLA questions about antibiotics?"</li>
                     <li>"Quiz me on the causes of chest pain"</li>
+                    <li>"Quiz me with short answer questions on cardiology"</li>
+                    <li>"Generate an SAQ on respiratory physiology"</li>
+                </ul>
+                
+                <h4>Semester Focus:</h4>
+                <ul>
+                    <li>"What semester scopes do I have?"</li>
+                    <li>"Focus my study plan on my current semester"</li>
+                    <li>"What topics are in my active semester scope?"</li>
+                    <li>"Quiz me on topics from my current semester"</li>
                 </ul>
                 
                 <h3>Understanding AI Responses</h3>
@@ -1397,10 +1410,10 @@ npm run dev</code></pre>
                 
                 <h3>How Aetios Works Behind the Scenes</h3>
                 
-                <p>Aetios isn't just a chatbot—it's a sophisticated AI agent with access to <strong>18 specialized tools</strong> that connect to your personal learning data. Understanding what Aetios can do will help you get much more value from your interactions.</p>
+                <p>Aetios isn't just a chatbot—it's a sophisticated AI agent with access to <strong>19 specialized tools</strong> that connect to your personal learning data. Understanding what Aetios can do will help you get much more value from your interactions.</p>
                 
                 <div class="feature-box">
-                    <h4>🛠️ Aetios's 18 Tools:</h4>
+                    <h4>🛠️ Aetios's 19 Tools:</h4>
                     
                     <p><strong>Knowledge Graph & Progress Tracking:</strong></p>
                     <ul>
@@ -1421,7 +1434,7 @@ npm run dev</code></pre>
                     
                     <p><strong>Assessment:</strong></p>
                     <ul>
-                        <li><strong>generate_quiz</strong> - Create targeted quizzes based on weak areas</li>
+                        <li><strong>generate_quiz</strong> - Create targeted quizzes based on weak areas (supports SBA and SAQ question types)</li>
                         <li><strong>log_quiz_result</strong> - Track quiz performance to update confidence</li>
                     </ul>
                     
@@ -1429,8 +1442,13 @@ npm run dev</code></pre>
                     <ul>
                         <li><strong>log_study_session</strong> - Record time spent studying specific topics</li>
                         <li><strong>get_study_history</strong> - View your study patterns over time</li>
-                        <li><strong>generate_study_plan</strong> - Create personalized study plans for exams</li>
+                        <li><strong>generate_study_plan</strong> - Create personalized study plans for exams (supports semester scope filtering)</li>
                         <li><strong>get_exam_readiness</strong> - Assess your preparation for upcoming exams</li>
+                    </ul>
+                    
+                    <p><strong>Semester Management:</strong></p>
+                    <ul>
+                        <li><strong>get_semester_scopes</strong> - Get all semester curriculum scopes and see which is active</li>
                     </ul>
                     
                     <p><strong>Exam Management:</strong></p>
@@ -1479,6 +1497,15 @@ npm run dev</code></pre>
                         <li><em>"Quiz me on my weakest respiratory topic"</em> → Uses <code>get_weak_topics</code> + <code>generate_quiz</code></li>
                         <li><em>"Generate a hard quiz on pharmacology"</em> → Uses <code>generate_quiz</code></li>
                         <li><em>"Test me on topics I haven't reviewed in a while"</em> → Uses <code>get_decaying_topics</code> + <code>generate_quiz</code></li>
+                        <li><em>"Quiz me with short answer questions on cardiology"</em> → Uses <code>generate_quiz</code> with <code>question_type="saq"</code></li>
+                        <li><em>"Give me SAQs on renal physiology"</em> → Uses <code>generate_quiz</code> with <code>question_type="saq"</code></li>
+                    </ul>
+                    
+                    <p><strong>For Semester Management:</strong></p>
+                    <ul>
+                        <li><em>"What semester scopes do I have?"</em> → Uses <code>get_semester_scopes</code></li>
+                        <li><em>"Which semester scope is active?"</em> → Uses <code>get_semester_scopes</code></li>
+                        <li><em>"Focus my study plan on my current semester"</em> → Uses <code>generate_study_plan</code> with <code>semester_scope_id</code></li>
                     </ul>
                     
                     <p><strong>For Understanding Prerequisites:</strong></p>
@@ -1791,11 +1818,100 @@ npm run dev</code></pre>
                 </div>
                 
                 <h4>Question Types:</h4>
+                
+                <h5>SBA (Single Best Answer) - Multiple Choice Questions:</h5>
                 <ul>
                     <li><strong>Multiple Choice</strong> - Select one correct answer</li>
                     <li><strong>True/False</strong> - Simple binary choice</li>
                     <li><strong>Best Answer</strong> - Multiple plausible options, choose the best</li>
                     <li><strong>Clinical Vignette</strong> - Scenario-based questions (harder difficulty)</li>
+                </ul>
+                
+                <h5>SAQ (Short Answer Questions) - Written Responses:</h5>
+                <p>In addition to multiple choice questions, Aetios-Med now supports <strong>Short Answer Questions (SAQs)</strong> with AI-powered marking. SAQs test your ability to construct written answers and demonstrate clinical reasoning.</p>
+                
+                <div class="feature-box">
+                    <h4>📝 How SAQs Work</h4>
+                    <ul>
+                        <li><strong>Free-text responses:</strong> Type your answer in your own words (no multiple choice options)</li>
+                        <li><strong>Points-based marking:</strong> Each question has specific key points worth 1 mark each</li>
+                        <li><strong>AI examiner:</strong> Your answer is marked by the LLM against the mark scheme</li>
+                        <li><strong>Detailed feedback:</strong> See which key points you earned and which you missed</li>
+                        <li><strong>Model answer:</strong> Compare your response to the ideal answer</li>
+                        <li><strong>Areas to review:</strong> Get targeted recommendations for improvement</li>
+                    </ul>
+                </div>
+                
+                <h4>Generating SAQs vs SBAs</h4>
+                <p>When generating a quiz, you can now choose the question type:</p>
+                <ul>
+                    <li><strong>SBA (default):</strong> Multiple choice questions with instant feedback - best for quick revision and knowledge checks</li>
+                    <li><strong>SAQ:</strong> Written answer questions with structured marking - best for exam practice and deeper learning</li>
+                </ul>
+                
+                <p><strong>Ask the AI:</strong> "Quiz me with short answer questions on cardiology" or "Generate an SAQ on respiratory physiology"</p>
+                
+                <h4>SAQ Scoring & Feedback</h4>
+                
+                <p>When you submit an SAQ answer, you'll receive:</p>
+                
+                <div class="success-box">
+                    <h4>✅ Your SAQ Results Include:</h4>
+                    <ol>
+                        <li><strong>Overall Score:</strong> Points earned out of total available (e.g., 4/6 marks = 67%)</li>
+                        <li><strong>Color-Coded Performance:</strong>
+                            <ul>
+                                <li><span class="badge badge-green">Green</span> ≥70% - Excellent understanding</li>
+                                <li><span class="badge badge-amber">Yellow</span> 50-69% - Good with room for improvement</li>
+                                <li><span class="badge badge-red">Red</span> &lt;50% - Needs significant review</li>
+                            </ul>
+                        </li>
+                        <li><strong>Key Points Breakdown:</strong> See each marking point with:
+                            <ul>
+                                <li>✅ <strong>Awarded:</strong> Key points you covered in your answer</li>
+                                <li>❌ <strong>Missing:</strong> Key points you didn't mention</li>
+                                <li><strong>Evidence:</strong> Which part of your answer earned each mark</li>
+                            </ul>
+                        </li>
+                        <li><strong>Examiner Feedback:</strong> AI-generated comments on your answer's strengths and weaknesses</li>
+                        <li><strong>Areas to Review:</strong> Specific topics to study based on missed points</li>
+                        <li><strong>Model Answer:</strong> A complete reference answer to compare against</li>
+                    </ol>
+                </div>
+                
+                <div class="info-box">
+                    <h4>💡 SAQ Marking Philosophy</h4>
+                    <p>The AI marker is trained to be <strong>fair but strict</strong>, like a real medical examiner:</p>
+                    <ul>
+                        <li>Accepts synonyms and equivalent clinical terminology</li>
+                        <li>Marks understanding, not exact wording</li>
+                        <li>Awards credit for correct concepts even if phrased differently</li>
+                        <li>Does NOT award marks for vague or incorrect statements</li>
+                        <li>Provides constructive feedback to improve your written communication</li>
+                    </ul>
+                </div>
+                
+                <h4>SAQ Tips for Success</h4>
+                <ul>
+                    <li><strong>Structure your answer:</strong> Use bullet points or numbered lists for clarity</li>
+                    <li><strong>Be specific:</strong> Use proper medical terminology</li>
+                    <li><strong>Cover key concepts:</strong> Think about what the examiner wants to see</li>
+                    <li><strong>Check the marks:</strong> A 6-mark question needs 6 distinct points</li>
+                    <li><strong>Word count indicator:</strong> Use the built-in word counter to gauge answer length</li>
+                    <li><strong>Review feedback carefully:</strong> Learn from missed marks to improve future answers</li>
+                </ul>
+                
+                <div class="screenshot-placeholder">
+                    📸 SAQ Input Component
+                    <p>Text area with word count, submit button, and color-coded score display with key points breakdown</p>
+                </div>
+                
+                <h4>SAQ Confidence Tracking</h4>
+                <p>Just like SBA questions, your SAQ performance affects your topic confidence:</p>
+                <ul>
+                    <li><strong>High scores (≥70%):</strong> Boost confidence significantly - you can articulate your knowledge</li>
+                    <li><strong>Medium scores (50-69%):</strong> Moderate confidence increase - you have partial understanding</li>
+                    <li><strong>Low scores (&lt;50%):</strong> Minimal or no confidence boost - identifies areas needing review</li>
                 </ul>
                 
                 <h4>During the Quiz:</h4>
@@ -2429,8 +2545,224 @@ npm run dev</code></pre>
                 </div>
             </section>
             
+            <section id="semester">
+                <h2>📚 11. Semester Curriculum Scoping</h2>
+                
+                <p>Semester Curriculum Scoping allows you to upload your medical school's semester-specific curriculum PDFs and focus your study on the topics you'll actually be examined on. This helps you prioritize effectively and reduces cognitive overload.</p>
+                
+                <h3>What is Semester Scoping?</h3>
+                
+                <div class="feature-box">
+                    <h4>🎯 Purpose</h4>
+                    <p>Medical school curricula are vast, but each semester only covers a subset of topics. Semester Scoping:</p>
+                    <ul>
+                        <li>Identifies which topics from the knowledge graph match your current curriculum</li>
+                        <li>Prioritizes these topics in study plans and quiz generation</li>
+                        <li>Dims out-of-scope topics in the knowledge graph (30% opacity) so you can focus</li>
+                        <li>Helps you prepare specifically for upcoming semester exams</li>
+                        <li>Allows switching between different semester scopes as you progress through medical school</li>
+                    </ul>
+                </div>
+                
+                <h3>How to Upload a Semester Curriculum PDF</h3>
+                
+                <h4>Step 1: Prepare Your Curriculum Document</h4>
+                <ul>
+                    <li>Get your semester curriculum document from your medical school (usually available on VLE/Blackboard)</li>
+                    <li>Must be in PDF format</li>
+                    <li>Can include module handbooks, course guides, or learning outcomes documents</li>
+                    <li>The more detailed, the better (topic names, learning objectives, module descriptions)</li>
+                </ul>
+                
+                <h4>Step 2: Upload to Aetios</h4>
+                <ol>
+                    <li><span class="step-number">1</span> Navigate to the <strong>Semester Management</strong> section in Settings or the sidebar</li>
+                    <li><span class="step-number">2</span> Click <strong>"Upload Semester Curriculum"</strong></li>
+                    <li><span class="step-number">3</span> Select your PDF file</li>
+                    <li><span class="step-number">4</span> Enter semester details:
+                        <ul>
+                            <li><strong>Name:</strong> e.g., "Year 3 Semester 1" or "Cardiovascular & Respiratory Module"</li>
+                            <li><strong>Year:</strong> Your academic year (optional)</li>
+                            <li><strong>Semester Number:</strong> 1 or 2 (optional)</li>
+                            <li><strong>Exam Date:</strong> When the semester exam takes place (optional, helps with study plan prioritization)</li>
+                        </ul>
+                    </li>
+                    <li><span class="step-number">5</span> Click <strong>Upload & Analyze</strong></li>
+                </ol>
+                
+                <div class="screenshot-placeholder">
+                    📸 Semester Upload Dialog
+                    <p>Form showing file picker, name field, year/semester inputs, and exam date picker</p>
+                </div>
+                
+                <h3>The Matching Process</h3>
+                
+                <p>Aetios uses <strong>vector similarity matching</strong> to automatically identify which topics in the knowledge graph correspond to your curriculum:</p>
+                
+                <div class="info-box">
+                    <h4>🔍 How Matching Works</h4>
+                    <ol>
+                        <li><strong>Text Extraction:</strong> PDF content is parsed to extract all text</li>
+                        <li><strong>Semantic Analysis:</strong> Text is embedded using the same model that powers note search</li>
+                        <li><strong>Topic Comparison:</strong> Each topic in the knowledge graph is compared against the PDF content</li>
+                        <li><strong>Similarity Scoring:</strong> Topics with high semantic similarity (typically >0.3 cosine similarity) are matched</li>
+                        <li><strong>Review Results:</strong> You'll see a list of matched topics with confidence scores</li>
+                    </ol>
+                </div>
+                
+                <h4>Review Matched Topics</h4>
+                <p>After upload, you'll see a list of topics that were matched to your curriculum:</p>
+                
+                <ul>
+                    <li><strong>Topic Name:</strong> e.g., "Heart Failure", "Respiratory Physiology"</li>
+                    <li><strong>Match Score:</strong> How confident the system is about the match (0.0 to 1.0)</li>
+                    <li><strong>Topic Label:</strong> The full topic name from the knowledge graph</li>
+                </ul>
+                
+                <div class="screenshot-placeholder">
+                    📸 Matched Topics Review Screen
+                    <p>Table showing matched topics, match scores, checkboxes to include/exclude topics</p>
+                </div>
+                
+                <p><strong>You can:</strong></p>
+                <ul>
+                    <li>✅ Accept all matched topics (recommended for most users)</li>
+                    <li>📝 Manually deselect topics that don't belong</li>
+                    <li>➕ Manually add topics that were missed (click "Add Topic")</li>
+                </ul>
+                
+                <h3>Activating a Semester Scope</h3>
+                
+                <p>Once you've created a semester scope, you need to <strong>activate</strong> it to affect the app:</p>
+                
+                <ol>
+                    <li><span class="step-number">1</span> Go to <strong>Semester Management</strong></li>
+                    <li><span class="step-number">2</span> View your list of saved scopes</li>
+                    <li><span class="step-number">3</span> Click <strong>"Activate"</strong> next to the semester you want to focus on</li>
+                </ol>
+                
+                <div class="info-box">
+                    <h4>💡 Single Active Scope</h4>
+                    <p>Only <strong>one semester scope can be active at a time</strong>. When you activate a new scope, the previous one is automatically deactivated. This ensures you stay focused on your current semester's content.</p>
+                </div>
+                
+                <h3>How Scoping Affects the App</h3>
+                
+                <h4>1. Knowledge Graph Visualization</h4>
+                <ul>
+                    <li><strong>In-scope topics:</strong> Normal appearance (full opacity, full color)</li>
+                    <li><strong>Out-of-scope topics:</strong> Dimmed to 30% opacity, muted colors</li>
+                    <li><strong>Purpose:</strong> Visually highlights what you should be focusing on</li>
+                </ul>
+                
+                <div class="screenshot-placeholder">
+                    📸 Knowledge Graph with Active Semester Scope
+                    <p>Graph with bright focused topics and dimmed out-of-scope topics</p>
+                </div>
+                
+                <h4>2. Study Plan Generation</h4>
+                <ul>
+                    <li>Scoped topics receive <strong>+50 priority boost</strong></li>
+                    <li>Out-of-scope topics can still appear in plans but are deprioritized</li>
+                    <li>Weak scoped topics are prioritized over strong out-of-scope topics</li>
+                    <li>Ask the AI: <em>"Focus my study plan on my semester topics"</em></li>
+                </ul>
+                
+                <h4>3. Quiz Generation</h4>
+                <ul>
+                    <li>Quiz recommendations favor scoped topics</li>
+                    <li>When generating quizzes, the AI considers your active scope</li>
+                    <li>You can still quiz on any topic manually, but automated suggestions focus on your semester</li>
+                </ul>
+                
+                <h4>4. Dashboard & Analytics</h4>
+                <ul>
+                    <li>Weak topics widget prioritizes scoped topics</li>
+                    <li>Exam readiness calculations focus on scoped content</li>
+                    <li>Progress metrics emphasize semester-relevant learning</li>
+                </ul>
+                
+                <h3>Managing Semester Scopes</h3>
+                
+                <h4>View All Scopes</h4>
+                <p>In Semester Management, you can see all your saved scopes:</p>
+                <ul>
+                    <li><strong>Name</strong> - e.g., "Year 3 Semester 1"</li>
+                    <li><strong>Topic Count</strong> - How many topics are included</li>
+                    <li><strong>Active Status</strong> - Whether this scope is currently active</li>
+                    <li><strong>Exam Date</strong> - Upcoming exam (if set)</li>
+                    <li><strong>Created Date</strong> - When you uploaded this scope</li>
+                </ul>
+                
+                <h4>Deactivate All Scopes</h4>
+                <p>Want to see the full curriculum without scoping?</p>
+                <ul>
+                    <li>Click <strong>"Deactivate All"</strong> or <strong>"Show Full Curriculum"</strong></li>
+                    <li>All topics return to normal visibility</li>
+                    <li>Study plans and quizzes consider the entire knowledge graph</li>
+                    <li>Useful during revision or when exploring topics beyond your current semester</li>
+                </ul>
+                
+                <h4>Edit Scope Topics</h4>
+                <ul>
+                    <li>Click the <strong>edit icon</strong> next to a scope</li>
+                    <li>Add or remove topics from the scope</li>
+                    <li>Useful if the auto-matching missed relevant topics or included irrelevant ones</li>
+                </ul>
+                
+                <h4>Delete a Scope</h4>
+                <ul>
+                    <li>Click the <strong>delete icon</strong> next to a scope</li>
+                    <li>Confirm deletion</li>
+                    <li>Useful for removing old semester scopes you no longer need</li>
+                </ul>
+                
+                <h3>AI Integration: Semester-Aware Tutoring</h3>
+                
+                <p>The AI tutor can work with your semester scopes. Try asking:</p>
+                
+                <div class="success-box">
+                    <h4>📝 Semester-Related Prompts</h4>
+                    <ul>
+                        <li><em>"What semester scopes do I have?"</em> - Lists your saved scopes and which is active</li>
+                        <li><em>"Focus my study plan on my current semester"</em> - Generates a plan prioritizing scoped topics</li>
+                        <li><em>"What topics are in my active semester scope?"</em> - Shows which topics are included</li>
+                        <li><em>"Quiz me on topics from my current semester"</em> - Generates quiz from scoped topics only</li>
+                        <li><em>"Show me my weak areas in this semester's curriculum"</em> - Filters weak topics by scope</li>
+                    </ul>
+                </div>
+                
+                <p>The AI uses the <code>get_semester_scopes()</code> tool to retrieve your scope information and can factor it into study recommendations.</p>
+                
+                <h3>Best Practices</h3>
+                
+                <div class="feature-box">
+                    <h4>💡 Tips for Effective Semester Scoping</h4>
+                    <ul>
+                        <li><strong>Upload early:</strong> Set up your semester scope at the start of term for maximum benefit</li>
+                        <li><strong>Include exam dates:</strong> Helps Aetios prioritize revision timing</li>
+                        <li><strong>Review matches:</strong> Spend a minute checking auto-matched topics are correct</li>
+                        <li><strong>One scope per semester:</strong> Create a new scope each semester/module block</li>
+                        <li><strong>Deactivate between terms:</strong> Broaden your view during holidays or electives</li>
+                        <li><strong>Keep PDFs:</strong> Save your curriculum PDFs for reference (not stored in the app)</li>
+                        <li><strong>Re-upload if needed:</strong> If the curriculum changes mid-semester, upload an updated PDF</li>
+                    </ul>
+                </div>
+                
+                <div class="warning-box">
+                    <h4>⚠️ Important Notes</h4>
+                    <ul>
+                        <li>Semester scoping is <strong>advisory</strong> - you can still access and study any topic</li>
+                        <li>Topics not in your scope aren't hidden, just deprioritized</li>
+                        <li>The matching algorithm isn't perfect - always review matched topics</li>
+                        <li>PDF content is processed locally and never sent to external servers</li>
+                        <li>Requires the PDF processing libraries (installed automatically during setup)</li>
+                    </ul>
+                </div>
+            </section>
+            
             <section id="troubleshooting">
-                <h2>🔧 11. Troubleshooting & FAQ</h2>
+                <h2>🔧 12. Troubleshooting & FAQ</h2>
                 
                 <h3>Common Installation Issues</h3>
                 
@@ -2671,7 +3003,7 @@ npm run dev</code></pre>
             </section>
             
             <section id="appendix">
-                <h2>📚 12. Appendix</h2>
+                <h2>📚 13. Appendix</h2>
                 
                 <h3>Glossary of Terms</h3>
                 
