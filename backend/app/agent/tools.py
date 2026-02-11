@@ -551,6 +551,7 @@ async def get_study_history(
 async def generate_study_plan(
     exam_id: Optional[int] = None, 
     weeks: int = 4,
+    semester_scope_id: Optional[int] = None,  # NEW
     db: AsyncSession = None
 ) -> Dict:
     """
@@ -559,6 +560,7 @@ async def generate_study_plan(
     Args:
         exam_id: Optional exam to prepare for
         weeks: Planning horizon in weeks, default 4
+        semester_scope_id: Optional semester scope ID to focus the plan on scoped topics
         db: Database session
         
     Returns:
@@ -569,6 +571,7 @@ async def generate_study_plan(
             "plan_id": f"plan_{datetime.utcnow().timestamp()}",
             "weeks": weeks,
             "exam_id": exam_id,
+            "semester_scope_id": semester_scope_id,
             "schedule": [],
             "error": "Study plan service not available"
         }
@@ -585,7 +588,8 @@ async def generate_study_plan(
             end_date=end_date,
             hours_per_day=2.0,
             db=db,
-            focus_weak_areas=True
+            focus_weak_areas=True,
+            semester_scope_id=semester_scope_id  # NEW
         )
         
         # Retrieve the plan
@@ -600,6 +604,7 @@ async def generate_study_plan(
                 "plan_id": plan_id,
                 "weeks": weeks,
                 "exam_id": exam_id,
+                "semester_scope_id": semester_scope_id,
                 "schedule": plan_data
             }
         else:
@@ -607,6 +612,7 @@ async def generate_study_plan(
                 "plan_id": plan_id,
                 "weeks": weeks,
                 "exam_id": exam_id,
+                "semester_scope_id": semester_scope_id,
                 "schedule": []
             }
     except Exception as e:
@@ -615,9 +621,46 @@ async def generate_study_plan(
             "plan_id": f"plan_{datetime.utcnow().timestamp()}",
             "weeks": weeks,
             "exam_id": exam_id,
+            "semester_scope_id": semester_scope_id,
             "schedule": [],
             "error": str(e)
         }
+
+
+async def get_semester_scopes(db: AsyncSession = None) -> List[Dict]:
+    """
+    Get all semester curriculum scopes, including which one is active.
+    
+    Args:
+        db: Database session
+        
+    Returns:
+        List of semester scopes with details
+    """
+    if db is None or 'semester_service' not in _services:
+        return []
+    
+    try:
+        semester_service = _services['semester_service']
+        
+        scopes = await semester_service.get_all_scopes(db)
+        
+        return [
+            {
+                'id': scope.id,
+                'name': scope.name,
+                'year': scope.year,
+                'semester_number': scope.semester_number,
+                'exam_date': scope.exam_date.isoformat() if scope.exam_date else None,
+                'topic_count': len(json.loads(scope.topic_ids)),
+                'is_active': scope.is_active,
+                'created_at': scope.created_at.isoformat()
+            }
+            for scope in scopes
+        ]
+    except Exception as e:
+        print(f"Error getting semester scopes: {e}")
+        return []
 
 
 async def get_exam_readiness(exam_id: int, db: AsyncSession = None) -> Dict:
@@ -1190,7 +1233,7 @@ TOOL_DEFINITIONS = [
         "type": "function",
         "function": {
             "name": "generate_study_plan",
-            "description": "Generate a personalized study plan based on weak areas, upcoming exams, and spaced repetition needs.",
+            "description": "Generate a personalized study plan based on weak areas, upcoming exams, semester scope, and spaced repetition needs.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -1202,8 +1245,23 @@ TOOL_DEFINITIONS = [
                         "type": "integer",
                         "description": "Planning horizon in weeks",
                         "default": 4
+                    },
+                    "semester_scope_id": {
+                        "type": "integer",
+                        "description": "Optional semester scope ID to focus the plan on scoped topics"
                     }
                 }
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_semester_scopes",
+            "description": "Get all semester curriculum scopes, including which one is active. Use this to see what semester scopes exist and which topics they cover.",
+            "parameters": {
+                "type": "object",
+                "properties": {}
             }
         }
     },
@@ -1331,6 +1389,7 @@ TOOL_FUNCTIONS = {
     "log_study_session": log_study_session,
     "get_study_history": get_study_history,
     "generate_study_plan": generate_study_plan,
+    "get_semester_scopes": get_semester_scopes,
     "get_exam_readiness": get_exam_readiness,
     "get_curriculum_overview": get_curriculum_overview,
     "update_confidence": update_confidence,
