@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import type { KnowledgeGraph, TopicNode } from '../types/curriculum';
 import type { ChatMessage, ChatResponse, ChatContext } from '../types/chat';
-import type { Exam, StudyPlan, QuizQuestion, StudySession, StudyPlanPreferences, Resource } from '../types/study';
+import type { Exam, StudyPlan, QuizQuestion, StudySession, StudyPlanPreferences, Resource, SAQQuestion, SAQResult } from '../types/study';
 
 const BASE_URL = 'http://localhost:8741/api';
 
@@ -143,11 +143,12 @@ class ApiClient {
   }
 
   // Quizzes
-  async generateQuiz(topicIds: string[], count: number = 5): Promise<QuizQuestion[]> {
+  async generateQuiz(topicIds: string[], count: number = 5, questionType: string = 'sba'): Promise<QuizQuestion[]> {
     const response = await this.client.post<{ questions: QuizQuestion[] }>('/quiz/generate', {
       topic_ids: topicIds,
       num_questions: count,
       difficulty: 'medium',
+      question_type: questionType,
     }, {
       timeout: 300_000, // 5 minutes for LLM-based quiz generation
     });
@@ -158,6 +159,18 @@ class ApiClient {
     const response = await this.client.post(`/quiz/answer`, {
       questionId,
       answer,
+    });
+    return response.data;
+  }
+
+  async submitSAQAnswer(quizId: string, questionId: string, topicId: string, answer: string): Promise<SAQResult> {
+    const response = await this.client.post<SAQResult>('/quiz/submit-saq', {
+      quiz_id: quizId,
+      question_id: questionId,
+      topic_id: topicId,
+      answer,
+    }, {
+      timeout: 300_000, // LLM marking can take time
     });
     return response.data;
   }

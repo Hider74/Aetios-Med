@@ -326,6 +326,7 @@ async def generate_quiz(
     topic_id: str, 
     num_questions: int = 5, 
     difficulty: str = "medium",
+    question_type: str = "sba",  # NEW
     db: AsyncSession = None
 ) -> Dict:
     """
@@ -335,6 +336,7 @@ async def generate_quiz(
         topic_id: Topic identifier
         num_questions: Number of questions to generate, default 5
         difficulty: Difficulty level (easy/medium/hard), default "medium"
+        question_type: Question type ('sba' for Single Best Answer or 'saq' for Short Answer Questions), default "sba"
         db: Database session
         
     Returns:
@@ -346,6 +348,7 @@ async def generate_quiz(
             "topic_id": topic_id,
             "questions": [],
             "difficulty": difficulty,
+            "question_type": question_type,
             "error": "Quiz service not available"
         }
     
@@ -355,6 +358,7 @@ async def generate_quiz(
             topic_id=topic_id,
             num_questions=num_questions,
             difficulty=difficulty,
+            question_type=question_type,  # NEW
             db=db
         )
         
@@ -362,7 +366,8 @@ async def generate_quiz(
             "quiz_id": f"quiz_{datetime.utcnow().timestamp()}",
             "topic_id": topic_id,
             "questions": questions,
-            "difficulty": difficulty
+            "difficulty": difficulty,
+            "question_type": question_type
         }
     except Exception as e:
         print(f"Error generating quiz: {e}")
@@ -371,6 +376,7 @@ async def generate_quiz(
             "topic_id": topic_id,
             "questions": [],
             "difficulty": difficulty,
+            "question_type": question_type,
             "error": str(e)
         }
 
@@ -1134,7 +1140,7 @@ TOOL_DEFINITIONS = [
         "type": "function",
         "function": {
             "name": "generate_quiz",
-            "description": "Generate a quiz for a specific topic to test understanding. Returns questions with multiple choice options.",
+            "description": "Generate a quiz for a specific topic. Supports SBA (Single Best Answer multiple choice) and SAQ (Short Answer Questions with points-based marking).",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -1152,6 +1158,12 @@ TOOL_DEFINITIONS = [
                         "enum": ["easy", "medium", "hard"],
                         "description": "Difficulty level of questions",
                         "default": "medium"
+                    },
+                    "question_type": {
+                        "type": "string",
+                        "enum": ["sba", "saq"],
+                        "description": "Question type: 'sba' for Single Best Answer (multiple choice) or 'saq' for Short Answer Questions",
+                        "default": "sba"
                     }
                 },
                 "required": ["topic_id"]

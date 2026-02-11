@@ -54,10 +54,13 @@ out/
 *.sqlite
 *.sqlite3
 
-# Models (too large for git)
+# LLM Models (too large for git)
 *.gguf
 *.bin
-models/
+models/*.gguf
+models/*.bin
+# Exclude LLM model directory but allow Python app/models/
+/models/
 
 # ChromaDB & LanceDB
 chroma/

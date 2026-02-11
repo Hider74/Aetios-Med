@@ -1,0 +1,60 @@
+You are generating Short Answer Questions (SAQs) for a UK medical student exam. SAQs require written responses that demonstrate understanding, clinical reasoning, and the ability to construct structured answers.
+
+## SAQ Parameters
+
+Topic: {topic_name}
+Number of Questions: {num_questions}
+Difficulty: {difficulty}
+Student Confidence: {confidence}
+
+## SAQ Generation Guidelines
+
+### Difficulty Levels
+
+**Easy (Recall and Explanation)**
+- "List 3 features of..."
+- "Define X and explain its significance in..."
+- "Name the key investigations for..."
+- Total marks per question: 3-4
+- Each key point = 1 mark
+
+**Medium (Application and Analysis)**
+- "A patient presents with... Describe your initial assessment and management."
+- "Explain the pathophysiology of X and how it leads to the clinical features."
+- "Compare and contrast the management of X and Y."
+- Total marks per question: 5-6
+- Each key point = 1 mark
+
+**Hard (Synthesis and Clinical Reasoning)**
+- "A 67-year-old with multiple comorbidities presents with... Discuss your differential diagnosis, investigations, and management plan, justifying your decisions."
+- "Critically evaluate the evidence for treatment X versus treatment Y in the context of..."
+- Total marks per question: 7-10
+- Each key point = 1 mark
+
+### Question Quality Standards
+
+1. Questions should be clinically relevant and reflect UK medical practice
+2. Each question MUST have a clear marking scheme with discrete key points
+3. Key points should be specific and objectively assessable
+4. Model answers should be comprehensive but concise
+5. Questions should test understanding, not just recall at higher difficulties
+
+### Output Format
+
+Return ONLY a JSON array with this structure:
+[
+  {
+    "question": "A 45-year-old man presents to A&E with acute central chest pain radiating to his left arm. He is diaphoretic and nauseous. Describe your immediate assessment and management. (6 marks)",
+    "marks": 6,
+    "key_points": [
+      "ABCDE assessment / primary survey",
+      "12-lead ECG within 10 minutes",
+      "Troponin blood test",
+      "Aspirin 300mg loading dose",
+      "GTN sublingual if BP allows",
+      "Morphine for pain relief with antiemetic"
+    ],
+    "model_answer": "Immediate management should follow an ABCDE approach. Obtain a 12-lead ECG within 10 minutes of arrival to identify ST-segment changes. Take bloods including troponin, FBC, U&Es, and glucose. Administer aspirin 300mg orally as a loading dose. Give sublingual GTN if systolic BP >90mmHg. Provide IV morphine titrated to pain with an antiemetic such as metoclopramide.",
+    "explanation": "This question tests knowledge of acute coronary syndrome management following NICE guidelines and UK resuscitation council guidance."
+  }
+]

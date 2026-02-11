@@ -5,7 +5,7 @@ Quiz generation and submission endpoints.
 from fastapi import APIRouter, Request, HTTPException
 from sqlalchemy import select, func
 from datetime import datetime
-from app.models.api_models import QuizRequest, QuizResponse, QuizSubmission, QuizResult
+from app.models.api_models import QuizRequest, QuizResponse, QuizSubmission, QuizResult, SAQSubmission
 from app.models.database import QuizResult as DBQuizResult, get_session
 import uuid
 import random
@@ -50,6 +50,7 @@ async def generate_quiz(request: Request, quiz_request: QuizRequest):
             topic_id=topic_id,
             num_questions=quiz_request.num_questions,
             difficulty=quiz_request.difficulty,
+            question_type=quiz_request.question_type,  # NEW
             db=db
         )
         
@@ -187,3 +188,50 @@ async def get_quiz_history(request: Request, limit: int = 20):
         ]
         
         return {"quizzes": quizzes}
+
+
+@router.post("/submit-saq")
+async def submit_saq_answer(request: Request, submission: SAQSubmission):
+    """Submit an SAQ answer for LLM-based marking."""
+    quiz_service = request.app.state.quiz if hasattr(request.app.state, 'quiz') else None
+    
+    if not quiz_service:
+        raise HTTPException(status_code=503, detail="Quiz service not available")
+    
+    # Look up quiz data
+    quiz_data = _active_quizzes.get(submission.quiz_id)
+    if not quiz_data:
+        raise HTTPException(status_code=404, detail="Quiz not found or expired")
+    
+    # Find the question
+    question_data = None
+    for q_text, q_info in quiz_data['questions'].items():
+        if submission.question_id == q_text or submission.question_id == q_info.get('question'):
+            question_data = q_info
+            break
+    
+    if not question_data:
+        try:
+            idx = int(submission.question_id.replace('q', ''))
+            questions_list = list(quiz_data['questions'].values())
+            if 0 <= idx < len(questions_list):
+                question_data = questions_list[idx]
+        except (ValueError, IndexError):
+            pass
+    
+    if not question_data:
+        raise HTTPException(status_code=404, detail="Question not found in quiz")
+    
+    # Evaluate SAQ answer
+    async with get_session() as db:
+        result = await quiz_service.evaluate_saq_answer(
+            question=question_data.get('question', ''),
+            model_answer=question_data.get('model_answer', ''),
+            key_points=question_data.get('key_points', []),
+            student_answer=submission.answer,
+            topic_id=submission.topic_id,
+            difficulty=quiz_data.get('difficulty', 'medium'),
+            db=db
+        )
+    
+    return result

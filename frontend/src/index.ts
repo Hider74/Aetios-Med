@@ -1,7 +1,7 @@
 // Type exports
 export type { TopicNode, GraphEdge, KnowledgeGraph, GraphLayout, GraphFilter, GraphStats } from './types/curriculum';
 export type { ChatMessage, ChatResponse, QuizData, ChatSession, ChatContext } from './types/chat';
-export type { Exam, StudyPlan, StudyTask, QuizQuestion, StudySession, DecayingTopic, StudyStats } from './types/study';
+export type { Exam, StudyPlan, StudyTask, QuizQuestion, StudySession, DecayingTopic, StudyStats, SAQQuestion, SAQResult, KeyPointAssessment } from './types/study';
 
 // Service exports
 export { api } from './services/api';
@@ -40,6 +40,9 @@ export { NodeDetail } from './components/KnowledgeGraph/NodeDetail';
 export { ChatInterface } from './components/Chat/ChatInterface';
 export { MessageBubble } from './components/Chat/MessageBubble';
 export { QuizCard } from './components/Chat/QuizCard';
+
+// Component exports - Quiz
+export { SAQInput } from './components/Quiz/SAQInput';
 
 // Component exports - Study Plan
 export { PlanGenerator } from './components/StudyPlan/PlanGenerator';
