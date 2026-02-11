@@ -8,6 +8,8 @@ from datetime import datetime
 from app.models.api_models import QuizRequest, QuizResponse, QuizSubmission, QuizResult
 from app.models.database import QuizResult as DBQuizResult, get_session
 import uuid
+import random
+import json
 from typing import Dict, Any
 
 router = APIRouter()
@@ -27,8 +29,20 @@ async def generate_quiz(request: Request, quiz_request: QuizRequest):
     
     # Get database session
     async with get_session() as db:
-        # For now, use the first topic_id (service supports single topic)
+        # If no topics specified, check for active semester scope
         topic_id = quiz_request.topic_ids[0] if quiz_request.topic_ids else None
+        
+        if not topic_id:
+            # Check for active semester scope
+            semester_service = request.app.state.semester if hasattr(request.app.state, 'semester') else None
+            if semester_service:
+                active_scope = await semester_service.get_active_scope(db)
+                if active_scope:
+                    scope_topics = json.loads(active_scope.topic_ids)
+                    # Pick a random topic from scope for quiz
+                    if scope_topics:
+                        topic_id = random.choice(scope_topics)
+        
         if not topic_id:
             raise HTTPException(status_code=400, detail="At least one topic_id required")
         

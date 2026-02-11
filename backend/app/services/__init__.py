@@ -9,6 +9,7 @@ from .retention_service import RetentionService
 from .study_plan_service import StudyPlanService
 from .encryption_service import EncryptionService
 from .model_downloader import ModelDownloader
+from .semester_service import SemesterService
 
 __all__ = [
     'LLMService',
@@ -20,4 +21,5 @@ __all__ = [
     'StudyPlanService',
     'EncryptionService',
     'ModelDownloader',
+    'SemesterService',
 ]

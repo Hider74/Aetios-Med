@@ -201,6 +201,89 @@ class ApiClient {
     const response = await this.client.get<Resource>(`/resources/${resourceId}`);
     return response.data;
   }
+
+  // Semester Scope API
+  async uploadSemesterPDF(
+    file: File,
+    name: string,
+    year?: number,
+    semester_number?: number,
+    exam_date?: string
+  ): Promise<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('name', name);
+    if (year) formData.append('year', year.toString());
+    if (semester_number) formData.append('semester_number', semester_number.toString());
+    if (exam_date) formData.append('exam_date', exam_date);
+
+    const response = await this.client.post('/semester/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  }
+
+  async createSemesterScope(scopeData: {
+    name: string;
+    topic_ids: string[];
+    year?: number;
+    semester_number?: number;
+    exam_date?: string;
+    source_filename?: string;
+  }): Promise<any> {
+    const response = await this.client.post('/semester/create', scopeData);
+    return response.data;
+  }
+
+  async uploadAndCreateSemesterScope(
+    file: File,
+    name: string,
+    year?: number,
+    semester_number?: number,
+    exam_date?: string
+  ): Promise<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('name', name);
+    if (year) formData.append('year', year.toString());
+    if (semester_number) formData.append('semester_number', semester_number.toString());
+    if (exam_date) formData.append('exam_date', exam_date);
+
+    const response = await this.client.post('/semester/upload-and-create', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  }
+
+  async getSemesterScopes(): Promise<any> {
+    const response = await this.client.get('/semester/scopes');
+    return response.data;
+  }
+
+  async getActiveSemesterScope(): Promise<any> {
+    const response = await this.client.get('/semester/active');
+    return response.data;
+  }
+
+  async activateSemesterScope(scopeId: number): Promise<any> {
+    const response = await this.client.put(`/semester/${scopeId}/activate`);
+    return response.data;
+  }
+
+  async deactivateSemesterScope(): Promise<any> {
+    const response = await this.client.put('/semester/deactivate');
+    return response.data;
+  }
+
+  async updateSemesterScopeTopics(scopeId: number, topic_ids: string[]): Promise<any> {
+    const response = await this.client.put(`/semester/${scopeId}/topics`, { topic_ids });
+    return response.data;
+  }
+
+  async deleteSemesterScope(scopeId: number): Promise<any> {
+    const response = await this.client.delete(`/semester/${scopeId}`);
+    return response.data;
+  }
 }
 
 export const api = new ApiClient();
