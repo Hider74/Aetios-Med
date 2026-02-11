@@ -8,10 +8,15 @@ from unittest.mock import Mock, AsyncMock, MagicMock
 def test_session_isolation_logic():
     """Test that session isolation logic creates separate agents per session."""
     # Simulate the app.state structure
+    agent_counter = {'count': 0}
+    
     class AppState:
         def __init__(self):
             self.agent_sessions = {}
-            self.create_agent = Mock(side_effect=lambda: Mock(id=len(self.agent_sessions)))
+            def create_agent_impl():
+                agent_counter['count'] += 1
+                return Mock(id=agent_counter['count'])
+            self.create_agent = create_agent_impl
     
     app_state = AppState()
     
@@ -41,7 +46,7 @@ def test_session_isolation_logic():
     
     # Verify we only created 2 agents (not 3)
     assert len(app_state.agent_sessions) == 2
-    assert app_state.create_agent.call_count == 2
+    assert agent_counter['count'] == 2
 
 
 def test_session_cleanup_on_delete():
@@ -68,10 +73,15 @@ def test_session_cleanup_on_delete():
 def test_max_sessions_limit():
     """Test that the max sessions limit prevents unbounded growth."""
     # Simulate the app.state structure
+    agent_counter = {'count': 0}
+    
     class AppState:
         def __init__(self):
             self.agent_sessions = {}
-            self.create_agent = Mock(side_effect=lambda: Mock(id=len(self.agent_sessions)))
+            def create_agent_impl():
+                agent_counter['count'] += 1
+                return Mock(id=agent_counter['count'])
+            self.create_agent = create_agent_impl
     
     app_state = AppState()
     MAX_SESSIONS = 20

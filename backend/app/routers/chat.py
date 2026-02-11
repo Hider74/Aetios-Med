@@ -12,6 +12,9 @@ import json
 
 router = APIRouter()
 
+# Maximum number of concurrent agent sessions to prevent memory leaks
+MAX_SESSIONS = 20
+
 
 @router.post("/message", response_model=ChatResponse)
 async def send_message(request: Request, chat_request: ChatRequest):
@@ -27,7 +30,6 @@ async def send_message(request: Request, chat_request: ChatRequest):
     if session_id not in agent_sessions:
         agent_sessions[session_id] = request.app.state.create_agent()
         # Limit total sessions to prevent memory leaks
-        MAX_SESSIONS = 20
         if len(agent_sessions) > MAX_SESSIONS:
             # Remove oldest session (first inserted)
             oldest_key = next(iter(agent_sessions))
