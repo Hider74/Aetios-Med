@@ -13,6 +13,35 @@ import os
 
 router = APIRouter()
 
+# Allowed file extensions for validation
+ALLOWED_ANKI_EXTENSIONS = {'.apkg'}
+ALLOWED_NOTES_EXTENSIONS = {'.txt', '.md'}
+
+
+def validate_file_path(file_path: str, allowed_extensions: set) -> Path:
+    """Validate and sanitize a file path to prevent directory traversal attacks."""
+    if not file_path or not isinstance(file_path, str):
+        raise HTTPException(status_code=400, detail="File path is required")
+    
+    # Check for directory traversal (.. in the original input) before normalization
+    if '..' in file_path:
+        raise HTTPException(
+            status_code=400, 
+            detail="Invalid file path: directory traversal is not allowed"
+        )
+    
+    # Resolve to absolute path
+    path = Path(file_path).resolve()
+    
+    # Validate file extension
+    if path.suffix.lower() not in allowed_extensions:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid file type. Allowed: {', '.join(allowed_extensions)}"
+        )
+    
+    return path
+
 
 @router.post("/anki", response_model=IngestResponse)
 async def ingest_anki(request: Request, file_path: str, auto_map: bool = True):
@@ -22,7 +51,7 @@ async def ingest_anki(request: Request, file_path: str, auto_map: bool = True):
     if not ingest_service:
         raise HTTPException(status_code=503, detail="Ingest service not available")
     
-    path = Path(file_path)
+    path = validate_file_path(file_path, ALLOWED_ANKI_EXTENSIONS)
     if not path.exists():
         raise HTTPException(status_code=404, detail="File not found")
     
@@ -98,13 +127,9 @@ async def ingest_notes(request: Request, file_path: str, auto_map: bool = True):
     if not ingest_service:
         raise HTTPException(status_code=503, detail="Ingest service not available")
     
-    path = Path(file_path)
+    path = validate_file_path(file_path, ALLOWED_NOTES_EXTENSIONS)
     if not path.exists():
         raise HTTPException(status_code=404, detail="File not found")
-    
-    # Check file extension
-    if path.suffix not in ['.txt', '.md']:
-        raise HTTPException(status_code=400, detail="File must be .txt or .md")
     
     try:
         # Read file content
