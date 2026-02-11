@@ -17,6 +17,9 @@ router = APIRouter()
 ALLOWED_ANKI_EXTENSIONS = {'.apkg'}
 ALLOWED_NOTES_EXTENSIONS = {'.txt', '.md'}
 
+# Sensitive system directories that should not be accessible
+SENSITIVE_SYSTEM_DIRS = ['/etc/', '/sys/', '/proc/', '/dev/', '/root/']
+
 
 def validate_file_path(file_path: str, allowed_extensions: set) -> Path:
     """Validate and sanitize a file path to prevent directory traversal attacks.
@@ -31,8 +34,11 @@ def validate_file_path(file_path: str, allowed_extensions: set) -> Path:
     Raises:
         HTTPException: If validation fails (400 status code)
     """
-    if not file_path or not isinstance(file_path, str):
-        raise HTTPException(status_code=400, detail="File path is required")
+    if not isinstance(file_path, str):
+        raise HTTPException(status_code=400, detail="File path must be a string")
+    
+    if not file_path:
+        raise HTTPException(status_code=400, detail="File path cannot be empty")
     
     # Check for directory traversal patterns (.. in the original input) before normalization
     # This catches both literal .. and URL-encoded variants after decoding
@@ -48,8 +54,7 @@ def validate_file_path(file_path: str, allowed_extensions: set) -> Path:
     # Additional security: ensure we're not accessing system-critical directories
     # This prevents absolute paths to sensitive locations like /etc, /sys, etc.
     path_str = str(path)
-    sensitive_dirs = ['/etc/', '/sys/', '/proc/', '/dev/', '/root/']
-    for sensitive_dir in sensitive_dirs:
+    for sensitive_dir in SENSITIVE_SYSTEM_DIRS:
         if path_str.startswith(sensitive_dir):
             raise HTTPException(
                 status_code=400,

@@ -94,7 +94,7 @@ def test_validate_file_path_empty_string():
     with pytest.raises(HTTPException) as exc_info:
         validate_file_path("", ALLOWED_ANKI_EXTENSIONS)
     assert exc_info.value.status_code == 400
-    assert "file path is required" in exc_info.value.detail.lower()
+    assert "cannot be empty" in exc_info.value.detail.lower()
 
 
 def test_validate_file_path_none():
@@ -104,7 +104,7 @@ def test_validate_file_path_none():
     with pytest.raises(HTTPException) as exc_info:
         validate_file_path(None, ALLOWED_ANKI_EXTENSIONS)  # type: ignore
     assert exc_info.value.status_code == 400
-    assert "file path is required" in exc_info.value.detail.lower()
+    assert "must be a string" in exc_info.value.detail.lower()
 
 
 def test_validate_file_path_absolute_sensitive_paths():
@@ -122,7 +122,7 @@ def test_validate_file_path_absolute_sensitive_paths():
         with pytest.raises(HTTPException) as exc_info:
             validate_file_path(sensitive_path, ALLOWED_ANKI_EXTENSIONS)
         assert exc_info.value.status_code == 400
-        assert "system directories" in exc_info.value.detail.lower() or "directory traversal" in exc_info.value.detail.lower()
+        assert "system directories" in exc_info.value.detail.lower()
 
 
 def test_validate_file_path_case_insensitive():
