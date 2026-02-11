@@ -15,6 +15,9 @@ from .graph_service import GraphService
 from .vector_service import VectorService
 from .llm_service import LLMService
 
+# Constants
+SAQ_PASS_THRESHOLD = 0.5  # 50% score threshold for considering SAQ answer as "correct"
+
 
 class QuizService:
     """Service for generating and managing quizzes."""
@@ -418,7 +421,7 @@ Return ONLY a JSON array with this structure:
                 topic_name=topic.label,
                 num_questions=num_questions,
                 difficulty=difficulty,
-                confidence=0.5  # Default; could be fetched from DB
+                confidence=0.5  # Default value - not currently fetched from DB for simplicity
             )
             prompt += f"\n\nAdditional Context:\n{context}"
         else:
@@ -591,7 +594,7 @@ Return a JSON object with: score, max_score, percentage, key_points_assessment (
             question=question,
             correct_answer=model_answer[:500],  # Truncate for DB storage
             user_answer=student_answer[:500],
-            is_correct=(score_ratio >= 0.5),  # "Correct" if ≥50% marks
+            is_correct=(score_ratio >= SAQ_PASS_THRESHOLD),  # "Correct" if ≥50% marks
             difficulty=difficulty,
             timestamp=datetime.utcnow()
         )
@@ -635,20 +638,20 @@ Return a JSON object with: score, max_score, percentage, key_points_assessment (
         # SAQ scoring is proportional: full marks = full positive adjustment
         # Zero marks = full negative adjustment
         # Partial marks = proportional
-        if score_ratio >= 0.5:
-            # Positive adjustment scaled by how well they did above 50%
-            positive_factor = (score_ratio - 0.5) * 2  # Maps 0.5-1.0 to 0.0-1.0
+        if score_ratio >= SAQ_PASS_THRESHOLD:
+            # Positive adjustment scaled by how well they did above threshold
+            positive_factor = (score_ratio - SAQ_PASS_THRESHOLD) * 2  # Maps threshold-1.0 to 0.0-1.0
             adjustment = weight * (1 - progress.confidence) * positive_factor
             progress.confidence = min(1.0, progress.confidence + adjustment)
         else:
-            # Negative adjustment scaled by how poorly they did below 50%
-            negative_factor = (0.5 - score_ratio) * 2  # Maps 0.0-0.5 to 1.0-0.0
+            # Negative adjustment scaled by how poorly they did below threshold
+            negative_factor = (SAQ_PASS_THRESHOLD - score_ratio) * 2  # Maps 0.0-threshold to 1.0-0.0
             adjustment = weight * progress.confidence * negative_factor
             progress.confidence = max(0.0, progress.confidence - adjustment)
         
         # Update quiz stats
         progress.quiz_attempts += 1
-        if score_ratio >= 0.5:
+        if score_ratio >= SAQ_PASS_THRESHOLD:
             progress.quiz_correct += 1
         
         progress.updated_at = datetime.utcnow()

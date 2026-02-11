@@ -168,7 +168,7 @@ class ApiClient {
       quiz_id: quizId,
       question_id: questionId,
       topic_id: topicId,
-      answer: answer,
+      answer,
     }, {
       timeout: 300_000, // LLM marking can take time
     });

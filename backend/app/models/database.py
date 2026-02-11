@@ -43,9 +43,15 @@ class QuizResult(Base):
     question = Column(Text, nullable=False)
     correct_answer = Column(String, nullable=True)  # For SBA questions
     user_answer = Column(String, nullable=True)
+    # Note: Both boolean fields are kept for backward compatibility with different parts of the codebase
+    # is_correct is used by quiz_service.py, correct is used by quiz router
+    # TODO: Consolidate to single field in future refactor
     is_correct = Column(Boolean, nullable=True)  # Used by quiz_service
     correct = Column(Boolean, nullable=True)  # Used by quiz router - kept for compatibility
     difficulty = Column(String, default="medium")
+    # Note: Both datetime fields are kept for backward compatibility
+    # timestamp is used by quiz_service.py, quiz_date is used by quiz router
+    # TODO: Consolidate to single field in future refactor
     timestamp = Column(DateTime, default=datetime.utcnow)  # Used by quiz_service
     quiz_date = Column(DateTime, default=datetime.utcnow)  # Used by quiz router
 
