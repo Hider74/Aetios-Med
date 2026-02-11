@@ -17,6 +17,8 @@
     "build:frontend": "cd frontend && vite build",
     "build:backend": "node scripts/build-backend.js",
     "generate-icons": "electron-icon-builder --input=./assets/icon.png --output=./assets --flatten && cpy 'assets/icons/*.ic*' assets/ --flat",
+    "generate:types": "cd backend && uvicorn app.main:app --port 8741 & sleep 3 && npx openapi-typescript http://localhost:8741/openapi.json -o ../frontend/src/types/generated-api.ts && kill %1",
+    "generate:types:from-file": "npx openapi-typescript backend/openapi.json -o frontend/src/types/generated-api.ts",
     "preelectron:build": "npm run build",
     "electron:build": "npm run generate-icons && electron-builder",
     "electron:dev": "electron .",
@@ -34,6 +36,7 @@
     "electron-builder": "^24.9.1",
     "electron-icon-builder": "^2.0.1",
     "eslint": "^8.56.0",
+    "openapi-typescript": "^7.0.0",
     "rimraf": "^6.1.2",
     "typescript": "^5.3.3",
     "vitest": "^1.2.0"

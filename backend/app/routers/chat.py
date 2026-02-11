@@ -12,15 +12,29 @@ import json
 
 router = APIRouter()
 
+# Maximum number of concurrent agent sessions to prevent memory leaks
+MAX_SESSIONS = 20
+
 
 @router.post("/message", response_model=ChatResponse)
 async def send_message(request: Request, chat_request: ChatRequest):
     """Send a message to the AI tutor."""
     llm_service = request.app.state.llm
-    agent = request.app.state.agent if hasattr(request.app.state, 'agent') else None
+    session_id = chat_request.session_id or "default"
     
     if not llm_service.is_loaded:
         raise HTTPException(status_code=503, detail="LLM model not loaded")
+    
+    # Get or create per-session agent
+    agent_sessions = request.app.state.agent_sessions
+    if session_id not in agent_sessions:
+        agent_sessions[session_id] = request.app.state.create_agent()
+        # Limit total sessions to prevent memory leaks
+        if len(agent_sessions) > MAX_SESSIONS:
+            # Remove oldest session (first inserted)
+            oldest_key = next(iter(agent_sessions))
+            del agent_sessions[oldest_key]
+    agent = agent_sessions[session_id]
     
     # Get the user's latest message
     user_content = chat_request.messages[-1].content if chat_request.messages else ""
@@ -34,28 +48,19 @@ async def send_message(request: Request, chat_request: ChatRequest):
                 db_user_message = DBChatMessage(
                     role=user_message.role,
                     content=user_message.content,
-                    session_id=chat_request.session_id or "default"
+                    session_id=session_id
                 )
                 db.add(db_user_message)
                 await db.commit()
         
-        # Use agent orchestrator if available, otherwise fall back to basic completion
-        if agent:
-            # Process message through agent with tool calling
-            response_text = await agent.process_message(user_content, db=db)
-        else:
-            # Fallback to basic completion without agent
-            response_text = await llm_service.complete(
-                messages=chat_request.messages,
-                temperature=chat_request.temperature,
-                max_tokens=chat_request.max_tokens
-            )
+        # Process message through agent with tool calling
+        response_text = await agent.process_message(user_content, db=db)
         
         # Store assistant response in database
         db_assistant_message = DBChatMessage(
             role="assistant",
             content=response_text,
-            session_id=chat_request.session_id or "default"
+            session_id=session_id
         )
         db.add(db_assistant_message)
         await db.commit()
@@ -126,10 +131,10 @@ async def get_chat_history(request: Request, limit: int = 50, session_id: str = 
 async def clear_chat_history(request: Request, session_id: str = "default"):
     """Clear chat history."""
     try:
-        # Reset the agent orchestrator's in-memory conversation
-        agent = getattr(request.app.state, 'agent', None)
-        if agent:
-            agent.reset()
+        # Remove the session's agent orchestrator
+        agent_sessions = request.app.state.agent_sessions
+        if session_id in agent_sessions:
+            del agent_sessions[session_id]
         
         async with get_session() as db:
             await db.execute(
