@@ -10,7 +10,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import chat, graph, ingest, quiz, study, system
+from app.routers import chat, graph, ingest, quiz, study, system, semester
 from app.services.llm_service import LLMService
 from app.services.graph_service import GraphService
 from app.services.vector_service import VectorService
@@ -19,6 +19,7 @@ from app.services.quiz_service import QuizService
 from app.services.retention_service import RetentionService
 from app.services.study_plan_service import StudyPlanService
 from app.services.encryption_service import EncryptionService
+from app.services.semester_service import SemesterService
 from app.models.database import init_database
 from app.agent import create_agent, init_tools
 
@@ -32,6 +33,7 @@ quiz_service: QuizService = None
 retention_service: RetentionService = None
 study_plan_service: StudyPlanService = None
 encryption_service: EncryptionService = None
+semester_service: SemesterService = None
 
 
 @asynccontextmanager
@@ -41,7 +43,7 @@ async def lifespan(app: FastAPI):
     Initializes services on startup, cleans up on shutdown.
     """
     global llm_service, graph_service, vector_service
-    global ingest_service, quiz_service, retention_service, study_plan_service, encryption_service
+    global ingest_service, quiz_service, retention_service, study_plan_service, encryption_service, semester_service
     
     # Initialize database
     await init_database(settings.database_path)
@@ -95,13 +97,20 @@ async def lifespan(app: FastAPI):
     # Initialize encryption service
     encryption_service = EncryptionService()
     
+    # Initialize semester service
+    semester_service = SemesterService(
+        graph_service=graph_service,
+        vector_service=vector_service
+    )
+    
     # Initialize agent tools with services
     init_tools({
         'graph_service': graph_service,
         'vector_service': vector_service,
         'retention_service': retention_service,
         'quiz_service': quiz_service,
-        'study_plan_service': study_plan_service
+        'study_plan_service': study_plan_service,
+        'semester_service': semester_service
     })
     
     # Create agent orchestrator
@@ -116,6 +125,7 @@ async def lifespan(app: FastAPI):
     app.state.retention = retention_service
     app.state.study = study_plan_service
     app.state.encryption = encryption_service
+    app.state.semester = semester_service
     app.state.agent = agent
     
     yield
@@ -153,6 +163,7 @@ def create_app() -> FastAPI:
     app.include_router(ingest.router, prefix="/api/ingest", tags=["Data Ingestion"])
     app.include_router(quiz.router, prefix="/api/quiz", tags=["Quiz"])
     app.include_router(study.router, prefix="/api/study", tags=["Study Planning"])
+    app.include_router(semester.router, prefix="/api/semester", tags=["Semester Scopes"])
     
     return app
 
