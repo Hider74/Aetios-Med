@@ -66,6 +66,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({ onNodeSelect, onNaviga
         size: getNodeSize(connectionCounts.get(node.id) || 0),
         mastered: node.mastered,
         confidence: node.confidence,
+        in_scope: node.in_scope !== false, // Default to true if not specified
       },
     }));
 

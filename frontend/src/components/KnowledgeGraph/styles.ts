@@ -31,6 +31,13 @@ export const graphStyles: CytoscapeStylesheet[] = [
       'border-width': 3,
     },
   },
+  // Out-of-scope nodes (dimmed when semester scope is active)
+  {
+    selector: 'node[in_scope = false]',
+    style: {
+      'opacity': 0.3,
+    },
+  },
   // Selected node
   {
     selector: 'node:selected',
