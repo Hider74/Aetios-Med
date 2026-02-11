@@ -100,8 +100,12 @@ class LLMService:
         
         prompt = self._format_messages(messages)
         
-        chunk_queue: asyncio.Queue = asyncio.Queue()
+        # Use bounded queue to prevent unbounded memory growth
+        chunk_queue: asyncio.Queue = asyncio.Queue(maxsize=100)
         sentinel = object()
+        
+        # Capture event loop before starting thread
+        loop = asyncio.get_event_loop()
         
         def _generate():
             try:
@@ -114,12 +118,11 @@ class LLMService:
                     text = chunk["choices"][0]["text"]
                     if text:
                         # Use call_soon_threadsafe to safely add to queue from thread
-                        asyncio.get_event_loop().call_soon_threadsafe(chunk_queue.put_nowait, text)
-                asyncio.get_event_loop().call_soon_threadsafe(chunk_queue.put_nowait, sentinel)
+                        loop.call_soon_threadsafe(chunk_queue.put_nowait, text)
+                loop.call_soon_threadsafe(chunk_queue.put_nowait, sentinel)
             except Exception as e:
-                asyncio.get_event_loop().call_soon_threadsafe(chunk_queue.put_nowait, e)
+                loop.call_soon_threadsafe(chunk_queue.put_nowait, e)
         
-        loop = asyncio.get_event_loop()
         loop.run_in_executor(self.executor, _generate)
         
         while True:
