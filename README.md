@@ -41,20 +41,23 @@ After installation:
 3. Configure your Notability folder (optional)
 4. Start studying!
 
+> **Security Note:** The install scripts automatically build the backend executable and copy it to Electron resources. Your Hugging Face token is securely stored using platform keyring, the app runs entirely offline after initial setup, and OpenAPI documentation is disabled in production builds for security.
+
 ## 🎯 Features
 
 - 🧠 **Local AI Tutor** - OpenBioLLM-8B with Metal/CUDA optimization
 - 📊 **Knowledge Graph** - 75+ UK medical curriculum topics visualized
 - 🎴 **Anki Integration** - Auto-parse .apkg files with topic mapping
 - 📈 **Spaced Repetition** - FSRS-4 algorithm for optimal review
-- 🎯 **Quiz Generation** - AI-powered quizzes from weak areas
+- 🎯 **Quiz Generation** - AI-powered SBA (multiple choice) and SAQ (short answer) quizzes from weak areas with LLM-based marking
+- 📚 **Semester Scoping** - Upload curriculum PDFs to focus study on current semester topics
 - 📅 **Study Planning** - Personalized plans with ICS export
 - 🔒 **Offline-First** - Works completely offline after setup
-- 🔐 **Secure** - AES-256 encryption with platform keyring
+- 🔐 **Secure** - AES-256 encryption with platform keyring, runs entirely offline after setup
 
 ## 📁 Structure
 
-- `backend/` - Python FastAPI (9 services, 6 routers, agent with 18 tools)
+- `backend/` - Python FastAPI (9 services, 6 routers, agent with 19 tools, LanceDB vector store)
 - `frontend/` - React + TypeScript (38+ components, Cytoscape.js graph)
 - `electron/` - Desktop wrapper
 - `scripts/` - Installation and build scripts
@@ -78,8 +81,8 @@ cd frontend && npm test
 ## 🏗️ Development
 
 ### Prerequisites
-- Node.js 18-22 (LTS recommended, avoid odd-numbered versions)
-- Python 3.10+
+- Node.js 18-22 (LTS recommended, avoid Node.js 25+)
+- Python 3.10+ (tested up to 3.14)
 - Git
 
 ### Manual Setup

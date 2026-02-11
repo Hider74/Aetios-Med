@@ -64,6 +64,9 @@ src/
 - **MessageBubble**: Formatted chat messages
 - **QuizCard**: Interactive quiz questions
 
+### Quiz
+- **SAQInput**: Short answer question input with word count, color-coded scoring, and key-point breakdown
+
 ### Study Plan
 - **PlanGenerator**: AI-powered study plan generation
 - **CalendarView**: Visual calendar with tasks
