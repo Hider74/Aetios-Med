@@ -104,9 +104,6 @@ async def lifespan(app: FastAPI):
         'study_plan_service': study_plan_service
     })
     
-    # Create agent orchestrator
-    agent = create_agent(llm_service=llm_service)
-    
     # Make services available to routers
     app.state.llm = llm_service
     app.state.graph = graph_service
@@ -116,7 +113,10 @@ async def lifespan(app: FastAPI):
     app.state.retention = retention_service
     app.state.study = study_plan_service
     app.state.encryption = encryption_service
-    app.state.agent = agent
+    
+    # Session-based agent orchestrators (session_id -> AgentOrchestrator)
+    app.state.agent_sessions = {}
+    app.state.create_agent = lambda: create_agent(llm_service=llm_service)
     
     yield
     
@@ -130,11 +130,17 @@ async def lifespan(app: FastAPI):
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
     
+    # Check if we're in development mode
+    is_dev = os.environ.get("NODE_ENV") == "development"
+    
     app = FastAPI(
         title="Aetios-Med API",
         description="Backend for the Medical Study Assistant",
         version="0.1.0",
-        lifespan=lifespan
+        lifespan=lifespan,
+        docs_url="/docs" if is_dev else None,
+        redoc_url="/redoc" if is_dev else None,
+        openapi_url="/openapi.json" if is_dev else None,
     )
     
     # CORS for Electron renderer
