@@ -125,6 +125,7 @@ class LLMService:
         
         loop.run_in_executor(self.executor, _generate)
         
+        # Errors in _generate are caught and propagated via the queue mechanism
         while True:
             item = await chunk_queue.get()
             if item is sentinel:

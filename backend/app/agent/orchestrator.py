@@ -354,6 +354,7 @@ class AgentOrchestrator:
         
         TODO: Implement true chunk-by-chunk streaming by directly calling
         llm_service.stream_complete() instead of delegating to process_message.
+        This would require handling tool calls in a streaming context.
         
         Args:
             user_message: User's input message
