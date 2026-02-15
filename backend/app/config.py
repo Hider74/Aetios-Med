@@ -33,17 +33,18 @@ class Settings(BaseSettings):
     # Pydantic v2 configuration
     model_config = SettingsConfigDict(
         env_file=".env",
-        env_file_encoding="utf-8"
+        env_file_encoding="utf-8",
+        protected_namespaces=()
     )
     
     # Paths
     app_data_dir: Path = get_app_data_dir()
-    database_path: Path = None
-    lancedb_path: Path = None
-    model_path: Path = None
-    curriculum_path: Path = None
-    anki_watch_folder: Path = None
-    notes_folder: Path = None
+    database_path: Optional[Path] = None
+    lancedb_path: Optional[Path] = None
+    model_path: Optional[Path] = None
+    curriculum_path: Optional[Path] = None
+    anki_watch_folder: Optional[Path] = None
+    notes_folder: Optional[Path] = None
     
     # Server
     port: int = 8741

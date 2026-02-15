@@ -97,7 +97,7 @@ function createWindow() {
   });
 }
 
-async function waitForBackend(maxAttempts = 30) {
+async function waitForBackend(maxAttempts = 90) {
   for (let i = 0; i < maxAttempts; i++) {
     try {
       await new Promise((resolve, reject) => {
@@ -123,7 +123,7 @@ async function waitForBackend(maxAttempts = 30) {
       }
     }
   }
-  throw new Error('Backend failed to start within 30 seconds');
+  throw new Error('Backend failed to start within 90 seconds');
 }
 
 function startPythonBackend() {
