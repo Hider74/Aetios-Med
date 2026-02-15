@@ -177,7 +177,7 @@ function startPythonBackend() {
     
     // Wait for backend to be ready
     try {
-      await waitForBackend(90);
+      await waitForBackend();
       resolve();
     } catch (error) {
       reject(error);

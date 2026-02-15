@@ -19,8 +19,6 @@ def test_settings_initialization():
     # Verify string fields
     assert settings.model_repo == "aaditya/Llama3-OpenBioLLM-8B-GGUF"
     assert settings.model_filename == "llama3-openbio-8b.Q4_K_M.gguf"
-    
-    print("✓ Settings initialized successfully without validation errors")
 
 
 def test_protected_namespaces_configured():
@@ -35,8 +33,6 @@ def test_protected_namespaces_configured():
     assert hasattr(settings, 'model_path')
     assert hasattr(settings, 'model_repo')
     assert hasattr(settings, 'model_filename')
-    
-    print("✓ Protected namespaces configured correctly")
 
 
 def test_optional_path_fields():
@@ -61,12 +57,10 @@ def test_optional_path_fields():
         field_type = hints.get(field_name)
         # In Python 3.10+, Optional[Path] is Union[Path, None]
         assert field_type is not None, f"Field {field_name} not found in type hints"
-    
-    print("✓ Optional[Path] fields are properly typed")
 
 
 if __name__ == "__main__":
     test_settings_initialization()
     test_protected_namespaces_configured()
     test_optional_path_fields()
-    print("\n✓ All config tests passed")
+
