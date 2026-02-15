@@ -173,6 +173,9 @@ cd frontend
 print_info "Installing frontend dependencies..."
 npm install
 print_success "Frontend dependencies installed"
+print_info "Building frontend..."
+npm run build
+print_success "Frontend built"
 cd ..
 
 echo ""
