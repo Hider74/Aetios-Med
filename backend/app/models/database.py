@@ -83,6 +83,7 @@ class AnkiCard(Base):
     due_date = Column(DateTime, nullable=True)
     last_reviewed = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
 class Note(Base):
@@ -94,6 +95,7 @@ class Note(Base):
     title = Column(String, nullable=False)
     content = Column(Text, nullable=False)
     source = Column(String, nullable=True)  # e.g., "manual", "pdf_page_5", "lecture"
+    file_path = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -128,6 +130,22 @@ class ChatMessage(Base):
     role = Column(String, nullable=False)  # "user", "assistant", "system"
     content = Column(Text, nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow)
+
+
+class SemesterScope(Base):
+    """Store semester curriculum scopes."""
+    __tablename__ = "semester_scopes"
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    year = Column(Integer, nullable=True)
+    semester_number = Column(Integer, nullable=True)
+    exam_date = Column(DateTime, nullable=True)
+    topic_ids = Column(Text, nullable=False)  # JSON array
+    source_filename = Column(String, nullable=True)
+    is_active = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
 async def init_database(db_path: Path) -> None:

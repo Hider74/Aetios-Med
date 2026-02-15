@@ -39,12 +39,14 @@ class ChatRequest(BaseModel):
     """Chat request with message history."""
     messages: List[ChatMessage]
     session_id: Optional[str] = "default"
+    temperature: Optional[float] = 0.7
+    max_tokens: Optional[int] = 2048
 
 
 class ChatResponse(BaseModel):
     """Chat response from the AI tutor."""
-    response: str
-    session_id: str
+    message: ChatMessage
+    finish_reason: str
 
 
 # ============================================================================
@@ -55,22 +57,26 @@ class TopicNode(BaseModel):
     """Knowledge graph topic node."""
     id: str
     label: str
+    type: str = "topic"
     confidence: float = 0.5
     exam_weight: float = 1.0
     learning_objectives: List[str] = []
     prerequisites: List[str] = []
+    in_scope: bool = True
 
 
 class GraphResponse(BaseModel):
     """Knowledge graph response."""
-    topics: List[TopicNode]
-    total_count: int
+    nodes: List[TopicNode]
+    edges: List[Dict[str, Any]]
+    statistics: Optional[Dict[str, Any]] = None
 
 
 class ConfidenceUpdate(BaseModel):
     """Update confidence for a topic."""
     topic_id: str
     confidence: float = Field(ge=0.0, le=1.0)
+    notes: Optional[str] = None
 
 
 # ============================================================================
@@ -132,8 +138,10 @@ class IngestResponse(BaseModel):
     """Response from data ingestion."""
     success: bool
     message: str
-    chunks_processed: int = 0
-    cards_imported: int = 0
+    items_processed: int = 0
+    items_mapped: int = 0
+    errors: List[str] = []
+    statistics: Dict[str, Any] = {}
 
 
 # ============================================================================
@@ -176,3 +184,46 @@ class StudySessionLog(BaseModel):
     duration: int  # seconds
     quality: int = Field(ge=1, le=5)  # 1-5 rating
     notes: Optional[str] = None
+
+
+# ============================================================================
+# Semester Scope Models
+# ============================================================================
+
+class SemesterScopeCreate(BaseModel):
+    """Create a new semester scope."""
+    name: str
+    topic_ids: List[str]
+    year: Optional[int] = None
+    semester_number: Optional[int] = None
+    exam_date: Optional[str] = None
+    source_filename: Optional[str] = None
+
+
+class SemesterTopicMatch(BaseModel):
+    """Matched topic from curriculum PDF."""
+    topic_id: str
+    topic_name: str
+    confidence: float
+    matched_text: str
+
+
+class SemesterUploadResponse(BaseModel):
+    """Response from semester PDF upload."""
+    matched_topics: List[SemesterTopicMatch]
+    scope_id: Optional[int] = None
+    source_filename: str
+
+
+class SemesterScopeResponse(BaseModel):
+    """Semester scope information."""
+    id: int
+    name: str
+    topic_ids: List[str]
+    year: Optional[int] = None
+    semester_number: Optional[int] = None
+    exam_date: Optional[str] = None
+    source_filename: Optional[str] = None
+    is_active: bool
+    created_at: str
+    updated_at: str
