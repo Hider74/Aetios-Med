@@ -1,6 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-import sys
 from PyInstaller.utils.hooks import collect_dynamic_libs, collect_data_files
 
 block_cipher = None
