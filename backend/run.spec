@@ -1,15 +1,24 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import sys
+from PyInstaller.utils.hooks import collect_dynamic_libs, collect_data_files
+
 block_cipher = None
+
+# Collect llama-cpp-python binaries and data
+llama_binaries = collect_dynamic_libs('llama_cpp')
+llama_datas = collect_data_files('llama_cpp')
 
 a = Analysis(
     ['run.py'],
     pathex=[],
-    binaries=[],
+    binaries=llama_binaries,
     datas=[
         ('app/data', 'app/data'),
-    ],
+    ] + llama_datas,
     hiddenimports=[
+        'llama_cpp',
+        'llama_cpp.llama_cpp',
         'uvicorn',
         'uvicorn.logging',
         'uvicorn.loops',

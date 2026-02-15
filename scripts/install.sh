@@ -113,7 +113,7 @@ print_success "PyInstaller installed"
 
 # Build backend executable
 print_info "Building backend executable (this may take a few minutes)..."
-pyinstaller run.spec --distpath dist --workpath build --log-level INFO
+pyinstaller run.spec --clean --distpath dist --workpath build --log-level INFO
 if [ -f "dist/run" ]; then
     print_success "Backend executable built successfully at backend/dist/run"
 else

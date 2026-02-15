@@ -115,11 +115,19 @@ function installPyInstaller() {
 function buildExecutable() {
   printInfo('Building backend executable (this may take a few minutes)...');
   try {
+    const specFile = path.join(backendDir, 'run.spec');
     const distPath = path.join(backendDir, 'dist');
     const workPath = path.join(backendDir, 'build');
     
+    // Check if spec file exists
+    if (!fs.existsSync(specFile)) {
+      printError(`Spec file not found: ${specFile}`);
+      printError('The run.spec file is required for building the backend');
+      return false;
+    }
+    
     execSync(
-      `"${pyinstallerCmd}" --onefile run.py --distpath "${distPath}" --workpath "${workPath}" --specpath . --log-level ERROR`,
+      `"${pyinstallerCmd}" run.spec --clean --distpath "${distPath}" --workpath "${workPath}" --log-level ERROR`,
       { 
         cwd: backendDir,
         stdio: 'inherit',
