@@ -161,7 +161,7 @@ Print-Info "Installing frontend dependencies..."
 npm install --silent
 Print-Success "Frontend dependencies installed"
 Print-Info "Building frontend..."
-npm --silent run build
+npm run build
 Print-Success "Frontend built"
 Set-Location ..
 
