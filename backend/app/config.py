@@ -7,7 +7,7 @@ import sys
 import logging
 from pathlib import Path
 from typing import Optional
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import SecretStr
 
 logger = logging.getLogger(__name__)
@@ -29,6 +29,12 @@ def get_app_data_dir() -> Path:
 
 class Settings(BaseSettings):
     """Application settings with sensible defaults."""
+    
+    # Pydantic v2 configuration
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8"
+    )
     
     # Paths
     app_data_dir: Path = get_app_data_dir()
@@ -54,10 +60,6 @@ class Settings(BaseSettings):
     
     # HuggingFace - uses SecretStr to prevent accidental exposure in logs/serialization
     hf_token: Optional[SecretStr] = None
-    
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
