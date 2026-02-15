@@ -3,7 +3,7 @@ Retention Service
 FSRS-inspired spaced repetition and retention prediction.
 """
 import math
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional, Tuple, Any
 from datetime import datetime, timedelta
 from sqlalchemy import select, and_
 from sqlalchemy.ext.asyncio import AsyncSession
