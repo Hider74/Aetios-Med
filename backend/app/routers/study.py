@@ -87,6 +87,7 @@ async def get_exam(request: Request, exam_id: int):
 async def delete_exam(request: Request, exam_id: int):
     """Delete an exam."""
     try:
+        from sqlalchemy import delete
         async with get_session() as db:
             result = await db.execute(
                 select(Exam).where(Exam.id == exam_id)
@@ -96,7 +97,7 @@ async def delete_exam(request: Request, exam_id: int):
             if not exam:
                 raise HTTPException(status_code=404, detail="Exam not found")
             
-            await db.delete(exam)
+            await db.execute(delete(Exam).where(Exam.id == exam_id))
             await db.commit()
             
             return {"status": "deleted", "exam_id": exam_id}
@@ -125,7 +126,6 @@ async def update_exam(request: Request, exam_id: int, exam_update: ExamCreate):
             exam.topics_json = json.dumps(exam_update.topics)
             
             await db.commit()
-            await db.refresh(exam)
             
             return ExamResponse(
                 id=exam.id,
@@ -165,12 +165,10 @@ async def get_study_plans(request: Request):
             # Get exam details for each plan if exam_id is present
             response_plans = []
             for plan in plans:
+                plan_dict = json.loads(plan.plan_json)
                 plan_data = {
                     "id": plan.id,
-                    "start_date": plan.start_date.isoformat(),
-                    "end_date": plan.end_date.isoformat(),
-                    "hours_per_day": plan.hours_per_day,
-                    "topics": json.loads(plan.topics_json),
+                    "plan": plan_dict,
                     "created_at": plan.created_at.isoformat()
                 }
                 
@@ -199,9 +197,10 @@ async def log_study_session(request: Request, session: StudySessionLog):
             # Create StudySession record
             study_session = StudySession(
                 topic_id=session.topic_id,
-                duration_minutes=session.duration_minutes,
-                session_date=datetime.utcnow(),
-                notes=session.notes
+                duration=session.duration,
+                quality=session.quality,
+                notes=session.notes,
+                session_date=datetime.utcnow()
             )
             db.add(study_session)
             
@@ -251,10 +250,10 @@ async def get_study_sessions(request: Request, topic_id: Optional[str] = None, l
                     {
                         "id": session.id,
                         "topic_id": session.topic_id,
-                        "duration_minutes": session.duration_minutes,
+                        "duration": session.duration,
+                        "quality": session.quality,
                         "session_date": session.session_date.isoformat(),
-                        "notes": session.notes,
-                        "created_at": session.created_at.isoformat()
+                        "notes": session.notes
                     }
                     for session in sessions
                 ]

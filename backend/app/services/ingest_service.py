@@ -87,32 +87,28 @@ class IngestService:
                 if topic_id:
                     stats['mapped'] += 1
                 
-                # Check if card exists in database
+                # Check if card exists in database (by matching front, back, and deck)
                 result = await db.execute(
-                    select(DBAnkiCard).where(DBAnkiCard.card_id == card.card_id)
+                    select(DBAnkiCard).where(
+                        DBAnkiCard.front == card.clean_front,
+                        DBAnkiCard.back == card.clean_back,
+                        DBAnkiCard.deck_name == card.deck_name
+                    )
                 )
                 db_card = result.scalar_one_or_none()
                 
                 if db_card:
                     # Update existing card
-                    db_card.deck_name = card.deck_name
-                    db_card.front = card.clean_front
-                    db_card.back = card.clean_back
                     db_card.tags = ','.join(card.tags)
                     db_card.topic_id = topic_id
                     db_card.interval = card.interval
                     db_card.ease_factor = card.ease_factor
-                    db_card.reviews = card.reviews
-                    db_card.lapses = card.lapses
                     if card.last_review:
-                        db_card.last_review = datetime.fromtimestamp(card.last_review)
-                    db_card.last_synced = datetime.utcnow()
+                        db_card.last_reviewed = datetime.fromtimestamp(card.last_review)
                     stats['updated'] += 1
                 else:
                     # Create new card
                     db_card = DBAnkiCard(
-                        card_id=card.card_id,
-                        note_id=card.note_id,
                         deck_name=card.deck_name,
                         front=card.clean_front,
                         back=card.clean_back,
@@ -120,31 +116,28 @@ class IngestService:
                         topic_id=topic_id,
                         interval=card.interval,
                         ease_factor=card.ease_factor,
-                        reviews=card.reviews,
-                        lapses=card.lapses,
-                        last_review=datetime.fromtimestamp(card.last_review) if card.last_review else None,
-                        last_synced=datetime.utcnow()
+                        last_reviewed=datetime.fromtimestamp(card.last_review) if card.last_review else None
                     )
                     db.add(db_card)
                     stats['new'] += 1
                 
-                # Add to vector store
-                doc_id = f"anki_{card.card_id}"
+                # Use database ID for vector store
+                await db.flush()  # Ensure ID is generated
+                doc_id = f"anki_{db_card.id}"
                 self.vector_service.add_documents(
                     documents=[card_text],
                     metadatas=[{
                         'source': 'anki',
                         'deck': card.deck_name,
                         'topic_id': topic_id or '',
-                        'card_id': card.card_id,
-                        'stability': card.stability
+                        'db_id': db_card.id
                     }],
                     ids=[doc_id]
                 )
                 
             except Exception as e:
                 stats['errors'] += 1
-                print(f"Error processing card {card.card_id}: {e}")
+                print(f"Error processing card: {e}")
         
         await db.commit()
         
@@ -183,9 +176,8 @@ class IngestService:
         note = Note(
             title=title,
             content=content,
-            source_path=str(source_path) if source_path else None,
-            topic_id=topic_id,
-            is_encrypted=False
+            source=str(source_path) if source_path else None,
+            topic_id=topic_id
         )
         db.add(note)
         await db.flush()
@@ -504,14 +496,16 @@ class IngestService:
         cards = result.scalars().all()
         
         # Delete from vector store
-        doc_ids = [f"anki_{card.card_id}" for card in cards]
+        doc_ids = [f"anki_{card.id}" for card in cards]
         if doc_ids:
             self.vector_service.delete_documents(doc_ids)
         
-        # Delete from database
+        # Delete from database using SQLAlchemy delete statement
+        from sqlalchemy import delete
         count = len(cards)
-        for card in cards:
-            await db.delete(card)
+        await db.execute(
+            delete(DBAnkiCard).where(DBAnkiCard.deck_name == deck_name)
+        )
         
         await db.commit()
         
@@ -561,7 +555,7 @@ class IngestService:
                 stats['remapped'] += 1
                 
                 # Update vector store metadata
-                doc_id = f"anki_{card.card_id}"
+                doc_id = f"anki_{card.id}"
                 try:
                     self.vector_service.update_documents(
                         documents=[card_text],
@@ -569,14 +563,13 @@ class IngestService:
                             'source': 'anki',
                             'deck': card.deck_name,
                             'topic_id': new_topic_id,
-                            'card_id': card.card_id,
-                            'stability': card.interval * (card.ease_factor / 2.5)
+                            'db_id': card.id
                         }],
                         ids=[doc_id]
                     )
                 except Exception as e:
                     # Document might not exist in vector store yet, will be added on next ingest
-                    print(f"Warning: Could not update vector store for card {card.card_id}: {e}")
+                    print(f"Warning: Could not update vector store for card {card.id}: {e}")
             else:
                 stats['unchanged'] += 1
         

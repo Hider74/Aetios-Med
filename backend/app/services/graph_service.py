@@ -202,15 +202,14 @@ class GraphService:
         result = await db.execute(
             select(StudySession)
             .where(StudySession.topic_id == topic_id)
-            .order_by(StudySession.timestamp.desc())
+            .order_by(StudySession.session_date.desc())
             .limit(10)
         )
         study_history = [
             {
-                'timestamp': s.timestamp.isoformat(),
-                'duration_minutes': s.duration_minutes,
-                'session_type': s.session_type,
-                'confidence_after': s.confidence_after
+                'timestamp': s.session_date.isoformat(),
+                'duration': s.duration,
+                'quality': s.quality
             }
             for s in result.scalars().all()
         ]

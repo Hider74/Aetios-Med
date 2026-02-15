@@ -57,7 +57,7 @@ After installation:
 
 ## 📁 Structure
 
-- `backend/` - Python FastAPI (9 services, 6 routers, agent with 19 tools, LanceDB vector store)
+- `backend/` - Python FastAPI (9 services, 7 routers, agent with 19 tools, LanceDB vector store)
 - `frontend/` - React + TypeScript (38+ components, Cytoscape.js graph)
 - `electron/` - Desktop wrapper
 - `scripts/` - Installation and build scripts
