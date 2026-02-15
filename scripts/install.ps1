@@ -103,7 +103,7 @@ Print-Success "PyInstaller installed"
 
 # Build backend executable
 Print-Info "Building backend executable (this may take a few minutes)..."
-pyinstaller --onefile run.py --distpath dist --workpath build --specpath . --log-level ERROR
+pyinstaller run.spec --clean --distpath dist --workpath build --log-level ERROR
 if (Test-Path "dist\run.exe") {
     Print-Success "Backend executable built successfully at backend\dist\run.exe"
 } else {
