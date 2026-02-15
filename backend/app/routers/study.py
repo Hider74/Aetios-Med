@@ -87,6 +87,7 @@ async def get_exam(request: Request, exam_id: int):
 async def delete_exam(request: Request, exam_id: int):
     """Delete an exam."""
     try:
+        from sqlalchemy import delete
         async with get_session() as db:
             result = await db.execute(
                 select(Exam).where(Exam.id == exam_id)
@@ -96,7 +97,7 @@ async def delete_exam(request: Request, exam_id: int):
             if not exam:
                 raise HTTPException(status_code=404, detail="Exam not found")
             
-            await db.delete(exam)
+            await db.execute(delete(Exam).where(Exam.id == exam_id))
             await db.commit()
             
             return {"status": "deleted", "exam_id": exam_id}
@@ -125,7 +126,6 @@ async def update_exam(request: Request, exam_id: int, exam_update: ExamCreate):
             exam.topics_json = json.dumps(exam_update.topics)
             
             await db.commit()
-            await db.refresh(exam)
             
             return ExamResponse(
                 id=exam.id,

@@ -41,7 +41,7 @@ async def upload_semester_pdf(
         raise HTTPException(status_code=400, detail="File must be a PDF")
     
     # Save uploaded file temporarily
-    temp_file = None
+    temp_path = None
     try:
         # Create temporary file
         with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_file:
@@ -123,7 +123,7 @@ async def upload_and_create_scope(
         raise HTTPException(status_code=400, detail="File must be a PDF")
     
     # Save uploaded file temporarily
-    temp_file = None
+    temp_path = None
     try:
         # Create temporary file
         with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_file:

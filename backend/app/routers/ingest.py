@@ -114,7 +114,7 @@ async def ingest_pdf(request: Request, file: UploadFile = File(...), auto_map: b
         raise HTTPException(status_code=400, detail="File must be a PDF")
     
     # Save uploaded file temporarily
-    temp_file = None
+    temp_path = None
     try:
         # Create temporary file
         with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_file:
@@ -143,7 +143,7 @@ async def ingest_pdf(request: Request, file: UploadFile = File(...), auto_map: b
         raise HTTPException(status_code=500, detail=f"Failed to ingest PDF: {str(e)}")
     finally:
         # Clean up temporary file
-        if temp_file and os.path.exists(temp_path):
+        if temp_path and os.path.exists(temp_path):
             os.unlink(temp_path)
 
 

@@ -2,7 +2,32 @@
 Graph-specific models for knowledge graph operations.
 """
 from pydantic import BaseModel
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
+
+
+class CurriculumTopic(BaseModel):
+    """Curriculum topic model used by graph service."""
+    id: str
+    label: str
+    type: str = "topic"
+    exam_weight: float = 1.0
+    learning_objectives: List[str] = []
+    prerequisites: List[str] = []
+    resources: Optional[Dict[str, str]] = None
+
+
+class GraphEdge(BaseModel):
+    """Knowledge graph edge model."""
+    source: str
+    target: str
+    type: str = "prerequisite"
+
+
+class KnowledgeGraph(BaseModel):
+    """Complete knowledge graph with nodes and edges."""
+    nodes: List[Any]  # Can be TopicNode or CurriculumTopic
+    edges: List[GraphEdge]
+    metadata: Optional[Dict[str, Any]] = None
 
 
 class TopicDetails(BaseModel):
