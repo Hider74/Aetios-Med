@@ -40,8 +40,43 @@ class ApiClient {
   }
 
   // Knowledge Graph
-  async getGraph(): Promise<KnowledgeGraph> {
-    const response = await this.client.get<KnowledgeGraph>('/graph');
+  async getGraph(curriculum?: string): Promise<KnowledgeGraph> {
+    const response = await this.client.get<KnowledgeGraph>('/graph', {
+      params: curriculum ? { curriculum } : undefined,
+    });
+    const graph = response.data;
+    const normalizedNodes = (graph.nodes || []).map((node) => ({
+      ...node,
+      notes: node.notes ?? '',
+      mastered: node.mastered ?? (node.confidence >= 0.8),
+      timesReviewed: node.timesReviewed ?? 0,
+      lastReviewed: node.lastReviewed ? new Date(node.lastReviewed) : null,
+      resources: node.resources ?? [],
+    }));
+
+    const normalizedEdges = (graph.edges || []).map((edge) => ({
+      ...edge,
+      id: edge.id || `${edge.source}-${edge.target}-${edge.relationship || 'related'}`,
+      relationship: edge.relationship || 'related',
+      weight: edge.weight ?? 1,
+    }));
+
+    return {
+      ...graph,
+      nodes: normalizedNodes,
+      edges: normalizedEdges,
+    };
+  }
+
+  async getCurricula(): Promise<{ active: string | null; available: string[] }> {
+    const response = await this.client.get<{ active: string; available: string[] }>('/graph/curricula');
+    return response.data;
+  }
+
+  async setActiveCurriculum(curriculum: string): Promise<{ active: string }> {
+    const response = await this.client.post<{ active: string }>('/graph/active-curriculum', {
+      curriculum,
+    });
     return response.data;
   }
 
@@ -64,7 +99,7 @@ class ApiClient {
 
   // Chat
   async sendMessage(message: string, context?: ChatContext): Promise<ChatResponse> {
-    const response = await this.client.post<ChatResponse>('/chat/message', {
+    const response = await this.client.post('/chat/message', {
       messages: [
         {
           role: 'user',
@@ -72,18 +107,103 @@ class ApiClient {
         },
       ],
       temperature: 0.7,
-      max_tokens: 2048,
       session_id: 'default',
     }, {
       timeout: 300_000, // 5 minutes for LLM inference
     });
     
-    // Basic runtime validation
-    if (!response.data || typeof response.data.message !== 'string') {
+    // Backend returns { message: { role, content }, finish_reason }
+    // Frontend expects { message: string, ... }
+    // Transform the response
+    const backendResponse = response.data;
+    if (!backendResponse || !backendResponse.message) {
       throw new Error('Invalid response from chat API');
     }
     
-    return response.data;
+    // Extract content from message object if needed
+    const messageContent = typeof backendResponse.message === 'string' 
+      ? backendResponse.message 
+      : backendResponse.message.content;
+    
+    return {
+      message: messageContent,
+      confidence: 0.9, // Default confidence
+      sources: [],
+      suggestedTopics: [],
+    };
+  }
+
+  async streamMessage(
+    message: string,
+    context?: ChatContext,
+    options?: {
+      sessionId?: string;
+      temperature?: number;
+      onChunk?: (chunk: string) => void;
+    }
+  ): Promise<string> {
+    const payload = {
+      messages: [
+        {
+          role: 'user',
+          content: message,
+        },
+      ],
+      temperature: options?.temperature ?? 0.7,
+      session_id: options?.sessionId ?? 'default',
+    };
+
+    const response = await fetch(`${BASE_URL}/chat/stream`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok || !response.body) {
+      const text = await response.text();
+      throw new Error(text || 'Failed to stream chat response');
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let fullText = '';
+
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      let separatorIndex = buffer.indexOf('\n\n');
+
+      while (separatorIndex !== -1) {
+        const rawEvent = buffer.slice(0, separatorIndex).trim();
+        buffer = buffer.slice(separatorIndex + 2);
+
+        const lines = rawEvent.split('\n').filter((line) => line.startsWith('data:'));
+        for (const line of lines) {
+          const data = line.replace('data:', '').trim();
+          if (data === '[DONE]') {
+            return fullText;
+          }
+
+          try {
+            const parsed = JSON.parse(data);
+            const chunk = typeof parsed.chunk === 'string' ? parsed.chunk : '';
+            if (chunk) {
+              fullText += chunk;
+              options?.onChunk?.(chunk);
+            }
+          } catch (error) {
+            // Ignore malformed chunks
+          }
+        }
+
+        separatorIndex = buffer.indexOf('\n\n');
+      }
+    }
+
+    return fullText;
   }
 
   async getChatHistory(sessionId?: string): Promise<ChatMessage[]> {
@@ -143,8 +263,12 @@ class ApiClient {
   }
 
   // Quizzes
-  async generateQuiz(topicIds: string[], count: number = 5, questionType: string = 'sba'): Promise<QuizQuestion[]> {
-    const response = await this.client.post<{ questions: QuizQuestion[] }>('/quiz/generate', {
+  async generateQuiz(
+    topicIds: string[],
+    count: number = 5,
+    questionType: string = 'sba'
+  ): Promise<{ quizId: string; questions: Array<QuizQuestion | SAQQuestion>; topicId: string; difficulty: string; questionType: string }> {
+    const response = await this.client.post<{ quiz_id: string; questions: any[]; topic_id: string; difficulty: string }>('/quiz/generate', {
       topic_ids: topicIds,
       num_questions: count,
       difficulty: 'medium',
@@ -152,7 +276,38 @@ class ApiClient {
     }, {
       timeout: 300_000, // 5 minutes for LLM-based quiz generation
     });
-    return response.data.questions || [];
+
+    const rawQuestions = response.data.questions || [];
+    const mappedQuestions: Array<QuizQuestion | SAQQuestion> = rawQuestions.map((q, idx) => {
+      if (questionType === 'saq') {
+        return q as SAQQuestion;
+      }
+
+      const optionsObj = q.options || {};
+      const optionKeys = ['A', 'B', 'C', 'D'];
+      const options = optionKeys.map((key) => optionsObj[key]).filter(Boolean);
+      const correctLetter = (q.correct_answer || '').toUpperCase();
+      const correctIndex = optionKeys.indexOf(correctLetter);
+
+      return {
+        id: q.id || `q${idx}`,
+        question: q.question,
+        options,
+        correctAnswer: correctIndex >= 0 ? correctIndex : 0,
+        explanation: q.explanation || '',
+        topic: q.topic_id || response.data.topic_id,
+        difficulty: q.difficulty || response.data.difficulty || 'medium',
+        source: q.source,
+      } as QuizQuestion;
+    });
+
+    return {
+      quizId: response.data.quiz_id,
+      questions: mappedQuestions,
+      topicId: response.data.topic_id,
+      difficulty: response.data.difficulty,
+      questionType,
+    };
   }
 
   async submitQuizAnswer(questionId: string, answer: number): Promise<{ correct: boolean; explanation: string }> {
@@ -195,7 +350,12 @@ class ApiClient {
   // Model Status
   async getModelStatus(): Promise<{ loaded: boolean; model: string; progress?: number }> {
     const response = await this.client.get('/system/model-status');
-    return response.data;
+    // Backend returns is_loaded, map to loaded for frontend
+    return {
+      loaded: response.data.is_loaded,
+      model: response.data.model_path || '',
+      progress: response.data.progress,
+    };
   }
 
   async downloadModel(modelName: string): Promise<void> {
@@ -295,6 +455,87 @@ class ApiClient {
 
   async deleteSemesterScope(scopeId: number): Promise<any> {
     const response = await this.client.delete(`/semester/${scopeId}`);
+    return response.data;
+  }
+
+  // Tool Access Methods - Direct API calls for all agent tools
+  
+  async getWeakTopics(threshold: number = 0.3): Promise<any> {
+    const response = await this.client.get('/graph/weak-topics', {
+      params: { threshold },
+    });
+    return response.data.topics;
+  }
+
+  async getDecayingTopics(days: number = 7): Promise<any> {
+    const response = await this.client.get('/graph/decaying-topics', {
+      params: { days },
+    });
+    return response.data.topics;
+  }
+
+  async getPrerequisites(topicId: string): Promise<any> {
+    const response = await this.client.get(`/graph/prerequisites/${topicId}`);
+    return response.data.prerequisites;
+  }
+
+  async getDependentTopics(topicId: string): Promise<any> {
+    const response = await this.client.get(`/graph/dependents/${topicId}`);
+    return response.data.dependents;
+  }
+
+  async getTopicDetails(topicId: string): Promise<any> {
+    const response = await this.client.get(`/graph/topic/${topicId}`);
+    return response.data;
+  }
+
+  async searchNotes(query: string, limit: number = 5): Promise<any> {
+    const response = await this.client.get('/graph/search-notes', {
+      params: { query, limit },
+    });
+    return response.data.notes;
+  }
+
+  async getAnkiStats(topicId?: string): Promise<any> {
+    const response = await this.client.get('/ingest/anki/due', {
+      params: topicId ? { topic_id: topicId } : {},
+    });
+    return response.data;
+  }
+
+  async getStudyHistory(topicId?: string, days?: number): Promise<any> {
+    const response = await this.client.get('/study/sessions', {
+      params: { topic_id: topicId, limit: days ? Math.ceil(days * 2) : 20 },
+    });
+    return response.data.sessions;
+  }
+
+  async updateTopicConfidence(topicId: string, confidence: number, notes?: string): Promise<any> {
+    const response = await this.client.post('/graph/confidence', {
+      topic_id: topicId,
+      confidence,
+      notes,
+    });
+    return response.data;
+  }
+
+  async getExamReadiness(examId: number): Promise<any> {
+    const response = await this.client.get(`/study/readiness/${examId}`);
+    return response.data;
+  }
+
+  async getCurriculumOverview(): Promise<any> {
+    const response = await this.client.get('/graph/statistics');
+    return response.data;
+  }
+
+  async logQuizResult(topicId: string, correct: boolean, question: string): Promise<any> {
+    // This is handled by submitQuizAnswer, but adding explicit method
+    const response = await this.client.post('/quiz/submit', {
+      topic_id: topicId,
+      correct,
+      question,
+    });
     return response.data;
   }
 }

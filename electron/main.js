@@ -62,6 +62,7 @@ function createWindow() {
     mainWindow.webContents.openDevTools();
   } else {
     mainWindow.loadFile(path.join(__dirname, '../frontend/dist/index.html'));
+    mainWindow.webContents.openDevTools(); // Temporarily enable for debugging
   }
 
   mainWindow.once('ready-to-show', () => {
@@ -128,6 +129,16 @@ async function waitForBackend(maxAttempts = 90) {
 
 function startPythonBackend() {
   return new Promise(async (resolve, reject) => {
+    // First check if backend is already running
+    try {
+      await waitForBackend(3);
+      console.log('Backend already running, skipping startup');
+      resolve();
+      return;
+    } catch (e) {
+      // Backend not running, continue to start it
+    }
+    
     if (isDev) {
       // In development, assume backend is started manually
       try {

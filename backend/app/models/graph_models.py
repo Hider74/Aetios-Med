@@ -1,6 +1,7 @@
 """
 Graph-specific models for knowledge graph operations.
 """
+from datetime import datetime
 from pydantic import BaseModel
 from typing import List, Dict, Optional, Any
 
@@ -10,10 +11,15 @@ class CurriculumTopic(BaseModel):
     id: str
     label: str
     type: str = "topic"
+    parent: Optional[str] = None
     exam_weight: float = 1.0
     learning_objectives: List[str] = []
     prerequisites: List[str] = []
     resources: Optional[Dict[str, str]] = None
+    in_scope: Optional[bool] = True
+    confidence: float = 0.0
+    last_studied: Optional[datetime] = None
+    study_count: int = 0
 
 
 class GraphEdge(BaseModel):

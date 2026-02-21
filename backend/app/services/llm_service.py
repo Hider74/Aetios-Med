@@ -63,12 +63,14 @@ class LLMService:
         self,
         messages: List[Dict[str, str]],
         temperature: float = 0.7,
-        max_tokens: int = 2048,
+        max_tokens: Optional[int] = None,
         stop: Optional[List[str]] = None
     ) -> str:
         """Generate a completion."""
         if not self.is_loaded:
             raise RuntimeError("Model not loaded")
+
+        max_tokens = self._resolve_max_tokens(max_tokens)
         
         # Convert messages to prompt format
         prompt = self._format_messages(messages)
@@ -92,11 +94,13 @@ class LLMService:
         self,
         messages: List[Dict[str, str]],
         temperature: float = 0.7,
-        max_tokens: int = 2048
+        max_tokens: Optional[int] = None
     ) -> AsyncIterable[str]:
         """Stream a completion without blocking the event loop."""
         if not self.is_loaded:
             raise RuntimeError("Model not loaded")
+
+        max_tokens = self._resolve_max_tokens(max_tokens)
         
         prompt = self._format_messages(messages)
         
@@ -140,6 +144,12 @@ class LLMService:
         for token in self.SPECIAL_TOKENS:
             sanitized = sanitized.replace(token, "")
         return sanitized
+
+    def _resolve_max_tokens(self, max_tokens: Optional[int]) -> int:
+        """Resolve max_tokens when not provided or invalid."""
+        if max_tokens is None or max_tokens <= 0:
+            return self.n_ctx
+        return max_tokens
     
     def _format_messages(self, messages: List[Dict[str, str]]) -> str:
         """Convert messages to Llama 3 prompt format."""

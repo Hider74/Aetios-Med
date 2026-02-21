@@ -5,12 +5,14 @@ import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { UserGuidePanel } from './components/common/UserGuidePanel';
 import { Dashboard } from './components/Dashboard/Dashboard';
 import { GraphCanvas } from './components/KnowledgeGraph/GraphCanvas';
+import { Graph3DView } from './components/KnowledgeGraph/Graph3DView';
 import { GraphControls } from './components/KnowledgeGraph/GraphControls';
 import { NodeDetail } from './components/KnowledgeGraph/NodeDetail';
 import { ChatInterface } from './components/Chat/ChatInterface';
 import { PlanGenerator } from './components/StudyPlan/PlanGenerator';
 import { CalendarView } from './components/StudyPlan/CalendarView';
 import { WebViewPanel } from './components/ResourceViewer/WebViewPanel';
+import { QuizPage } from './components/Quiz/QuizPage';
 import { ModelDownload } from './components/Setup/ModelDownload';
 import { HuggingFaceAuth } from './components/Setup/HuggingFaceAuth';
 import { FolderConfig } from './components/Setup/FolderConfig';
@@ -23,13 +25,17 @@ function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
   const [chatInitialMessage, setChatInitialMessage] = useState<string | null>(null);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
-  const { selectedNode, setSelectedNode } = useGraph();
+  const { selectedNode, setSelectedNode, viewMode } = useGraph();
   const { theme } = useSettingsStore();
   const chatInputRef = useRef<HTMLTextAreaElement>(null);
 
   const handleQuickStudy = (topic: string) => {
     setChatInitialMessage(`Let's study ${topic}. Start with a quick overview.`);
     setCurrentPage('chat');
+  };
+
+  const handleStartQuiz = () => {
+    setCurrentPage('quiz');
   };
 
   // Helper function to focus chat input
@@ -70,6 +76,7 @@ function App() {
       case 'graph': return 'Knowledge Graph';
       case 'chat': return 'AI Tutor';
       case 'study': return 'Study Plan';
+      case 'quiz': return 'Quiz';
       case 'resources': return 'Resources';
       case 'settings': return 'Settings';
       default: return 'Aetios-Med';
@@ -82,6 +89,7 @@ function App() {
       case 'graph': return 'Visualize your knowledge connections';
       case 'chat': return 'Learn with AI assistance';
       case 'study': return 'Plan and track your study sessions';
+      case 'quiz': return 'Test your knowledge with SBA and SAQ';
       case 'resources': return 'Browse medical resources';
       case 'settings': return 'Configure your preferences';
       default: return '';
@@ -93,7 +101,11 @@ function App() {
       case 'dashboard':
         return (
           <ErrorBoundary>
-            <Dashboard onNavigate={setCurrentPage} onQuickStudy={handleQuickStudy} />
+            <Dashboard
+              onNavigate={setCurrentPage}
+              onQuickStudy={handleQuickStudy}
+              onStartQuiz={handleStartQuiz}
+            />
           </ErrorBoundary>
         );
       
@@ -101,13 +113,19 @@ function App() {
         return (
           <ErrorBoundary>
             <div className="relative h-full">
-              <GraphCanvas 
-                onNodeSelect={(id) => console.log('Selected:', id)}
-                onNavigateToChat={(message) => {
-                  setChatInitialMessage(message);
-                  setCurrentPage('chat');
-                }}
-              />
+              {viewMode === '3d' ? (
+                <Graph3DView
+                  onNodeSelect={(id) => console.log('Selected:', id)}
+                />
+              ) : (
+                <GraphCanvas
+                  onNodeSelect={(id) => console.log('Selected:', id)}
+                  onNavigateToChat={(message) => {
+                    setChatInitialMessage(message);
+                    setCurrentPage('chat');
+                  }}
+                />
+              )}
               <GraphControls />
               {selectedNode && (
                 <NodeDetail 
@@ -138,6 +156,13 @@ function App() {
                 <CalendarView />
               </div>
             </div>
+          </ErrorBoundary>
+        );
+
+      case 'quiz':
+        return (
+          <ErrorBoundary>
+            <QuizPage />
           </ErrorBoundary>
         );
       
@@ -192,7 +217,7 @@ function App() {
       {/* Floating help button */}
       <button
         onClick={() => setIsGuideOpen(true)}
-        className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110 focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2"
+        className="fixed bottom-24 right-6 z-50 p-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110 focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2"
         aria-label="Open user guide"
         title="User Guide"
       >

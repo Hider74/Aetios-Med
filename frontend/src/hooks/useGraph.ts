@@ -11,7 +11,12 @@ export const useGraph = () => {
     filter,
     layout,
     searchQuery,
+    curriculumKey,
+    availableCurricula,
+    viewMode,
     fetchGraph,
+    fetchCurricula,
+    setActiveCurriculum,
     setSelectedNode,
     updateNodeConfidence,
     addNode,
@@ -19,6 +24,7 @@ export const useGraph = () => {
     setFilter,
     setLayout,
     setSearchQuery,
+    setViewMode,
     clearError,
   } = useGraphStore();
 
@@ -28,6 +34,13 @@ export const useGraph = () => {
       fetchGraph();
     }
   }, []);
+
+  // Auto-fetch available curricula on mount
+  useEffect(() => {
+    if (availableCurricula.length === 0) {
+      fetchCurricula();
+    }
+  }, [availableCurricula.length, fetchCurricula]);
 
   // Filter nodes based on current filter settings
   const getFilteredNodes = useCallback(() => {
@@ -58,7 +71,7 @@ export const useGraph = () => {
       const query = searchQuery.toLowerCase();
       nodes = nodes.filter(n => 
         n.label.toLowerCase().includes(query) ||
-        n.notes.toLowerCase().includes(query)
+        (n.notes || '').toLowerCase().includes(query)
       );
     }
 
@@ -128,6 +141,51 @@ export const useGraph = () => {
     return graph.nodes.filter(n => relatedIds.has(n.id));
   }, [graph]);
 
+  const getDomainNodes = useCallback((domainId: string): TopicNode[] => {
+    if (!graph) return [];
+
+    const domainNodeIds = new Set<string>();
+    graph.edges.forEach(edge => {
+      if (edge.relationship === 'BELONGS_TO' && edge.target === domainId) {
+        domainNodeIds.add(edge.source);
+      }
+    });
+
+    return graph.nodes.filter(node => domainNodeIds.has(node.id));
+  }, [graph]);
+
+  const getDomainStats = useCallback((domainId: string) => {
+    const domainNodes = getDomainNodes(domainId);
+    const totalNodes = domainNodes.length;
+    if (totalNodes === 0) {
+      return {
+        totalNodes: 0,
+        averageConfidence: 0,
+        masteredCount: 0,
+        lowConfidenceCount: 0,
+        unreviewedCount: 0,
+        weakestTopics: [] as TopicNode[],
+      };
+    }
+
+    const masteredCount = domainNodes.filter(node => node.mastered).length;
+    const lowConfidenceCount = domainNodes.filter(node => node.confidence < 0.3).length;
+    const unreviewedCount = domainNodes.filter(node => !node.lastReviewed).length;
+    const averageConfidence = domainNodes.reduce((sum, node) => sum + node.confidence, 0) / totalNodes;
+    const weakestTopics = [...domainNodes]
+      .sort((a, b) => a.confidence - b.confidence)
+      .slice(0, 8);
+
+    return {
+      totalNodes,
+      averageConfidence,
+      masteredCount,
+      lowConfidenceCount,
+      unreviewedCount,
+      weakestTopics,
+    };
+  }, [getDomainNodes]);
+
   return {
     graph,
     loading,
@@ -136,9 +194,14 @@ export const useGraph = () => {
     filter,
     layout,
     searchQuery,
+    curriculumKey,
+    availableCurricula,
+    viewMode,
     
     // Actions
     fetchGraph,
+    fetchCurricula,
+    setActiveCurriculum,
     setSelectedNode,
     updateNodeConfidence,
     addNode,
@@ -146,6 +209,7 @@ export const useGraph = () => {
     setFilter,
     setLayout,
     setSearchQuery,
+    setViewMode,
     clearError,
     
     // Computed
@@ -153,5 +217,7 @@ export const useGraph = () => {
     stats: getStats(),
     nodesNeedingReview: getNodesNeedingReview(),
     getRelatedNodes,
+    getDomainNodes,
+    getDomainStats,
   };
 };

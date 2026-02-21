@@ -62,7 +62,7 @@ export const UserGuidePanel: React.FC<UserGuidePanelProps> = ({ isOpen, onClose 
         {/* Iframe content */}
         <div className="flex-1 overflow-hidden">
           <iframe
-            src="/INSTRUCTION_MANUAL.html"
+            src="./INSTRUCTION_MANUAL.html"
             className="w-full h-full border-0"
             title="Aetios-Med User Manual"
             sandbox="allow-same-origin"

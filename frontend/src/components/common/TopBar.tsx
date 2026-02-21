@@ -86,7 +86,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, subtitle }) => {
         {/* Aetios Med Logo and Name */}
         <div className="flex items-center gap-2 pr-4 border-r border-gray-300 dark:border-gray-600">
           <img 
-            src="/logo.png" 
+            src="./logo.png" 
             alt="Aetios Med Logo" 
             className="h-10 w-10 object-contain"
           />

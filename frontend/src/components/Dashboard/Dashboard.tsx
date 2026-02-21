@@ -1,21 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ConfidenceOverview } from './ConfidenceOverview';
 import { UpcomingExams } from './UpcomingExams';
 import { DecayingTopics } from './DecayingTopics';
 import { AnkiCardsDue } from './AnkiCardsDue';
 import { StreakBadge } from './StreakBadge';
 import { DailyGoals } from './DailyGoals';
+import { WeakTopicsWidget } from './WeakTopicsWidget';
 import { useGraph } from '../../hooks/useGraph';
+import api from '../../services/api';
 import { Zap } from 'lucide-react';
 
 interface DashboardProps {
   onNavigate?: (page: string) => void;
   onQuickStudy?: (topic: string) => void;
+  onStartQuiz?: () => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ onNavigate, onQuickStudy }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ onNavigate, onQuickStudy, onStartQuiz }) => {
   const { stats, nodesNeedingReview } = useGraph();
-  const [showNoTopicsMessage, setShowNoTopicsMessage] = React.useState(false);
+  const [showNoTopicsMessage, setShowNoTopicsMessage] = useState(false);
+  const [curriculumStats, setCurriculumStats] = useState<any>(null);
+  const [weakTopics, setWeakTopics] = useState<any[]>([]);
+  const [decayingTopics, setDecayingTopics] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch dashboard data on mount
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        const [curriculum, weak, decaying] = await Promise.all([
+          api.getCurriculumOverview(),
+          api.getWeakTopics(0.3),
+          api.getDecayingTopics(7),
+        ]);
+        setCurriculumStats(curriculum);
+        setWeakTopics(weak);
+        setDecayingTopics(decaying);
+      } catch (error) {
+        console.error('Failed to fetch dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboardData();
+  }, []);
 
   const handleQuickStudy = () => {
     // Find the weakest topic
@@ -68,7 +97,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate, onQuickStudy }
       </div>
 
       {/* Stats Grid */}
-      <ConfidenceOverview stats={stats} />
+      <ConfidenceOverview stats={stats} curriculumStats={curriculumStats} loading={loading} />
+
+      {/* Weak Topics Alert */}
+      <WeakTopicsWidget
+        topics={weakTopics}
+        loading={loading}
+        onRefresh={() => api.getWeakTopics(0.3).then(setWeakTopics)}
+      />
 
       {/* Streak and Daily Goals */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -79,7 +115,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate, onQuickStudy }
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <UpcomingExams />
-        <DecayingTopics topics={nodesNeedingReview} />
+        <DecayingTopics topics={decayingTopics} loading={loading} onRefresh={() => api.getDecayingTopics(7).then(setDecayingTopics)} />
         <AnkiCardsDue />
       </div>
 
@@ -87,17 +123,26 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate, onQuickStudy }
       <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg p-6 text-white">
         <h3 className="text-xl font-bold mb-4">Quick Actions</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-lg p-4 transition-colors text-left">
+          <button
+            onClick={() => onNavigate?.('study')}
+            className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-lg p-4 transition-colors text-left"
+          >
             <div className="text-2xl mb-2">📚</div>
             <div className="font-semibold">Start Study Session</div>
             <div className="text-sm opacity-90">Review your topics</div>
           </button>
-          <button className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-lg p-4 transition-colors text-left">
+          <button
+            onClick={() => (onStartQuiz ? onStartQuiz() : onNavigate?.('quiz'))}
+            className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-lg p-4 transition-colors text-left"
+          >
             <div className="text-2xl mb-2">🎯</div>
             <div className="font-semibold">Take a Quiz</div>
             <div className="text-sm opacity-90">Test your knowledge</div>
           </button>
-          <button className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-lg p-4 transition-colors text-left">
+          <button
+            onClick={() => onNavigate?.('study')}
+            className="bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-lg p-4 transition-colors text-left"
+          >
             <div className="text-2xl mb-2">📅</div>
             <div className="font-semibold">Plan Study Schedule</div>
             <div className="text-sm opacity-90">Generate a study plan</div>

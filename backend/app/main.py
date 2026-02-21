@@ -50,7 +50,12 @@ async def lifespan(app: FastAPI):
     
     # Initialize graph service (loads curriculum)
     graph_service = GraphService(
-        curriculum_path=settings.curriculum_path
+        curriculum_paths={
+            "ukmla": settings.ukmla_curriculum_path,
+            "uk_legacy": settings.legacy_curriculum_path,
+            "uploaded": settings.uploaded_curriculum_path
+        },
+        active_curriculum_key=settings.active_curriculum_key
     )
     graph_service.load_curriculum()
     

@@ -4,10 +4,15 @@ import type { GraphStats } from '../../types/curriculum';
 
 interface ConfidenceOverviewProps {
   stats: GraphStats | null;
+  curriculumStats?: any;
+  loading?: boolean;
 }
 
-export const ConfidenceOverview: React.FC<ConfidenceOverviewProps> = ({ stats }) => {
-  if (!stats) {
+export const ConfidenceOverview: React.FC<ConfidenceOverviewProps> = ({ stats, curriculumStats, loading }) => {
+  // Use curriculum stats from API if available, otherwise fall back to graph stats
+  const displayStats = curriculumStats || stats;
+  
+  if (loading || !displayStats) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[...Array(4)].map((_, i) => (
@@ -22,28 +27,28 @@ export const ConfidenceOverview: React.FC<ConfidenceOverviewProps> = ({ stats })
   const cards = [
     {
       title: 'Total Topics',
-      value: stats.totalNodes,
+      value: displayStats.total_topics || displayStats.totalNodes || 0,
       icon: Target,
       color: 'bg-blue-500',
       change: null,
     },
     {
       title: 'Average Confidence',
-      value: `${(stats.averageConfidence * 100).toFixed(0)}%`,
+      value: `${((displayStats.average_confidence || displayStats.averageConfidence || 0) * 100).toFixed(0)}%`,
       icon: TrendingUp,
       color: 'bg-green-500',
-      change: stats.averageConfidence >= 0.6 ? '+5%' : null,
+      change: (displayStats.average_confidence || displayStats.averageConfidence || 0) >= 0.6 ? '+5%' : null,
     },
     {
       title: 'Mastered Topics',
-      value: stats.masteredCount,
+      value: displayStats.mastered_count || displayStats.masteredCount || 0,
       icon: Award,
       color: 'bg-purple-500',
       change: null,
     },
     {
       title: 'Need Review',
-      value: stats.lowConfidenceCount,
+      value: displayStats.low_confidence_count || displayStats.lowConfidenceCount || 0,
       icon: AlertCircle,
       color: 'bg-red-500',
       change: null,

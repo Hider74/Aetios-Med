@@ -1,6 +1,7 @@
 export interface TopicNode {
   id: string;
   label: string;
+  type?: string;
   confidence: number; // 0-1 scale
   lastReviewed: Date | null;
   timesReviewed: number;
@@ -25,7 +26,7 @@ export interface GraphEdge {
   id: string;
   source: string;
   target: string;
-  relationship: 'prerequisite' | 'related' | 'subtopic';
+  relationship: string;
   weight: number;
 }
 

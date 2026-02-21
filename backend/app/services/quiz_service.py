@@ -145,7 +145,7 @@ Return ONLY a JSON array with this structure:
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.7,
-                max_tokens=2048
+                max_tokens=None
             )
         except Exception as e:
             print(f"LLM generation failed: {e}")
@@ -448,7 +448,7 @@ Return ONLY a JSON array."""
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.7,
-                max_tokens=3000
+                max_tokens=None
             )
         except Exception as e:
             print(f"SAQ generation failed: {e}")

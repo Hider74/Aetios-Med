@@ -31,11 +31,23 @@ function printInfo(msg) {
 
 // Model configuration
 const MODEL_CONFIG = {
-  name: 'llama3-openbio-8b.Q4_K_M.gguf',
-  url: 'https://huggingface.co/aaditya/Llama3-OpenBioLLM-8B-GGUF/resolve/main/llama3-openbio-8b.Q4_K_M.gguf',
+  repo: process.env.MODEL_REPO || 'aaditya/OpenBioLLM-Llama3-8B-GGUF',
+  sourceFilename: process.env.MODEL_SOURCE_FILENAME || 'openbiollm-llama3-8b.Q4_K_M.gguf',
+  outputFilename: process.env.MODEL_FILENAME || 'llama3-openbio-8b.Q4_K_M.gguf',
   size: 4.5 * 1024 * 1024 * 1024, // ~4.5GB in bytes
   sha256: null // Optional: add checksum if available
 };
+
+MODEL_CONFIG.url = `https://huggingface.co/${MODEL_CONFIG.repo}/resolve/main/${MODEL_CONFIG.sourceFilename}`;
+
+function getHfToken() {
+  return (
+    process.env.HF_TOKEN ||
+    process.env.HUGGINGFACE_TOKEN ||
+    process.env.HUGGING_FACE_HUB_TOKEN ||
+    null
+  );
+}
 
 function getModelDirectory() {
   const platform = process.platform;
@@ -96,22 +108,48 @@ async function downloadModel(outputPath) {
     let lastBytes = 0;
     const startTime = Date.now();
     
-    printInfo(`Downloading ${MODEL_CONFIG.name}...`);
+    printInfo(`Downloading ${MODEL_CONFIG.sourceFilename}...`);
     printInfo(`Size: ~${formatBytes(MODEL_CONFIG.size)}`);
     printInfo(`Destination: ${outputPath}`);
+    const hfToken = getHfToken();
+    if (hfToken) {
+      printInfo('Using Hugging Face token from environment');
+    }
     console.log();
-    
-    https.get(MODEL_CONFIG.url, (response) => {
-      if (response.statusCode === 302 || response.statusCode === 301) {
-        // Follow redirect
-        https.get(response.headers.location, handleResponse).on('error', reject);
-      } else {
-        handleResponse(response);
+
+    const requestHeaders = {
+      'User-Agent': 'Aetios-Med-Installer/1.0'
+    };
+    if (hfToken) {
+      requestHeaders.Authorization = `Bearer ${hfToken}`;
+    }
+
+    function requestWithRedirect(url, redirectCount = 0) {
+      if (redirectCount > 5) {
+        reject(new Error('Too many redirects while downloading model'));
+        return;
       }
-    }).on('error', reject);
+
+      https.get(url, { headers: requestHeaders }, (response) => {
+        if (
+          (response.statusCode === 302 || response.statusCode === 301 || response.statusCode === 307 || response.statusCode === 308) &&
+          response.headers.location
+        ) {
+          requestWithRedirect(response.headers.location, redirectCount + 1);
+          return;
+        }
+        handleResponse(response);
+      }).on('error', reject);
+    }
+
+    requestWithRedirect(MODEL_CONFIG.url);
     
     function handleResponse(response) {
       if (response.statusCode !== 200) {
+        if (response.statusCode === 401 || response.statusCode === 403) {
+          reject(new Error('Access denied by Hugging Face (401/403). Set HF_TOKEN with read access and retry.'));
+          return;
+        }
         reject(new Error(`Failed to download: HTTP ${response.statusCode}`));
         return;
       }
@@ -164,7 +202,7 @@ async function main() {
   console.log();
   
   const modelDir = getModelDirectory();
-  const modelPath = path.join(modelDir, MODEL_CONFIG.name);
+  const modelPath = path.join(modelDir, MODEL_CONFIG.outputFilename);
   
   // Check if model already exists
   if (fs.existsSync(modelPath)) {

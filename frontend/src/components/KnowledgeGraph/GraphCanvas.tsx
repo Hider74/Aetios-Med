@@ -24,7 +24,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({ onNodeSelect, onNaviga
 
   // Initialize Cytoscape
   useEffect(() => {
-    if (!containerRef.current || !graph) return;
+    if (!containerRef.current || cyRef.current) return;
 
     const cy = cytoscape({
       container: containerRef.current,
@@ -38,6 +38,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({ onNodeSelect, onNaviga
 
     return () => {
       cy.destroy();
+      cyRef.current = null;
     };
   }, []);
 

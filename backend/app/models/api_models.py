@@ -40,7 +40,7 @@ class ChatRequest(BaseModel):
     messages: List[ChatMessage]
     session_id: Optional[str] = "default"
     temperature: Optional[float] = 0.7
-    max_tokens: Optional[int] = 2048
+    max_tokens: Optional[int] = None
 
 
 class ChatResponse(BaseModel):
@@ -77,6 +77,11 @@ class ConfidenceUpdate(BaseModel):
     topic_id: str
     confidence: float = Field(ge=0.0, le=1.0)
     notes: Optional[str] = None
+
+
+class CurriculumSelection(BaseModel):
+    """Select an active curriculum scope."""
+    curriculum: str
 
 
 # ============================================================================

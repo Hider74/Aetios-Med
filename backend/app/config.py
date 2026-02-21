@@ -43,8 +43,14 @@ class Settings(BaseSettings):
     lancedb_path: Optional[Path] = None
     model_path: Optional[Path] = None
     curriculum_path: Optional[Path] = None
+    ukmla_curriculum_path: Optional[Path] = None
+    legacy_curriculum_path: Optional[Path] = None
+    uploaded_curriculum_path: Optional[Path] = None
     anki_watch_folder: Optional[Path] = None
     notes_folder: Optional[Path] = None
+
+    # Curriculum
+    active_curriculum_key: Optional[str] = None
     
     # Server
     port: int = 8741
@@ -69,7 +75,11 @@ class Settings(BaseSettings):
         self.database_path = self.app_data_dir / "aetios.db"
         self.lancedb_path = self.app_data_dir / "lancedb"
         self.model_path = self.app_data_dir / "models" / self.model_filename
-        self.curriculum_path = self.app_data_dir / "curriculum" / "uk_curriculum.json"
+        self.ukmla_curriculum_path = self.app_data_dir / "curriculum" / "ukmla_graph.json"
+        self.legacy_curriculum_path = self.app_data_dir / "curriculum" / "uk_curriculum.json"
+        self.uploaded_curriculum_path = self.app_data_dir / "curriculum" / "uploaded_curriculum.json"
+        # Backwards compatibility: curriculum_path mirrors UKMLA path
+        self.curriculum_path = self.ukmla_curriculum_path
         
         # Create directories
         (self.app_data_dir / "models").mkdir(parents=True, exist_ok=True)

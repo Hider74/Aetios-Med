@@ -1,6 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 from PyInstaller.utils.hooks import collect_dynamic_libs, collect_data_files
+import certifi
 
 block_cipher = None
 
@@ -8,13 +9,16 @@ block_cipher = None
 llama_binaries = collect_dynamic_libs('llama_cpp')
 llama_datas = collect_data_files('llama_cpp')
 
+# Collect certifi CA bundle
+certifi_datas = [(certifi.where(), 'certifi')]
+
 a = Analysis(
     ['run.py'],
     pathex=[],
     binaries=llama_binaries,
     datas=[
         ('app/data', 'app/data'),
-    ] + llama_datas,
+    ] + llama_datas + certifi_datas,
     hiddenimports=[
         'llama_cpp',
         'llama_cpp.llama_cpp',
@@ -47,6 +51,7 @@ a = Analysis(
         'sqlalchemy',
         'sqlalchemy.ext.asyncio',
         'sqlalchemy.dialects.sqlite',
+        'greenlet',
         'sentence_transformers',
         'transformers',
         'torch',

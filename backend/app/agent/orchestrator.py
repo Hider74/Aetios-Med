@@ -45,11 +45,11 @@ class AgentOrchestrator:
         self._initialize_system_prompt()
     
     def _initialize_system_prompt(self):
-        """Initialize the system prompt with tool definitions baked in."""
+        """Initialize the system prompt for Q&A (no tool calling)."""
         system_prompt = get_system_prompt()
-        tools_prompt = self._format_tools_for_prompt()
+        # Tools are now accessed via UI, not LLM function calling
         self.messages = [
-            {"role": "system", "content": f"{system_prompt}\n\n{tools_prompt}"}
+            {"role": "system", "content": system_prompt}
         ]
     
     def add_user_message(self, content: str):
@@ -100,7 +100,7 @@ class AgentOrchestrator:
     
     async def _call_llm(self) -> Dict[str, Any]:
         """
-        Call the LLM with current messages and tools.
+        Call the LLM with current messages for Q&A (no tool calling).
         
         Returns:
             LLM response in OpenAI-compatible format
@@ -108,12 +108,12 @@ class AgentOrchestrator:
         if not self.llm_service.is_loaded:
             raise RuntimeError("LLM model not loaded. Call await llm_service.load_model() first.")
         
-        # Call the local LLM with messages as-is (tools already baked into system prompt)
+        # Call the local LLM with messages for Q&A only
         try:
             response_text = await self.llm_service.complete(
                 messages=self.messages,
                 temperature=self.temperature,
-                max_tokens=2048,
+                max_tokens=None,
                 stop=["<|eot_id|>"]
             )
             
@@ -146,23 +146,38 @@ class AgentOrchestrator:
             logger.error(f"Error calling LLM: {e}")
             raise
     
-    def _format_tools_for_prompt(self) -> str:
-        """Format tool definitions for the system prompt."""
-        tools_text = "You have access to the following tools:\n\n"
+    def _format_tools_for_prompt(self, tool_names: Optional[List[str]] = None) -> str:
+        """Format tool definitions for the system prompt in compact format.
         
-        for tool in TOOL_DEFINITIONS:
+        Args:
+            tool_names: List of tool names to include. If None, includes all tools.
+                       If empty list, includes no tools.
+        """
+        # If tool_names is explicitly an empty list, return empty string
+        if tool_names is not None and len(tool_names) == 0:
+            return ""
+        
+        # Filter tools if specific names provided
+        tools_to_include = TOOL_DEFINITIONS
+        if tool_names is not None:
+            tools_to_include = [t for t in TOOL_DEFINITIONS if t["function"]["name"] in tool_names]
+        
+        if not tools_to_include:
+            return ""
+        
+        # Compact single-line format: tool_name(params) - brief description
+        tools = []
+        for tool in tools_to_include:
             func = tool["function"]
             name = func["name"]
-            desc = func["description"]
             params = func.get("parameters", {}).get("properties", {})
-            
-            tools_text += f"- {name}: {desc}\n"
-            if params:
-                tools_text += f"  Parameters: {', '.join(params.keys())}\n"
+            param_str = ', '.join(params.keys()) if params else ''
+            # Extract first sentence only from description
+            desc = func["description"].split('.')[0]
+            tools.append(f"{name}({param_str}) - {desc}")
         
-        tools_text += "\nTo use a tool, respond with:\nTOOL_CALL: tool_name({\"arg\": \"value\"})\n\n"
-        tools_text += "You can make multiple tool calls by putting each on a new line.\n"
-        tools_text += "After tool results are provided, continue with your response.\n"
+        tools_text = "\n\nAvailable tools: " + " | ".join(tools)
+        tools_text += "\nUsage: TOOL_CALL: tool_name({\"arg\": \"value\"})"
         
         return tools_text
     
@@ -294,56 +309,26 @@ class AgentOrchestrator:
     
     async def process_message(self, user_message: str, db=None) -> str:
         """
-        Process a user message through the agent loop.
+        Process a user message for Q&A (no tool calling).
         
         Args:
             user_message: User's input message
-            db: Database session for tool execution
+            db: Database session (unused now that tools are UI-driven)
             
         Returns:
-            Final assistant response
+            Assistant response
         """
         self.add_user_message(user_message)
         
-        iteration = 0
-        while iteration < self.max_iterations:
-            iteration += 1
-            
-            # Call LLM
-            response = await self._call_llm()
-            choice = response["choices"][0]
-            message = choice["message"]
-            finish_reason = choice.get("finish_reason")
-            
-            # Check if assistant wants to call tools
-            tool_calls = message.get("tool_calls")
-            
-            if tool_calls:
-                # Add assistant message with tool calls
-                self.add_assistant_message(
-                    content=message.get("content"),
-                    tool_calls=tool_calls
-                )
-                
-                # Execute each tool call
-                for tool_call in tool_calls:
-                    tool_call_id = tool_call.get("id")
-                    function_name = tool_call.get("function", {}).get("name")
-                    
-                    result = await self._execute_tool_call(tool_call, db=db)
-                    self.add_tool_result(tool_call_id, function_name, result)
-                
-                # Continue loop to get next response
-                continue
-            
-            # No tool calls, we have final response
-            content = message.get("content", "")
-            self.add_assistant_message(content=content)
-            return content
+        # Call LLM for Q&A
+        response = await self._call_llm()
+        choice = response["choices"][0]
+        message = choice["message"]
         
-        # Max iterations reached
-        logger.warning(f"Max iterations ({self.max_iterations}) reached")
-        return "I apologize, but I need to break this down into smaller steps. Could you please rephrase your question?"
+        # Extract content from response
+        content = message.get("content", "")
+        self.add_assistant_message(content=content)
+        return content
     
     async def stream_message(self, user_message: str, db=None) -> AsyncIterator[str]:
         """

@@ -16,9 +16,14 @@ export const GraphControls: React.FC = () => {
     filter, 
     layout, 
     searchQuery,
+    curriculumKey,
+    availableCurricula,
+    viewMode,
     setFilter, 
     setLayout, 
     setSearchQuery,
+    setViewMode,
+    setActiveCurriculum,
     fetchGraph,
     stats
   } = useGraph();
@@ -37,6 +42,23 @@ export const GraphControls: React.FC = () => {
       fit: true,
     });
   };
+
+  const curriculumOptions = availableCurricula.map((key) => {
+    if (key === 'ukmla') {
+      return { value: key, label: 'UKMLA' };
+    }
+    if (key === 'uk_legacy') {
+      return { value: key, label: 'UK (Legacy)' };
+    }
+    if (key === 'uploaded') {
+      return { value: key, label: 'Uploaded' };
+    }
+    return { value: key, label: key.toUpperCase() };
+  });
+
+  const activeCurriculumLabel = curriculumOptions.find(
+    (option) => option.value === curriculumKey
+  )?.label;
 
   return (
     <div className="absolute top-4 left-4 right-4 flex flex-col gap-3 pointer-events-none">
@@ -66,6 +88,54 @@ export const GraphControls: React.FC = () => {
 
       {/* Control Panel */}
       <div className="flex gap-3">
+        {/* View Mode Toggle */}
+        <div className="pointer-events-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg p-1 flex items-center gap-1">
+          <button
+            onClick={() => setViewMode('2d')}
+            className={`px-3 py-1 text-sm rounded-md transition-colors ${viewMode === '2d' ? 'bg-blue-500 text-white' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+          >
+            2D
+          </button>
+          <button
+            onClick={() => setViewMode('3d')}
+            className={`px-3 py-1 text-sm rounded-md transition-colors ${viewMode === '3d' ? 'bg-blue-500 text-white' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+          >
+            3D
+          </button>
+        </div>
+
+        {/* Curriculum Selector */}
+        <div className="pointer-events-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg p-2">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 dark:text-gray-400">Curriculum</span>
+            <select
+              value={curriculumKey || ''}
+              onChange={(e) => setActiveCurriculum(e.target.value)}
+              className="bg-transparent text-sm focus:outline-none cursor-pointer"
+              disabled={curriculumOptions.length === 0}
+            >
+              {curriculumOptions.length === 0 ? (
+                <option value="">Unavailable</option>
+              ) : (
+                curriculumOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))
+              )}
+            </select>
+          </div>
+        </div>
+
+        {/* Active Curriculum Badge */}
+        {activeCurriculumLabel && (
+          <div className="pointer-events-auto flex items-center">
+            <span className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-200 border border-blue-200 dark:border-blue-800">
+              {activeCurriculumLabel}
+            </span>
+          </div>
+        )}
+
         {/* Layout Selector */}
         <div className="pointer-events-auto bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg p-2">
           <div className="flex items-center gap-2">

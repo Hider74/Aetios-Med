@@ -6,31 +6,53 @@ interface SAQInputProps {
   question: SAQQuestion;
   quizId: string;
   questionId: string;
+  value?: string;
+  onChange?: (value: string) => void;
+  showSubmit?: boolean;
+  result?: SAQResult | null;
+  isSubmitting?: boolean;
   onSubmit: (answer: string) => Promise<SAQResult>;
 }
 
-export const SAQInput: React.FC<SAQInputProps> = ({ question, quizId, questionId, onSubmit }) => {
-  const [answer, setAnswer] = useState('');
-  const [result, setResult] = useState<SAQResult | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export const SAQInput: React.FC<SAQInputProps> = ({
+  question,
+  quizId,
+  questionId,
+  value,
+  onChange,
+  showSubmit = true,
+  result,
+  isSubmitting,
+  onSubmit,
+}) => {
+  const [localAnswer, setLocalAnswer] = useState('');
+  const [localResult, setLocalResult] = useState<SAQResult | null>(null);
+  const [localSubmitting, setLocalSubmitting] = useState(false);
   const [showModelAnswer, setShowModelAnswer] = useState(false);
 
+  void quizId;
+  void questionId;
+
+  const currentAnswer = value !== undefined ? value : localAnswer;
+  const displayResult = result ?? localResult;
+  const submittingState = isSubmitting ?? localSubmitting;
+
   const handleSubmit = async () => {
-    if (!answer.trim()) return;
-    
-    setIsSubmitting(true);
+    if (!currentAnswer.trim()) return;
+
+    setLocalSubmitting(true);
     try {
-      const markingResult = await onSubmit(answer);
-      setResult(markingResult);
+      const markingResult = await onSubmit(currentAnswer);
+      setLocalResult(markingResult);
     } catch (error) {
       console.error('Failed to submit SAQ answer:', error);
     } finally {
-      setIsSubmitting(false);
+      setLocalSubmitting(false);
     }
   };
 
-  const wordCount = answer.trim().split(/\s+/).filter(w => w).length;
-  const charCount = answer.length;
+  const wordCount = currentAnswer.trim().split(/\s+/).filter((w) => w).length;
+  const charCount = currentAnswer.length;
 
   return (
     <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-6 border-2 border-blue-200 dark:border-blue-800">
@@ -55,13 +77,19 @@ export const SAQInput: React.FC<SAQInputProps> = ({ question, quizId, questionId
       </div>
 
       {/* Answer Input */}
-      {!result && (
+      {!displayResult && (
         <div className="mb-4">
           <textarea
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
+            value={currentAnswer}
+            onChange={(e) => {
+              if (onChange) {
+                onChange(e.target.value);
+                return;
+              }
+              setLocalAnswer(e.target.value);
+            }}
             placeholder="Type your answer here..."
-            disabled={isSubmitting}
+            disabled={submittingState}
             rows={8}
             className="w-full p-4 border-2 border-gray-300 dark:border-gray-700 rounded-lg 
                      bg-white dark:bg-gray-800 text-gray-900 dark:text-white
@@ -74,43 +102,45 @@ export const SAQInput: React.FC<SAQInputProps> = ({ question, quizId, questionId
       )}
 
       {/* Submit Button */}
-      {!result && (
+      {!displayResult && showSubmit && (
         <button
           onClick={handleSubmit}
-          disabled={!answer.trim() || isSubmitting}
+          disabled={!currentAnswer.trim() || submittingState}
           className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 
                    disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-medium"
         >
-          {isSubmitting ? 'Marking...' : 'Submit Answer'}
+          {submittingState ? 'Marking...' : 'Submit Answer'}
         </button>
       )}
 
       {/* Results */}
-      {result && (
+      {displayResult && (
         <div className="space-y-4">
           {/* Score Summary */}
-          <div className={`
+          <div
+            className={`
             p-4 rounded-lg border-2
-            ${result.percentage >= 70 
+            ${displayResult.percentage >= 70 
               ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' 
-              : result.percentage >= 50
+              : displayResult.percentage >= 50
               ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800'
               : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
             }
-          `}>
+          `}
+          >
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                {result.percentage >= 70 ? (
+                {displayResult.percentage >= 70 ? (
                   <CheckCircle size={24} className="text-green-600" />
                 ) : (
-                  <XCircle size={24} className={result.percentage >= 50 ? "text-yellow-600" : "text-red-600"} />
+                  <XCircle size={24} className={displayResult.percentage >= 50 ? 'text-yellow-600' : 'text-red-600'} />
                 )}
                 <span className="text-xl font-bold text-gray-900 dark:text-white">
-                  {result.score} / {result.max_score}
+                  {displayResult.score} / {displayResult.max_score}
                 </span>
               </div>
               <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">
-                {result.percentage.toFixed(1)}%
+                {displayResult.percentage.toFixed(1)}%
               </span>
             </div>
           </div>
@@ -118,8 +148,8 @@ export const SAQInput: React.FC<SAQInputProps> = ({ question, quizId, questionId
           {/* Key Points Assessment */}
           <div className="space-y-2">
             <h5 className="font-semibold text-gray-900 dark:text-white">Mark Breakdown:</h5>
-            {result.key_points_assessment.map((kp, idx) => (
-              <div 
+            {displayResult.key_points_assessment.map((kp, idx) => (
+              <div
                 key={idx}
                 className={`
                   p-3 rounded-lg border-l-4
@@ -152,17 +182,17 @@ export const SAQInput: React.FC<SAQInputProps> = ({ question, quizId, questionId
           <div className="p-4 bg-blue-50 dark:bg-blue-900/10 rounded-lg border border-blue-200 dark:border-blue-800">
             <h5 className="font-semibold text-gray-900 dark:text-white mb-2">Examiner Feedback:</h5>
             <p className="text-sm text-gray-700 dark:text-gray-300">
-              {result.feedback}
+              {displayResult.feedback}
             </p>
           </div>
 
           {/* Areas to Review */}
-          {result.areas_to_review && result.areas_to_review.length > 0 && (
+          {displayResult.areas_to_review && displayResult.areas_to_review.length > 0 && (
             <div className="p-4 bg-purple-50 dark:bg-purple-900/10 rounded-lg border border-purple-200 dark:border-purple-800">
               <h5 className="font-semibold text-gray-900 dark:text-white mb-2">Areas to Review:</h5>
               <div className="flex flex-wrap gap-2">
-                {result.areas_to_review.map((area, idx) => (
-                  <span 
+                {displayResult.areas_to_review.map((area, idx) => (
+                  <span
                     key={idx}
                     className="px-3 py-1 bg-purple-200 dark:bg-purple-800 text-purple-900 dark:text-purple-100 
                              rounded-full text-sm font-medium"
@@ -193,17 +223,17 @@ export const SAQInput: React.FC<SAQInputProps> = ({ question, quizId, questionId
             {showModelAnswer && (
               <div className="p-4 bg-white dark:bg-gray-900">
                 <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
-                  {result.model_answer}
+                  {displayResult.model_answer}
                 </p>
               </div>
             )}
           </div>
 
-          {/* Student's Answer (for reference) */}
+          {/* Student's Answer */}
           <div className="border-2 border-gray-200 dark:border-gray-700 rounded-lg p-4">
             <h5 className="font-semibold text-gray-900 dark:text-white mb-2">Your Answer:</h5>
             <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
-              {answer}
+              {currentAnswer}
             </p>
           </div>
         </div>

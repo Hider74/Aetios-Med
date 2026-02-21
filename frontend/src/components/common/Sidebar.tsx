@@ -6,6 +6,7 @@ import {
   Calendar, 
   BookOpen,
   Settings,
+  ClipboardCheck,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
@@ -20,6 +21,7 @@ const menuItems = [
   { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { id: 'graph', icon: Network, label: 'Knowledge Graph' },
   { id: 'chat', icon: MessageSquare, label: 'AI Tutor' },
+  { id: 'quiz', icon: ClipboardCheck, label: 'Quiz' },
   { id: 'study', icon: Calendar, label: 'Study Plan' },
   { id: 'resources', icon: BookOpen, label: 'Resources' },
   { id: 'settings', icon: Settings, label: 'Settings' },
@@ -42,7 +44,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate }) => 
       {/* Logo */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-gray-800">
         <img 
-          src="/aetios-logo.png" 
+          src="./aetios-logo.png" 
           alt="Aetios-Med" 
           className={sidebarCollapsed ? "h-8 w-8 object-contain" : "h-10 object-contain"}
         />

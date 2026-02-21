@@ -27,13 +27,15 @@ interface NodeDetailProps {
 }
 
 export const NodeDetail: React.FC<NodeDetailProps> = ({ onClose, onStartStudy }) => {
-  const { selectedNode, updateNodeConfidence, deleteNode, getRelatedNodes } = useGraph();
+  const { selectedNode, updateNodeConfidence, deleteNode, getRelatedNodes, getDomainStats } = useGraph();
   const [isEditing, setIsEditing] = useState(false);
   const [editedConfidence, setEditedConfidence] = useState(selectedNode?.confidence || 0);
 
   if (!selectedNode) return null;
 
+  const isDomain = selectedNode.type === 'Domain';
   const relatedNodes = getRelatedNodes(selectedNode.id);
+  const domainStats = isDomain ? getDomainStats(selectedNode.id) : null;
 
   const handleSaveConfidence = async () => {
     await updateNodeConfidence(selectedNode.id, editedConfidence);
@@ -80,110 +82,156 @@ export const NodeDetail: React.FC<NodeDetailProps> = ({ onClose, onStartStudy })
 
       {/* Content */}
       <div className="p-4 space-y-6">
-        {/* Confidence */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+        {isDomain ? (
+          <div>
+            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 mb-3">
               <TrendingUp size={16} />
-              Confidence Level
+              Domain Knowledge Status
             </h4>
-            <button
-              onClick={() => setIsEditing(!isEditing)}
-              className="text-sm text-blue-500 hover:text-blue-600"
-            >
-              {isEditing ? 'Cancel' : 'Edit'}
-            </button>
-          </div>
-          
-          {/* Quick Update Buttons */}
-          <div className="flex gap-2 mb-3">
-            <button
-              onClick={() => updateNodeConfidence(selectedNode.id, 0.3)}
-              className="flex-1 flex flex-col items-center gap-1 p-3 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors"
-              title="Struggling - 30%"
-            >
-              <span className="text-2xl">😕</span>
-              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Struggling</span>
-            </button>
-            <button
-              onClick={() => updateNodeConfidence(selectedNode.id, 0.6)}
-              className="flex-1 flex flex-col items-center gap-1 p-3 bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 rounded-lg transition-colors"
-              title="Getting There - 60%"
-            >
-              <span className="text-2xl">🤔</span>
-              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Getting There</span>
-            </button>
-            <button
-              onClick={() => updateNodeConfidence(selectedNode.id, 0.9)}
-              className="flex-1 flex flex-col items-center gap-1 p-3 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-lg transition-colors"
-              title="Confident - 90%"
-            >
-              <span className="text-2xl">😊</span>
-              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Confident</span>
-            </button>
-          </div>
-          
-          {isEditing ? (
-            <div className="space-y-3">
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.05"
-                value={editedConfidence}
-                onChange={(e) => setEditedConfidence(parseFloat(e.target.value))}
-                className="w-full"
-              />
-              <div className="flex items-center justify-between">
-                <span className="text-2xl font-bold">{(editedConfidence * 100).toFixed(0)}%</span>
-                <button
-                  onClick={handleSaveConfidence}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                >
-                  Save
-                </button>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <div className="text-xs text-gray-600 dark:text-gray-400">Topics</div>
+                <div className="text-xl font-bold text-gray-900 dark:text-white">
+                  {domainStats?.totalNodes ?? 0}
+                </div>
+              </div>
+              <div className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+                <div className="text-xs text-gray-600 dark:text-gray-400">Avg Confidence</div>
+                <div className="text-xl font-bold text-gray-900 dark:text-white">
+                  {((domainStats?.averageConfidence ?? 0) * 100).toFixed(0)}%
+                </div>
+              </div>
+              <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                <div className="text-xs text-gray-600 dark:text-gray-400">Mastered</div>
+                <div className="text-xl font-bold text-gray-900 dark:text-white">
+                  {domainStats?.masteredCount ?? 0}
+                </div>
+              </div>
+              <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                <div className="text-xs text-gray-600 dark:text-gray-400">Low Confidence</div>
+                <div className="text-xl font-bold text-gray-900 dark:text-white">
+                  {domainStats?.lowConfidenceCount ?? 0}
+                </div>
               </div>
             </div>
-          ) : (
-            <div>
-              <div className="flex items-baseline gap-2">
-                <span className={`text-3xl font-bold ${confidenceInfo.color}`}>
-                  {(selectedNode.confidence * 100).toFixed(0)}%
-                </span>
-                <span className="text-sm text-gray-500">{confidenceInfo.label}</span>
+            <div className="mt-4">
+              <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+                <span>Unreviewed</span>
+                <span>{domainStats?.unreviewedCount ?? 0}</span>
               </div>
-              <div className="mt-2 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+              <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
-                  style={{ width: `${selectedNode.confidence * 100}%` }}
+                  style={{ width: `${((domainStats?.averageConfidence ?? 0) * 100).toFixed(0)}%` }}
                 />
               </div>
             </div>
-          )}
-        </div>
-
-        {/* Review Info */}
-        <div>
-          <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 mb-2">
-            <Calendar size={16} />
-            Review Status
-          </h4>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Times Reviewed:</span>
-              <span className="font-semibold">{selectedNode.timesReviewed}</span>
+          </div>
+        ) : (
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                <TrendingUp size={16} />
+                Confidence Level
+              </h4>
+              <button
+                onClick={() => setIsEditing(!isEditing)}
+                className="text-sm text-blue-500 hover:text-blue-600"
+              >
+                {isEditing ? 'Cancel' : 'Edit'}
+              </button>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Last Reviewed:</span>
-              <span className="font-semibold">
-                {selectedNode.lastReviewed 
-                  ? formatDistanceToNow(selectedNode.lastReviewed, { addSuffix: true })
-                  : 'Never'
-                }
-              </span>
+
+            <div className="flex gap-2 mb-3">
+              <button
+                onClick={() => updateNodeConfidence(selectedNode.id, 0.3)}
+                className="flex-1 flex flex-col items-center gap-1 p-3 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors"
+                title="Struggling - 30%"
+              >
+                <span className="text-2xl">😕</span>
+                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Struggling</span>
+              </button>
+              <button
+                onClick={() => updateNodeConfidence(selectedNode.id, 0.6)}
+                className="flex-1 flex flex-col items-center gap-1 p-3 bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 rounded-lg transition-colors"
+                title="Getting There - 60%"
+              >
+                <span className="text-2xl">🤔</span>
+                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Getting There</span>
+              </button>
+              <button
+                onClick={() => updateNodeConfidence(selectedNode.id, 0.9)}
+                className="flex-1 flex flex-col items-center gap-1 p-3 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-lg transition-colors"
+                title="Confident - 90%"
+              >
+                <span className="text-2xl">😊</span>
+                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Confident</span>
+              </button>
+            </div>
+
+            {isEditing ? (
+              <div className="space-y-3">
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.05"
+                  value={editedConfidence}
+                  onChange={(e) => setEditedConfidence(parseFloat(e.target.value))}
+                  className="w-full"
+                />
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl font-bold">{(editedConfidence * 100).toFixed(0)}%</span>
+                  <button
+                    onClick={handleSaveConfidence}
+                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="flex items-baseline gap-2">
+                  <span className={`text-3xl font-bold ${confidenceInfo.color}`}>
+                    {(selectedNode.confidence * 100).toFixed(0)}%
+                  </span>
+                  <span className="text-sm text-gray-500">{confidenceInfo.label}</span>
+                </div>
+                <div className="mt-2 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"
+                    style={{ width: `${selectedNode.confidence * 100}%` }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {!isDomain && (
+          <div>
+            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2 mb-2">
+              <Calendar size={16} />
+              Review Status
+            </h4>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-400">Times Reviewed:</span>
+                <span className="font-semibold">{selectedNode.timesReviewed}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600 dark:text-gray-400">Last Reviewed:</span>
+                <span className="font-semibold">
+                  {selectedNode.lastReviewed 
+                    ? formatDistanceToNow(selectedNode.lastReviewed, { addSuffix: true })
+                    : 'Never'
+                  }
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Notes */}
         {selectedNode.notes && (
@@ -310,8 +358,30 @@ export const NodeDetail: React.FC<NodeDetailProps> = ({ onClose, onStartStudy })
           </div>
         )}
 
+        {/* Domain Weak Topics */}
+        {isDomain && (domainStats?.weakestTopics?.length ?? 0) > 0 && (
+          <div>
+            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              Needs Focus ({domainStats?.weakestTopics.length})
+            </h4>
+            <div className="space-y-2">
+              {domainStats?.weakestTopics.map(node => (
+                <div
+                  key={node.id}
+                  className="p-2 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-center justify-between"
+                >
+                  <span className="text-sm">{node.label}</span>
+                  <span className="text-xs font-semibold">
+                    {(node.confidence * 100).toFixed(0)}%
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Related Topics */}
-        {relatedNodes.length > 0 && (
+        {!isDomain && relatedNodes.length > 0 && (
           <div>
             <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
               Related Topics ({relatedNodes.length})
@@ -333,24 +403,26 @@ export const NodeDetail: React.FC<NodeDetailProps> = ({ onClose, onStartStudy })
         )}
 
         {/* Actions */}
-        <div className="space-y-2 pt-4 border-t border-gray-200 dark:border-gray-700">
-          {onStartStudy && (
+        {!isDomain && (
+          <div className="space-y-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+            {onStartStudy && (
+              <button
+                onClick={() => onStartStudy(selectedNode.id)}
+                className="w-full px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+              >
+                Start Study Session
+              </button>
+            )}
+
             <button
-              onClick={() => onStartStudy(selectedNode.id)}
-              className="w-full px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+              onClick={handleDelete}
+              className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
             >
-              Start Study Session
+              <Trash2 size={16} />
+              Delete Topic
             </button>
-          )}
-          
-          <button
-            onClick={handleDelete}
-            className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center justify-center gap-2"
-          >
-            <Trash2 size={16} />
-            Delete Topic
-          </button>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

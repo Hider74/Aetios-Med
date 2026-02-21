@@ -11,9 +11,14 @@ interface GraphState {
   filter: GraphFilter;
   layout: GraphLayout;
   searchQuery: string;
+  curriculumKey: string | null;
+  availableCurricula: string[];
+  viewMode: '2d' | '3d';
   
   // Actions
   fetchGraph: () => Promise<void>;
+  fetchCurricula: () => Promise<void>;
+  setActiveCurriculum: (curriculum: string) => Promise<void>;
   setSelectedNode: (node: TopicNode | null) => void;
   updateNodeConfidence: (nodeId: string, confidence: number) => Promise<void>;
   addNode: (node: Partial<TopicNode>) => Promise<void>;
@@ -21,6 +26,7 @@ interface GraphState {
   setFilter: (filter: Partial<GraphFilter>) => void;
   setLayout: (layout: GraphLayout) => void;
   setSearchQuery: (query: string) => void;
+  setViewMode: (mode: '2d' | '3d') => void;
   clearError: () => void;
 }
 
@@ -41,16 +47,50 @@ export const useGraphStore = create<GraphState>()(
         fit: true,
       },
       searchQuery: '',
+      curriculumKey: null,
+      availableCurricula: [],
+      viewMode: '2d',
 
       fetchGraph: async () => {
         set({ loading: true, error: null });
         try {
-          const graph = await api.getGraph();
+          const graph = await api.getGraph(get().curriculumKey || undefined);
           set({ graph, loading: false });
         } catch (error) {
           set({ 
             error: error instanceof Error ? error.message : 'Failed to fetch graph',
             loading: false 
+          });
+        }
+      },
+
+      fetchCurricula: async () => {
+        try {
+          const { active, available } = await api.getCurricula();
+          const resolvedActive = active || available[0] || null;
+          const current = get().curriculumKey;
+          set({
+            availableCurricula: available,
+            curriculumKey: resolvedActive,
+          });
+          if (resolvedActive && resolvedActive !== current) {
+            await get().fetchGraph();
+          }
+        } catch (error) {
+          set({
+            error: error instanceof Error ? error.message : 'Failed to fetch curricula',
+          });
+        }
+      },
+
+      setActiveCurriculum: async (curriculum) => {
+        try {
+          const { active } = await api.setActiveCurriculum(curriculum);
+          set({ curriculumKey: active });
+          await get().fetchGraph();
+        } catch (error) {
+          set({
+            error: error instanceof Error ? error.message : 'Failed to switch curriculum',
           });
         }
       },
@@ -127,6 +167,10 @@ export const useGraphStore = create<GraphState>()(
         set({ searchQuery: query });
       },
 
+      setViewMode: (mode) => {
+        set({ viewMode: mode });
+      },
+
       clearError: () => {
         set({ error: null });
       },
@@ -136,6 +180,7 @@ export const useGraphStore = create<GraphState>()(
       partialize: (state) => ({
         filter: state.filter,
         layout: state.layout,
+        viewMode: state.viewMode,
       }),
     }
   )
